@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>HCAS Hub Sync</title>
+  <style>
+    :root {
+      --navy:   #0F1A2F;
+      --blue:   #1E96E5;
+      --cyan:   #3BCFFF;
+      --white:  #F5F7FA;
+      --green:  #6ECC71;
+      --orange: #FF8020;
+      --red:    #FF4040;
+      --line:   rgba(59,207,255,0.18);
+      --soft:   rgba(245,247,250,0.65);
+      --mute:   rgba(245,247,250,0.42);
+    }
+    * { box-sizing: border-box; }
+    body {
+      width: 320px; margin: 0; padding: 0;
+      background:
+        radial-gradient(400px 200px at 80% 0%, rgba(30,150,229,0.18), transparent 60%),
+        var(--navy);
+      color: var(--white);
+      font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+    }
+    .header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    .header svg { flex-shrink: 0; }
+    .brand {
+      font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; font-size: 12px;
+    }
+    .body { padding: 14px 16px 12px; }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 999px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .pill.ok      { background: rgba(110,204,113,0.14); color: var(--green); }
+    .pill.warn    { background: rgba(255,128,32,0.14);  color: var(--orange); }
+    .pill.err     { background: rgba(255,64,64,0.14);   color: var(--red); }
+    .pill.neutral { background: rgba(59,207,255,0.14);  color: var(--cyan); }
+    .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    .row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin: 10px 0;
+    }
+    .row .label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--soft); }
+    .row .value { font-size: 18px; font-weight: 700; }
+
+    .field { margin: 12px 0 6px; }
+    label.field-label {
+      display: block; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--soft); margin-bottom: 6px;
+    }
+    .input-row { display: flex; gap: 6px; }
+    input[type="text"] {
+      flex: 1;
+      background: rgba(255,255,255,0.05); color: var(--white);
+      border: 1px solid var(--line); border-radius: 6px;
+      padding: 8px 10px; font-size: 12px; outline: none;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    input[type="text"]:focus { border-color: var(--cyan); background: rgba(255,255,255,0.08); }
+
+    button {
+      cursor: pointer; border: 0; border-radius: 6px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      transition: transform .1s ease, background .15s ease, opacity .15s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .btn-primary {
+      background: linear-gradient(180deg, var(--blue), #1779c0);
+      color: white; padding: 11px 14px;
+      box-shadow: 0 4px 12px rgba(30,150,229,0.30);
+    }
+    .btn-primary:hover { background: linear-gradient(180deg, var(--cyan), var(--blue)); }
+    .btn-save {
+      background: rgba(59,207,255,0.18); color: var(--cyan);
+      padding: 8px 12px; font-size: 10px;
+    }
+    .btn-save.saved { background: rgba(110,204,113,0.20); color: var(--green); }
+    .btn-ghost {
+      background: transparent; color: var(--soft);
+      border: 1px solid var(--line); padding: 9px 12px;
+    }
+    .btn-ghost:hover { color: var(--white); border-color: var(--cyan); }
+
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .actions .btn-primary { grid-column: span 2; }
+
+    .preview {
+      margin-top: 12px;
+      border: 1px solid var(--line); border-radius: 6px;
+      background: rgba(0,0,0,0.18);
+      max-height: 180px; overflow-y: auto;
+    }
+    .preview summary {
+      padding: 8px 12px; cursor: pointer; user-select: none;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--soft);
+      list-style: none;
+    }
+    .preview summary::-webkit-details-marker { display: none; }
+    .preview summary::after { content: "▾"; float: right; opacity: 0.5; }
+    .preview[open] summary::after { content: "▴"; }
+    .preview ul { list-style: none; margin: 0; padding: 0 12px 8px; }
+    .preview li {
+      padding: 6px 0; border-top: 1px solid var(--line);
+      font-size: 11px; line-height: 1.35;
+    }
+    .preview li:first-child { border-top: 0; }
+    .preview .a-title { display: block; color: var(--white); font-weight: 600; }
+    .preview .a-meta  { display: block; color: var(--mute); font-size: 10px; margin-top: 2px; }
+    .preview .empty { padding: 10px 12px; font-size: 11px; color: var(--mute); }
+
+    .status {
+      margin-top: 10px; min-height: 16px;
+      font-size: 11px; line-height: 1.45; color: var(--soft);
+    }
+    .status.err { color: var(--red); }
+    .status.ok  { color: var(--green); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hL" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#3BCFFF"/><stop offset="100%" stop-color="#1E96E5"/>
+        </linearGradient>
+        <linearGradient id="hR" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1E96E5"/><stop offset="100%" stop-color="#0F4A85"/>
+        </linearGradient>
+      </defs>
+      <path d="M6 6 L22 6 L22 58 L6 58 Z" fill="url(#hL)"/>
+      <path d="M42 6 L58 6 L58 58 L42 58 Z" fill="url(#hR)"/>
+      <path d="M22 26 L42 22 L42 36 L22 40 Z" fill="url(#hL)" opacity="0.95"/>
+    </svg>
+    <div>
+      <div class="brand">HCAS&nbsp;HUB</div>
+      <div style="font-size: 10px; color: var(--soft); letter-spacing: 0.10em;">SCHOOL SYNC</div>
+    </div>
+    <span id="pageStatus" class="pill neutral" style="margin-left: auto;">
+      <span class="dot"></span><span id="pageStatusText">Checking</span>
+    </span>
+  </div>
+
+  <div class="body">
+    <div class="row">
+      <span class="label">Assignments found</span>
+      <span class="value" id="foundCount">—</span>
+    </div>
+
+    <details class="preview" id="previewBox">
+      <summary>Preview scraped data</summary>
+      <ul id="previewList"></ul>
+    </details>
+
+    <div class="field">
+      <label class="field-label" for="hub">Hub URL</label>
+      <div class="input-row">
+        <input id="hub" type="text" placeholder="http://127.0.0.1:8000" />
+        <button id="save" class="btn-save">Save</button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="sync" class="btn-primary">Sync now</button>
+      <button id="openAssignments" class="btn-ghost">View HW</button>
+      <button id="open" class="btn-ghost">Open Hub</button>
+      <button id="refresh" class="btn-ghost">Refresh scan</button>
+    </div>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

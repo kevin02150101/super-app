@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block hero %}
+<section class="hero-section d-flex align-items-center text-white">
+  <div class="container text-center">
+    <h1 class="display-3 fw-bold mb-3">Find your next read at Taiwan's biggest online bookstore</h1>
+    <p class="lead mb-4">Type a book title — we'll query Books.com.tw in real time, present the results as polished cards, and save them for later analysis.</p>
+    <a href="#search" class="btn btn-primary btn-lg px-5 shadow">Search now</a>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div id="search" class="row justify-content-center">
+  <div class="col-12 col-lg-10 col-xl-9">
+    <div id="root-search"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/babel" data-presets="react"
+        src="{{ url_for('static', filename='js/search-app.js') }}"></script>
+{% endblock %}

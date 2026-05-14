@@ -1,0 +1,22 @@
+{
+  "name": "hcas-hub",
+  "version": "1.0.0",
+  "description": "The central HCAS student super-app. **Tagline:** *Everything HCAS, one tap.*",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "puppeteer": "^24.43.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

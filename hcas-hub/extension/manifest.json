@@ -1,0 +1,57 @@
+{
+  "manifest_version": 3,
+  "name": "HCAS Hub — School Sync",
+  "short_name": "HCAS Hub Sync",
+  "version": "0.2.0",
+  "description": "Pulls your assignments from Microsoft Teams and PowerSchool into HCAS Hub. No school login or admin approval required.",
+  "permissions": ["storage", "activeTab", "scripting", "webNavigation"],
+  "host_permissions": [
+    "https://teams.microsoft.com/*",
+    "https://teams.cloud.microsoft/*",
+    "https://teams.live.com/*",
+    "https://assignments.edu.cloud.microsoft/*",
+    "https://*.cloud.microsoft/*",
+    "https://*.powerschool.com/*",
+    "https://*.powerschool.cloud/*",
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "HCAS Hub — School Sync",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "32": "icons/icon-32.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "32": "icons/icon-32.png",
+    "128": "icons/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://teams.microsoft.com/*",
+        "https://teams.cloud.microsoft/*",
+        "https://teams.live.com/*",
+        "https://assignments.edu.cloud.microsoft/*",
+        "https://*.cloud.microsoft/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://*.powerschool.com/*",
+        "https://*.powerschool.cloud/*"
+      ],
+      "js": ["powerschool.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}

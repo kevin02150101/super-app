@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Capture · MyCam{% endblock %}
+
+{% block hero %}
+  {% with title="Take photo",
+          subtitle="Start your camera to capture in real time, or upload a food photo from this device" %}
+    {% include "_layout/hero.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+  <capture-uploader></capture-uploader>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/components/CaptureUploader.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/pages/capture.js') }}"></script>
+{% endblock %}

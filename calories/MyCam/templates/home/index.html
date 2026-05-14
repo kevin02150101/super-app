@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}MyCam · Snap a photo, get your nutrition dashboard{% endblock %}
+
+{% block hero %}
+  <section class="mc-hero mc-hero--landing">
+    <div class="mc-hero__inner">
+      <div class="mc-hero__text">
+        <h1 class="mc-hero__title">One photo. A complete view of what you eat.</h1>
+        <p class="mc-hero__sub">MyCam Powered by Google Gemini — automatically identify food, estimate calories, and track daily nutrition.</p>
+        <a href="{{ url_for('auth.register_page') }}" class="btn btn-light btn-lg rounded-pill px-4 me-2">
+          <i class="bi bi-rocket-takeoff me-2"></i>Sign up
+        </a>
+        <a href="{{ url_for('auth.login_page') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">Sign in</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <div class="row g-4 mt-2">
+    <div class="col-md-4">
+      <div class="mc-feature">
+        <i class="bi bi-camera2 mc-feature__icon"></i>
+        <h5>Snap to analyse</h5>
+        <p class="text-muted">Open your camera or upload a photo — Gemini AI will recognise it instantly.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mc-feature">
+        <i class="bi bi-clipboard-data mc-feature__icon"></i>
+        <h5>Nutrition dashboard</h5>
+        <p class="text-muted">Calories, protein, fat, carbs — see your full diet at a glance in the Dashboard.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mc-feature">
+        <i class="bi bi-graph-up-arrow mc-feature__icon"></i>
+        <h5>History & trends</h5>
+        <p class="text-muted">SQLite Your personal history, with calorie trends and food-category breakdowns.</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

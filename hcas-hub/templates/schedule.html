@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}My Schedule · HCAS HUB{% endblock %}
+{% block content %}
+
+{% macro to_minutes(t) -%}
+{%- if not t -%}0
+{%- else -%}
+{%- set s = t.strip().upper() -%}
+{%- set ap = 'PM' if 'PM' in s else ('AM' if 'AM' in s else '') -%}
+{%- set clean = s.replace('AM','').replace('PM','').strip() -%}
+{%- set parts = clean.split(':') -%}
+{%- set h = parts[0]|int -%}
+{%- set m = parts[1]|int if parts|length > 1 else 0 -%}
+{%- if ap == 'PM' and h != 12 -%}{%- set h = h + 12 -%}{%- endif -%}
+{%- if ap == 'AM' and h == 12 -%}{%- set h = 0 -%}{%- endif -%}
+{{ h * 60 + m }}
+{%- endif -%}
+{%- endmacro %}
+
+{# pastel palette per course (hash by name length) #}
+{% set palette = [
+  'rgba(255,210,150,0.30)',
+  'rgba(180,220,255,0.30)',
+  'rgba(210,180,255,0.30)',
+  'rgba(255,180,210,0.30)',
+  'rgba(180,235,200,0.30)',
+  'rgba(255,235,160,0.35)',
+  'rgba(200,230,210,0.30)',
+] %}
+
+<section class="max-w-[1400px] mx-auto">
+  <div class="flex items-baseline justify-between gap-3 mb-4">
+    <div>
+      <p class="eyebrow text-[11px] tracking-[0.22em]">MY&nbsp;SCHEDULE</p>
+      <h1 class="display text-2xl">Weekly timetable</h1>
+    </div>
+    {% if classes %}
+      <form action="/schedule/clear" method="post"
+            onsubmit="return confirm('Clear all imported classes?');">
+        <button class="text-[12px] text-ink-mute hover:text-white border border-line px-3 py-1 rounded-full">
+          Clear all
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+  {% if classes %}
+    {% set days = [('M','Monday'), ('T','Tuesday'), ('W','Wednesday'), ('R','Thursday'), ('F','Friday')] %}
+
+    {# Collect unique (start, end) time blocks across all days, sorted #}
+    {% set time_blocks = [] %}
+    {% for c in classes %}
+      {% if c.start_time %}
+        {% set key = c.start_time ~ '|' ~ (c.end_time or '') %}
+        {% if key not in time_blocks %}{% set _ = time_blocks.append(key) %}{% endif %}
+      {% endif %}
+    {% endfor %}
+    {# Sort time blocks by start minute #}
+    {% set sortable = [] %}
+    {% for k in time_blocks %}
+      {% set parts = k.split('|') %}
+      {% set sm = to_minutes(parts[0])|trim|int %}
+      {% set _ = sortable.append((sm, k, parts[0], parts[1])) %}
+    {% endfor %}
+    {% set sortable = sortable|sort(attribute=0) %}
+
+    <div class="overflow-x-auto mx-auto">
+      <table class="border-collapse mx-auto" style="min-width: 960px;">
+        <thead>
+          <tr>
+            <th class="px-2 py-2 w-[90px]"></th>
+            {% for code, name in days %}
+              <th class="px-3 py-2 text-center">
+                <p class="eyebrow text-[11px] tracking-[0.2em] text-white">{{ name }}</p>
+                {% if week_dates and week_dates[loop.index0] %}
+                  <p class="text-[10px] text-ink-mute mt-0.5 font-normal">{{ week_dates[loop.index0] }}</p>
+                {% endif %}
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for sm, key, start, end in sortable %}
+            {% set is_last = loop.last %}
+            <tr>
+              <td class="px-2 py-3 align-top text-[11px] text-ink-mute tracking-wider whitespace-nowrap">
+                {{ start }}
+              </td>
+              {% for code, name in days %}
+                {% set cell_classes = [] %}
+                {% for c in classes %}
+                  {% if code in (c.days or '') and (c.start_time ~ '|' ~ (c.end_time or '')) == key %}
+                    {% set _ = cell_classes.append(c) %}
+                  {% endif %}
+                {% endfor %}
+                <td class="align-top p-1 w-[180px]">
+                  {% if cell_classes %}
+                    <div class="flex flex-col gap-1 p-1">
+                      {% for c in cell_classes %}
+                        {% set idx = (c.course|length) % palette|length %}
+                        <div class="rounded px-2 py-1.5 text-[11px] leading-snug"
+                             style="background: {{ palette[idx] }};">
+                          <p class="text-white font-semibold">{{ c.course }}</p>
+                          {% if c.teacher %}<p class="text-ink-soft">{{ c.teacher }}</p>{% endif %}
+                          {% if c.room %}<p class="text-ink-mute">{{ c.room }}</p>{% endif %}
+                          <p class="text-ink-mute text-[10px] mt-0.5">
+                            {{ c.start_time }}{% if c.end_time %} – {{ c.end_time }}{% endif %}
+                          </p>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <details class="mt-6">
+      <summary class="text-[12px] text-ink-mute hover:text-white cursor-pointer">List view</summary>
+      <div class="hairline overflow-hidden mt-3">
+        <table class="w-full text-[13px]">
+          <thead>
+            <tr class="text-ink-mute uppercase tracking-wider text-[10px]">
+              <th class="text-left px-3 py-2">Course</th>
+              <th class="text-left px-3 py-2">Teacher</th>
+              <th class="text-left px-3 py-2">Room</th>
+              <th class="text-left px-3 py-2">Days</th>
+              <th class="text-left px-3 py-2">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in classes %}
+            <tr class="border-t border-line">
+              <td class="px-3 py-2 text-white">{{ c.course }}</td>
+              <td class="px-3 py-2 text-ink-soft">{{ c.teacher or '—' }}</td>
+              <td class="px-3 py-2 text-ink-soft">{{ c.room or '—' }}</td>
+              <td class="px-3 py-2 text-ink-soft">{{ c.days or '—' }}</td>
+              <td class="px-3 py-2 text-ink-soft">
+                {% if c.start_time and c.end_time %}{{ c.start_time }} – {{ c.end_time }}
+                {% elif c.start_time %}{{ c.start_time }}
+                {% else %}—{% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <p class="text-[11px] text-ink-mute mt-3">
+      Source: PowerSchool · Re-sync from the Chrome extension on a PowerSchool schedule page to refresh.
+    </p>
+  {% else %}
+    <div class="hairline p-6 text-center">
+      <p class="text-ink-soft mb-2">No schedule imported yet.</p>
+      <p class="text-[12px] text-ink-mute">
+        Install the HCAS Hub extension, open your PowerSchool <strong>My Schedule</strong> or
+        <strong>Class Schedule</strong> page, then click the orange <strong>Sync schedule</strong>
+        badge.
+      </p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

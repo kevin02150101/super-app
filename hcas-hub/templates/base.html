@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0F1A2F" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/static/icon-192.png" />
+  <link rel="stylesheet" href="/static/fonts/inter/inter.css" />
+  <link rel="stylesheet" href="/static/fonts/d-din/d-din.css" />
+  <title>{% block title %}HCAS HUB{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/tailwind.css" />
+  <style>
+    /* Theme variables — default = dark (navy) */
+    :root {
+      --page-bg:   #0F1A2F;
+      --page-text: #F5F7FA;
+      --bar-bg:    rgba(15,26,47,0.85);
+      --bar-border: rgba(59,207,255,0.16);
+      --ink-soft:  rgba(245,247,250,0.70);
+      --ink-mute:  rgba(245,247,250,0.45);
+      --tint:      rgba(21,36,65,0.55);
+      --glow-1:    rgba(30,150,229,0.18);
+      --glow-2:    rgba(59,207,255,0.10);
+    }
+    :root.light {
+      --page-bg:   #EEF2F8;
+      --page-text: #0F1A2F;
+      --bar-bg:    rgba(255,255,255,0.85);
+      --bar-border: rgba(15,26,47,0.08);
+      --ink-soft:  rgba(15,26,47,0.65);
+      --ink-mute:  rgba(15,26,47,0.42);
+      --tint:      #FFFFFF;
+      --glow-1:    rgba(30,150,229,0.14);
+      --glow-2:    rgba(59,207,255,0.10);
+      --card-shadow: 0 1px 2px rgba(15,26,47,0.04), 0 8px 24px rgba(15,26,47,0.06);
+    }
+
+    html, body {
+      background:
+        radial-gradient(1200px 600px at 80% -10%, var(--glow-1), transparent 60%),
+        radial-gradient(900px 500px at -10% 110%, var(--glow-2), transparent 60%),
+        var(--page-bg);
+      color: var(--page-text);
+      font-feature-settings: 'cv11', 'ss01', 'ss03';
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Curtain overlay for theme transition */
+    .curtain {
+      position: fixed;
+      inset: 0;
+      transform-origin: top;
+      transform: scaleY(0);
+      z-index: 9997;
+      pointer-events: none;
+    }
+    .curtain.falling {
+      transform: scaleY(1);
+      transition: transform 550ms cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    .curtain.rising {
+      transform: scaleY(0);
+      transition: transform 550ms cubic-bezier(0.76, 0, 0.24, 1);
+    }
+
+    /* Light-mode overrides for static Tailwind tokens */
+    :root.light .text-white,
+    :root.light [class*="text-white"] { color: var(--page-text) !important; }
+    :root.light .text-ink-soft { color: var(--ink-soft) !important; }
+    :root.light .text-ink-mute { color: var(--ink-mute) !important; }
+    :root.light .border-line   { border-color: rgba(15,26,47,0.10) !important; }
+    :root.light .border-white,
+    :root.light [class*="border-white"] { border-color: rgba(15,26,47,0.18) !important; }
+    /* bg-black is a low-contrast surface in dark mode → soft tinted surface in light mode */
+    :root.light .bg-black      { background-color: rgba(15,26,47,0.04) !important; }
+    :root.light .bg-line       { background-color: rgba(15,26,47,0.10) !important; }
+    :root.light .bg-paper-soft { background-color: rgba(15,26,47,0.06) !important; }
+    :root.light .bg-paper-tint { background-color: rgba(15,26,47,0.06) !important; }
+    :root.light .bg-ink-soft   { background-color: rgba(15,26,47,0.18) !important; }
+    /* In dark mode bg-white + text-black is the high-contrast accent (pills, primary buttons, selected states).
+       In light mode flip it to navy-on-white for the same visual role. Defined AFTER bg-black so it wins when both apply. */
+    :root.light .bg-white      { background-color: #0F1A2F !important; }
+    :root.light .text-black    { color: #FFFFFF !important; }
+    /* peer-checked variants (rating buttons) */
+    :root.light .peer:checked ~ [class~="peer-checked:bg-white"] { background-color: #0F1A2F !important; }
+    :root.light .peer:checked ~ [class~="peer-checked:text-black"] { color: #FFFFFF !important; }
+    /* hover:bg-* helpers used as accent fills */
+    :root.light [class~="hover:bg-ink-soft"]:hover { background-color: rgba(15,26,47,0.85) !important; color: #FFFFFF !important; }
+
+    /* Stronger eyebrow + accents in light mode */
+    :root.light .eyebrow { color: #1E96E5; }
+
+    /* Hairline cards become elevated white surfaces in light mode */
+    :root.light .hairline {
+      background: #FFFFFF;
+      box-shadow:
+        0 1px 2px rgba(15,26,47,0.04),
+        0 8px 24px rgba(15,26,47,0.06),
+        inset 0 0 0 1px rgba(15,26,47,0.06);
+      border-radius: 6px;
+    }
+    :root.light .hairline.hover\:bg-paper-soft:hover {
+      background: #FAFBFD !important;
+    }
+
+    /* Theme toggle button */
+    .theme-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--page-bg);
+      color: var(--page-text);
+      box-shadow: 0 0 0 1.5px var(--bar-border);
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.3s ease, color 0.3s ease;
+    }
+    .theme-btn:hover { transform: scale(1.10); }
+    .theme-btn:active { transform: scale(0.96); }
+    .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
+    .safe-top    { padding-top:    max(env(safe-area-inset-top),    0.5rem); }
+    input, textarea, select { font-size: 16px; color: var(--page-text); }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 1px solid rgba(59,207,255,0.7); outline-offset: 2px;
+    }
+    .hairline      { box-shadow: inset 0 0 0 1px var(--bar-border); }
+    .hairline-soft { box-shadow: inset 0 0 0 1px rgba(59,207,255,0.08); }
+
+    /* Header */
+    .app-header {
+      background: var(--bar-bg);
+      border-bottom: 1px solid var(--bar-border);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Nav: uppercase, tracking, hover underline in brand cyan */
+    .nav-link {
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: var(--ink-soft);
+      position: relative;
+      transition: color .18s ease;
+      padding: 6px 0;
+      white-space: nowrap;
+    }
+    @media (min-width: 640px) {
+      .nav-link { font-size: 12px; letter-spacing: 0.16em; }
+    }
+    .nav-link:hover { color: var(--page-text); }
+    .nav-link.active { color: #1E96E5; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 50%; right: 50%; bottom: -1px;
+      height: 1px;
+      background: linear-gradient(90deg, #3BCFFF, #1E96E5);
+      transition: left .25s ease, right .25s ease;
+    }
+    .nav-link:hover::after, .nav-link.active::after { left: 0; right: 0; }
+
+    /* H1 / display */
+    .display {
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 0.95;
+    }
+    .eyebrow {
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: rgba(59,207,255,0.75);
+    }
+
+    /* Verdict callout */
+    .callout {
+      padding: 22px 22px;
+      display: flex; flex-direction: column; gap: 10px;
+      border: 1px solid var(--bar-border);
+      background: var(--tint);
+      backdrop-filter: blur(8px);
+      border-radius: 6px;
+    }
+    :root.light .callout {
+      box-shadow: var(--card-shadow);
+    }
+
+    /* Brand wordmark gradient */
+    .wordmark {
+      background: linear-gradient(90deg, #3BCFFF 0%, #1E96E5 100%);
+      -webkit-background-clip: text;
+              background-clip: text;
+      color: transparent;
+    }
+
+    /* scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: rgba(59,207,255,0.25); }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col">
+
+  {# Curtain overlay for theme transitions #}
+  <div id="theme-curtain" class="curtain" aria-hidden="true"></div>
+
+  <header class="app-header fixed top-0 inset-x-0 z-50 backdrop-blur safe-top">
+    {# Logo row — centered on mobile, on the left on desktop #}
+    <div class="max-w-screen-md mx-auto px-5 pt-2 sm:pt-0 sm:h-12 flex flex-col sm:flex-row items-center sm:items-stretch">
+      <a href="/" class="flex items-center gap-2 shrink-0 sm:mr-6 sm:self-center">
+        {# H-mark logo #}
+        <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="hcasGradLeft" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3BCFFF"/>
+              <stop offset="100%" stop-color="#1E96E5"/>
+            </linearGradient>
+            <linearGradient id="hcasGradRight" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1E96E5"/>
+              <stop offset="100%" stop-color="#0F4A85"/>
+            </linearGradient>
+          </defs>
+          {# Left bar #}
+          <path d="M6 6 L22 6 L22 58 L6 58 Z" fill="url(#hcasGradLeft)"/>
+          {# Right bar #}
+          <path d="M42 6 L58 6 L58 58 L42 58 Z" fill="url(#hcasGradRight)"/>
+          {# Crossbar with slight angle #}
+          <path d="M22 26 L42 22 L42 36 L22 40 Z" fill="url(#hcasGradLeft)" opacity="0.95"/>
+        </svg>
+        <span class="display text-[14px] tracking-[0.22em] text-white">HCAS&nbsp;HUB</span>
+      </a>
+      <nav class="mx-auto sm:mx-0 sm:ml-auto sm:mr-auto flex items-center justify-center gap-3 sm:gap-7 py-1.5 sm:py-0">
+        {% set items = [
+          ('today',       '/',            'Home'),
+          ('lunch',       '/lunch',       'Lunch'),
+          ('schedule',    '/schedule',    'Schedule'),
+          ('assignments', '/assignments', 'HW'),
+          ('toolbox',     '/toolbox',     'Toolbox'),
+          ('notes',       '/notes',       'Notes'),
+        ] %}
+        {% for key, href, label in items %}
+          <a href="{{ href }}" class="nav-link {{ 'active' if active == key else '' }}">{{ label }}</a>
+        {% endfor %}
+      </nav>
+      {# User / streak chip #}
+      {% if user %}
+        {% if user.role == 'admin' %}
+          <a href="/admin" class="hidden sm:inline-flex items-center ml-3 px-2.5 py-1 rounded-full border text-[12px] hover:bg-paper-soft"
+             style="border-color: #FF8020; color: #FF8020;">ADMIN</a>
+        {% endif %}
+        <a href="/me" class="hidden sm:inline-flex items-center gap-1.5 ml-3 px-2.5 py-1 rounded-full border border-line bg-paper-soft text-[12px] hover:bg-paper-tint"
+           title="{{ user.display_name }}">
+          <span class="display tracking-wide">{{ (user.display_name or user.email or 'U')[:1]|upper }}</span>
+          {% if streak and streak.current_count %}
+            <span class="text-ink-soft">🔥 {{ streak.current_count }}</span>
+          {% endif %}
+        </a>
+        <form action="/auth/logout" method="post" class="inline-flex ml-2">
+          <button class="inline-flex items-center px-3 py-1.5 rounded-full border border-line text-[12px] hover:bg-paper-soft">Sign out</button>
+        </form>
+      {% else %}
+        <a href="/login" class="inline-flex items-center ml-3 px-3 py-1.5 rounded-full bg-white text-black text-[12px] font-medium hover:bg-ink-soft">Sign in</a>
+      {% endif %}
+      {# Theme toggle #}
+      <button id="theme-toggle" class="theme-btn sm:ml-3 mb-1 sm:mb-0" aria-label="Toggle theme" aria-pressed="false">
+        <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-1 pt-24 sm:pt-20 pb-16 px-5 max-w-screen-md mx-auto w-full">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/static/sw.js').catch(() => {});
+    }
+
+    // ── Curtain theme toggle ──────────────────────────────────────────────
+    (function () {
+      const DURATION = 550;
+      const root = document.documentElement;
+      const curtain = document.getElementById('theme-curtain');
+      const btn = document.getElementById('theme-toggle');
+      const iconMoon = document.getElementById('theme-icon-moon');
+      const iconSun = document.getElementById('theme-icon-sun');
+
+      // Restore saved theme
+      const saved = localStorage.getItem('hcas-theme');
+      if (saved === 'light') root.classList.add('light');
+      syncIcon();
+
+      let phase = 'idle';
+      btn.addEventListener('click', () => {
+        if (phase !== 'idle') return;
+        const goingLight = !root.classList.contains('light');
+        const nextBg = goingLight ? '#F5F7FA' : '#0F1A2F';
+
+        curtain.style.background = nextBg;
+        curtain.classList.remove('rising');
+        // force reflow so the next class change animates
+        void curtain.offsetWidth;
+        curtain.classList.add('falling');
+        phase = 'falling';
+
+        setTimeout(() => {
+          root.classList.toggle('light');
+          localStorage.setItem('hcas-theme', root.classList.contains('light') ? 'light' : 'dark');
+          syncIcon();
+          curtain.classList.remove('falling');
+          curtain.classList.add('rising');
+          phase = 'rising';
+          setTimeout(() => {
+            curtain.classList.remove('rising');
+            phase = 'idle';
+          }, DURATION + 60);
+        }, DURATION);
+      });
+
+      function syncIcon() {
+        const isLight = root.classList.contains('light');
+        iconMoon.style.display = isLight ? '' : 'none';
+        iconSun.style.display  = isLight ? 'none' : '';
+        btn.setAttribute('aria-pressed', isLight ? 'false' : 'true');
+        btn.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+      }
+    })();
+  </script>
+</body>
+</html>

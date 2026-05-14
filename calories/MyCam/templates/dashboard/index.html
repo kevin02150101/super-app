@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · MyCam{% endblock %}
+
+{% block hero %}
+  {% with title="Hi, " + (current_user.nickname or current_user.email) + "！",
+          subtitle="Today's diet overview and health tips",
+          cta={"url": url_for('capture.index'), "text": "Take a photo now"},
+          kpis=[
+            {"label":"Calories today", "value": (kpi.today_calories|round|int|string) + " kcal"},
+            {"label":"History count", "value": kpi.total_count},
+            {"label":"Frequent foods", "value": kpi.top_food or "—"}
+          ] %}
+    {% include "_layout/hero.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="mc-card">
+        <h5 class="mc-card__title"><i class="bi bi-graph-up me-1"></i>Calorie trend (last 30 days)</h5>
+        <canvas id="caloriesChart" height="120"></canvas>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="mc-card">
+        <h5 class="mc-card__title"><i class="bi bi-pie-chart me-1"></i>Food category breakdown</h5>
+        <canvas id="categoryChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="mc-card">
+        <h5 class="mc-card__title"><i class="bi bi-clock-history me-1"></i>Recent analyses</h5>
+        <recent-analyses></recent-analyses>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/components/AnalysisCard.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/pages/dashboard.js') }}"></script>
+{% endblock %}

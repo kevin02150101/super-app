@@ -1,0 +1,50 @@
+[
+  {
+    "code": "default",
+    "name": "HCAS Navy",
+    "palette": { "bg": "#0F1A2F", "text": "#F5F7FA", "accent": "#3BCFFF", "accent2": "#1E96E5" },
+    "font": "Inter",
+    "preview_emoji": "🌊",
+    "unlock_rule": { "type": "default" }
+  },
+  {
+    "code": "ocean",
+    "name": "Ocean Pulse",
+    "palette": { "bg": "#0A2E36", "text": "#E6F8FF", "accent": "#14E1C4", "accent2": "#0AB6A6" },
+    "font": "Inter",
+    "preview_emoji": "🐋",
+    "unlock_rule": { "type": "milestone", "code": "3d" }
+  },
+  {
+    "code": "sunset",
+    "name": "Sunset Drift",
+    "palette": { "bg": "#2A1133", "text": "#FFF0E8", "accent": "#FF8B5C", "accent2": "#FF4D8D" },
+    "font": "Inter",
+    "preview_emoji": "🌅",
+    "unlock_rule": { "type": "milestone", "code": "7d" }
+  },
+  {
+    "code": "aurora",
+    "name": "Aurora",
+    "palette": { "bg": "#0B1226", "text": "#EAF7FF", "accent": "#7CFFB2", "accent2": "#5DB0FF" },
+    "font": "Inter",
+    "preview_emoji": "✨",
+    "unlock_rule": { "type": "milestone", "code": "30d" }
+  },
+  {
+    "code": "midnight",
+    "name": "Midnight Mono",
+    "palette": { "bg": "#0A0A0F", "text": "#F2F2F4", "accent": "#FFFFFF", "accent2": "#8C8CA1" },
+    "font": "D-DIN",
+    "preview_emoji": "🌑",
+    "unlock_rule": { "type": "milestone", "code": "50d" }
+  },
+  {
+    "code": "retro",
+    "name": "Retro CRT",
+    "palette": { "bg": "#0F0F0F", "text": "#39FF14", "accent": "#39FF14", "accent2": "#FF00C8" },
+    "font": "D-DIN",
+    "preview_emoji": "🕹️",
+    "unlock_rule": { "type": "milestone", "code": "100d" }
+  }
+]

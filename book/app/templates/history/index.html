@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block hero %}
+<section class="hero-section hero-sm d-flex align-items-center text-white">
+  <div class="container text-center">
+    <h1 class="display-4 fw-bold mb-2">Search history</h1>
+    <p class="lead mb-0">Review your past searches — click any record to revisit its results.</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div id="root-history"></div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/babel" data-presets="react"
+        src="{{ url_for('static', filename='js/history-app.js') }}"></script>
+{% endblock %}

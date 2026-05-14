@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}🍱 MyCam · Calorie AI{% endblock %}
+{% block body_class %}theme-calories{% endblock %}
+{% block content %}
+<div id="calApp" v-cloak class="mc-shell">
+  <aside class="mc-sidebar">
+    <a class="active"><i>📷</i> Analyze</a>
+    <a @click.prevent="scrollToHistory" href="#hist"><i>🕘</i> History</a>
+    <a @click.prevent="scrollToStats" href="#stat"><i>📊</i> Stats</a>
+    <div class="mc-version">MyCam v1.0 · Gemini Vision</div>
+  </aside>
+
+  <div class="mc-main">
+    <section class="mc-hero">
+      <div style="opacity:.85; font-size:.8rem; letter-spacing:.2em; text-transform:uppercase;">CALORIE MODULE</div>
+      <h1>📷 Snap & Know — Smart Diet Tracking</h1>
+      <p class="sub">Upload a food photo, Gemini Vision estimates calories and macros for every item.</p>
+    </section>
+
+    <div class="mc-content">
+      <div style="display:grid; grid-template-columns: 5fr 7fr; gap:1.25rem;" class="mc-grid">
+        <!-- Upload -->
+        <div class="mc-card">
+          <div class="mc-card-title">📷 Upload Food Image</div>
+          <label for="fileInput">
+            <div class="upload-dropzone">
+              <div v-if="!previewUrl">
+                <div style="font-size:3rem;">📷</div>
+                <div style="font-weight:700; margin-top:.5rem;">Click to select or take a photo</div>
+                <div class="text-muted" style="font-size:.85rem;">JPG / PNG · max 10 MB</div>
+              </div>
+              <img v-else class="upload-preview" :src="previewUrl">
+            </div>
+          </label>
+          <input id="fileInput" type="file" accept="image/*" style="display:none;" @change="onPick">
+          <button class="btn-grad" :disabled="!file || loading" @click="analyze">
+            <span v-if="loading" class="spinner"></span>
+            [[ loading ? 'AI analyzing…' : '🚀 Start AI Analysis' ]]
+          </button>
+        </div>
+
+        <!-- Result -->
+        <div class="mc-card" id="stat">
+          <div class="mc-card-title">📊 Analysis Result</div>
+          <template v-if="result">
+            <div class="kpi-row">
+              <div class="kpi">
+                <div class="label">Total Calories</div>
+                <div class="value">[[ Math.round(result.total_calories) ]] <span style="font-size:.85rem;font-weight:500">kcal</span></div>
+              </div>
+              <div class="kpi alt">
+                <div class="label">Main Food</div>
+                <div class="value" style="font-size:1.15rem;">[[ result.main_food || '—' ]]</div>
+              </div>
+            </div>
+            <table class="items">
+              <thead><tr><th>Food</th><th>Category</th><th style="text-align:right">kcal</th><th style="text-align:right">Protein</th><th style="text-align:right">Fat</th><th style="text-align:right">Carbs</th></tr></thead>
+              <tbody>
+                <tr v-for="i in result.items" :key="i.name">
+                  <td><b>[[ i.name ]]</b></td>
+                  <td><span class="text-muted">[[ i.category ]]</span></td>
+                  <td style="text-align:right">[[ Math.round(i.calories) ]]</td>
+                  <td style="text-align:right">[[ i.protein_g ?? '—' ]]</td>
+                  <td style="text-align:right">[[ i.fat_g ?? '—' ]]</td>
+                  <td style="text-align:right">[[ i.carbs_g ?? '—' ]]</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top:1rem;"><b>📝 Summary:</b> [[ result.summary ]]</p>
+            <p><b>💡 Health Advice:</b> [[ result.health_advice ]]</p>
+          </template>
+          <div v-else class="empty">Upload an image on the left, then click “Start AI Analysis”.</div>
+        </div>
+      </div>
+
+      <div class="mc-card" style="margin-top:1.25rem;" id="hist">
+        <div class="mc-card-title">🕘 Recent Analyses</div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:1rem;">
+          <div v-for="a in history" :key="a.id" style="background:#f8fafc; border-radius:.85rem; overflow:hidden;">
+            <img :src="'/static/'+a.image_path" style="width:100%; height:140px; object-fit:cover;">
+            <div style="padding:.75rem;">
+              <div style="font-weight:700;">[[ Math.round(a.total_calories) ]] kcal · [[ a.main_food || '—' ]]</div>
+              <div class="text-muted" style="font-size:.78rem;">[[ a.analyzed_at ]]</div>
+              <div style="margin-top:.5rem; display:flex; gap:.4rem;">
+                <button class="btn-grad" style="padding:.3rem .55rem; font-size:.78rem; width:auto;" @click="loadDetail(a.id)">View</button>
+                <button @click="del(a.id)" style="background:#fee2e2; color:#b91c1c; border:0; border-radius:.45rem; padding:.3rem .55rem; font-size:.78rem; cursor:pointer;">Delete</button>
+              </div>
+            </div>
+          </div>
+          <div class="empty" v-if="history.length===0" style="grid-column:1/-1;">No records yet</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@media (max-width: 900px) {
+  .theme-calories .mc-sidebar { display: none; }
+  .theme-calories .mc-grid { grid-template-columns: 1fr !important; }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const { createApp } = Vue;
+createApp({
+  delimiters: ['[[', ']]'],
+  data() { return { file:null, previewUrl:'', loading:false, result:null, history:[] }; },
+  mounted() { this.refresh(); },
+  methods: {
+    onPick(e) { const f = e.target.files[0]; if (!f) return; this.file = f; this.previewUrl = URL.createObjectURL(f); },
+    async analyze() {
+      if (!this.file) return;
+      this.loading = true;
+      const fd = new FormData(); fd.append('image', this.file);
+      try {
+        const { data } = await axios.post('/api/calories/analyze', fd);
+        if (!data.success) throw new Error(data.message);
+        this.result = data.data; this.refresh();
+        Swal.fire({icon:'success', title:'Analysis complete', timer:1400, showConfirmButton:false});
+      } catch (e) { Swal.fire({icon:'error', title:'Analysis failed', text: e.response?.data?.message || e.message}); }
+      finally { this.loading = false; }
+    },
+    async refresh() {
+      const { data } = await axios.get('/api/calories/analyses');
+      if (data.success) this.history = data.data;
+    },
+    async loadDetail(id) {
+      const { data } = await axios.get(`/api/calories/analyses/${id}`);
+      if (data.success) { this.result = data.data; document.getElementById('stat').scrollIntoView({behavior:'smooth'}); }
+    },
+    async del(id) {
+      const r = await Swal.fire({icon:'warning', title:'Delete this record?', showCancelButton:true});
+      if (!r.isConfirmed) return;
+      await axios.delete(`/api/calories/analyses/${id}`); this.refresh();
+    },
+    scrollToHistory() { document.getElementById('hist').scrollIntoView({behavior:'smooth'}); },
+    scrollToStats() { document.getElementById('stat').scrollIntoView({behavior:'smooth'}); }
+  }
+}).mount('#calApp');
+</script>
+{% endblock %}

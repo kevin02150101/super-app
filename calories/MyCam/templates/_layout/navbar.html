@@ -1,0 +1,16 @@
+<nav class="mc-navbar">
+  <a class="mc-brand" href="{{ url_for('home.index') }}">
+    <i class="bi bi-camera-fill me-2"></i>MyCam
+  </a>
+  <div class="ms-auto d-flex align-items-center gap-2">
+    {% if current_user.is_authenticated %}
+      <span class="text-white-50 small d-none d-md-inline">Hi, {{ current_user.nickname or current_user.email }}</span>
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-outline-light rounded-pill">
+        <i class="bi bi-box-arrow-right"></i> Sign out
+      </a>
+    {% else %}
+      <a href="{{ url_for('auth.login_page') }}" class="btn btn-sm btn-outline-light rounded-pill">Sign in</a>
+      <a href="{{ url_for('auth.register_page') }}" class="btn btn-sm btn-light rounded-pill">Sign up</a>
+    {% endif %}
+  </div>
+</nav>

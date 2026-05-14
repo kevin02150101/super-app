@@ -1,0 +1,475 @@
+{
+  "school": {
+    "name": "HCAS",
+    "full_name": "Hsinchu County Carnelian American School (新竹縣康乃薾美國學校)",
+    "address": "Hsinchu County, Taiwan",
+    "lunch_period_start": "12:00",
+    "lunch_period_end": "12:40",
+    "menu_source_url": "https://www.hcas.tw/school-lunch/"
+  },
+  "lunch_menus": {
+    "2026-05-01": {
+      "headline": "LABOR HOLIDAY",
+      "icon": "🎉",
+      "main_dish": "No school lunch",
+      "items": [],
+      "allergens": [],
+      "prior_avg_rating": null,
+      "prior_rating_count": 0,
+      "is_holiday": true
+    },
+    "2026-05-04": {
+      "headline": "Three Cup Chicken",
+      "icon": "🍗",
+      "main_dish": "白飯 · White Rice",
+      "items": [
+        {"name": "Three Cup Sauce Chicken", "name_zh": "三杯雞", "station": "Dish 1"},
+        {"name": "Minced Pork & Corn", "name_zh": "火腿玉米粒", "station": "Dish 2"},
+        {"name": "Eggs with Bacon and Onions", "name_zh": "培根洋蔥炒蛋", "station": "Dish 3", "allergens": ["egg"]},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Egg & Seaweed Soup", "name_zh": "海芽蛋花湯", "station": "Soup", "allergens": ["egg"]},
+        {"name": "Fruit", "name_zh": "水果", "station": "Snack"}
+      ],
+      "allergens": ["egg"],
+      "prior_avg_rating": 4.4,
+      "prior_rating_count": 78
+    },
+    "2026-05-05": {
+      "headline": "Spicy Pork Stew with Chickpeas",
+      "icon": "🍛",
+      "main_dish": "薑黃飯 · Turmeric Rice",
+      "items": [
+        {"name": "Spicy Pork Stew with Chickpeas", "name_zh": "鷹嘴豆燉辣豬肉", "station": "Dish 1"},
+        {"name": "Fried Edamame with King Oyster Mushrooms", "name_zh": "杏鮑菇炒毛豆", "station": "Dish 2"},
+        {"name": "Cream Cabbage", "name_zh": "奶油白菜", "station": "Dish 3", "allergens": ["dairy"]},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Mushroom and Chicken Soup", "name_zh": "香菇雞湯", "station": "Soup"},
+        {"name": "Sweet Cream Bun", "name_zh": "奶黃包", "station": "Snack", "allergens": ["dairy"]}
+      ],
+      "allergens": ["dairy"],
+      "prior_avg_rating": 3.6,
+      "prior_rating_count": 64
+    },
+    "2026-05-06": {
+      "headline": "Salted Crispy Chicken",
+      "icon": "🍚",
+      "main_dish": "白飯 · White Rice",
+      "items": [
+        {"name": "Salted Chicken", "name_zh": "鹽酥雞", "station": "Dish 1"},
+        {"name": "Scrambled Eggs with Tomatoes", "name_zh": "番茄炒蛋", "station": "Dish 2", "allergens": ["egg"]},
+        {"name": "Stir-fried Celery with Dried Tofu Sticks", "name_zh": "西芹炒腐竹", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Corn and Radish Soup", "name_zh": "玉米蘿蔔湯", "station": "Soup"},
+        {"name": "Barbecued Pork Buns", "name_zh": "叉燒包", "station": "Snack"}
+      ],
+      "allergens": ["egg"],
+      "prior_avg_rating": 4.6,
+      "prior_rating_count": 142
+    },
+    "2026-05-07": {
+      "headline": "Hot Dog Day",
+      "icon": "🌭",
+      "main_dish": "大亨堡 · Hot Dog Bun",
+      "items": [
+        {"name": "German Sausage", "name_zh": "德國香腸", "station": "Dish 1"},
+        {"name": "Onion / Pickle", "name_zh": "洋蔥/酸黃瓜", "station": "Dish 2"},
+        {"name": "Fries", "name_zh": "薯條", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Corn Soup", "name_zh": "玉米濃湯", "station": "Soup", "allergens": ["egg", "dairy"]},
+        {"name": "Fruit", "name_zh": "水果", "station": "Snack"}
+      ],
+      "allergens": ["egg", "dairy"],
+      "prior_avg_rating": 4.7,
+      "prior_rating_count": 188
+    },
+    "2026-05-08": {
+      "headline": "Chicken Karaage Udon",
+      "icon": "🍜",
+      "main_dish": "烏龍麵 · Udon Noodles",
+      "items": [
+        {"name": "Daohe Udon Noodles", "name_zh": "稻禾烏龍麵", "station": "Dish 1"},
+        {"name": "Chicken Karaage", "name_zh": "唐揚炸雞", "station": "Dish 2"},
+        {"name": "Tofu / Boiled Egg / Seaweed", "name_zh": "油豆腐/水煮蛋/海苔絲", "station": "Dish 3", "allergens": ["egg"]},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Honey Cake", "name_zh": "蜂蜜蛋糕", "station": "Snack", "allergens": ["egg"]}
+      ],
+      "allergens": ["egg"],
+      "prior_avg_rating": 4.3,
+      "prior_rating_count": 96
+    },
+    "2026-05-11": {
+      "headline": "Miso Stir-Fried Pork",
+      "icon": "🍚",
+      "main_dish": "糙米飯 · Brown Rice",
+      "items": [
+        {"name": "Miso Stir-Fried Pork Slices", "name_zh": "味增炒肉片", "station": "Dish 1"},
+        {"name": "Scrambled Eggs with Preserved Radish", "name_zh": "菜脯炒蛋", "station": "Dish 2", "allergens": ["egg"]},
+        {"name": "Mushroom Tofu Casserole", "name_zh": "香菇豆腐煲", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Green Papaya Pork Rib Soup", "name_zh": "青木瓜排骨湯", "station": "Soup"},
+        {"name": "Fruit", "name_zh": "水果", "station": "Snack"}
+      ],
+      "allergens": ["egg"],
+      "prior_avg_rating": 3.4,
+      "prior_rating_count": 71
+    },
+    "2026-05-12": {
+      "headline": "Chicken with Capers & Cream",
+      "icon": "🍛",
+      "main_dish": "香料飯 · Spice Rice",
+      "items": [
+        {"name": "Chicken with Capers and Cream", "name_zh": "酸豆奶油雞肉", "station": "Dish 1", "allergens": ["dairy"]},
+        {"name": "Creamed Corn", "name_zh": "奶油玉米", "station": "Dish 2", "allergens": ["dairy"]},
+        {"name": "Margaret Omelette", "name_zh": "瑪格莉特烘蛋", "station": "Dish 3", "allergens": ["egg"]},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Miso Tofu Soup", "name_zh": "味增豆腐湯", "station": "Soup", "allergens": ["seafood"]},
+        {"name": "Malay Cake", "name_zh": "馬拉糕", "station": "Snack"}
+      ],
+      "allergens": ["dairy", "egg", "seafood"],
+      "prior_avg_rating": 3.1,
+      "prior_rating_count": 58
+    },
+    "2026-05-13": {
+      "headline": "Spaghetti Bolognese",
+      "icon": "🍝",
+      "main_dish": "義大利麵 · Spaghetti",
+      "items": [
+        {"name": "Spaghetti Bolognese", "name_zh": "茄汁肉醬義大利麵", "station": "Dish 1"},
+        {"name": "Hash Brown", "name_zh": "薯餅", "station": "Dish 2"},
+        {"name": "Baked Vegetables", "name_zh": "焗烤蔬菜", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Onion Soup", "name_zh": "洋蔥濃湯", "station": "Soup"},
+        {"name": "Pork Pie", "name_zh": "蔥肉餡餅", "station": "Snack"}
+      ],
+      "allergens": [],
+      "prior_avg_rating": 4.8,
+      "prior_rating_count": 211
+    },
+    "2026-05-14": {
+      "headline": "Chicken Rice (Donburi)",
+      "icon": "🍱",
+      "main_dish": "白飯 · White Rice",
+      "items": [
+        {"name": "Chicken Rice (Donburi)", "name_zh": "雞肉丼飯", "station": "Dish 1", "allergens": ["egg"]},
+        {"name": "Cauliflower with Mushroom", "name_zh": "白花炒鮮菇", "station": "Dish 2"},
+        {"name": "Stir-fried Tribute Balls with Gherkins", "name_zh": "小瓜炒貢丸片", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Egg and Seaweed Soup", "name_zh": "紫菜蛋花湯", "station": "Soup", "allergens": ["egg"]},
+        {"name": "Fruit", "name_zh": "水果", "station": "Snack"}
+      ],
+      "allergens": ["egg"],
+      "prior_avg_rating": 4.2,
+      "prior_rating_count": 132
+    },
+    "2026-05-15": {
+      "headline": "Miso Yakiniku Ramen",
+      "icon": "🍜",
+      "main_dish": "拉麵 · Ramen",
+      "items": [
+        {"name": "Miso Yakiniku Ramen", "name_zh": "燒肉拉麵", "station": "Dish 1"},
+        {"name": "Peanut Silver Roll", "name_zh": "花生銀絲卷", "station": "Dish 2", "allergens": ["nut"]},
+        {"name": "Corn / Boiled Egg / Fish Plates", "name_zh": "玉米粒/水煮蛋/魚板", "station": "Dish 3", "allergens": ["egg"]},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Banana Cake", "name_zh": "香蕉蛋糕", "station": "Snack", "allergens": ["egg"]}
+      ],
+      "allergens": ["nut", "egg"],
+      "prior_avg_rating": 4.5,
+      "prior_rating_count": 178
+    },
+    "2026-05-18": {
+      "headline": "Korean Spicy Spring Chicken",
+      "icon": "🌶️",
+      "main_dish": "糙米飯 · Brown Rice",
+      "items": [
+        {"name": "Korean Spicy Stir-Fried Spring Chicken", "name_zh": "韓式辣炒春雞", "station": "Dish 1"},
+        {"name": "Steamed Egg with Cheese", "name_zh": "起司蒸蛋", "station": "Dish 2", "allergens": ["egg", "dairy"]},
+        {"name": "Mixed Vegetable Vermicelli", "name_zh": "雜菜冬粉", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Korean Fish Cake Soup", "name_zh": "韓式魚板湯", "station": "Soup", "allergens": ["seafood"]},
+        {"name": "Fruit", "name_zh": "水果", "station": "Snack"}
+      ],
+      "allergens": ["egg", "dairy", "seafood"],
+      "prior_avg_rating": 4.6,
+      "prior_rating_count": 165
+    },
+    "2026-05-19": {
+      "headline": "Mushroom Pork",
+      "icon": "🍚",
+      "main_dish": "糙米飯 · Brown Rice",
+      "items": [
+        {"name": "Mushroom Pork", "name_zh": "蘑菇肉片", "station": "Dish 1"},
+        {"name": "Garlic Tofu", "name_zh": "蒜味豆腐", "station": "Dish 2"},
+        {"name": "Sautéed Sausages with Celery", "name_zh": "西芹炒香腸", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Winter Melon Meatballs Soup", "name_zh": "冬瓜貢丸湯", "station": "Soup"},
+        {"name": "Steamed Bread Roll", "name_zh": "銀絲捲", "station": "Snack"}
+      ],
+      "allergens": [],
+      "prior_avg_rating": 3.2,
+      "prior_rating_count": 67
+    },
+    "2026-05-20": {
+      "headline": "Truffle Mushroom Chicken Pasta",
+      "icon": "🍝",
+      "main_dish": "義大利麵 · Spaghetti",
+      "items": [
+        {"name": "Chicken with Mushrooms & Truffle Sauce", "name_zh": "鮮菇松露雞肉", "station": "Dish 1"},
+        {"name": "Pumpkin Gratin", "name_zh": "焗烤南瓜", "station": "Dish 2", "allergens": ["dairy"]},
+        {"name": "Onion Rings", "name_zh": "洋蔥圈", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Borscht", "name_zh": "羅宋湯", "station": "Soup"},
+        {"name": "Pork Floss Bread", "name_zh": "肉鬆麵包", "station": "Snack"}
+      ],
+      "allergens": ["dairy"],
+      "prior_avg_rating": 4.4,
+      "prior_rating_count": 123
+    },
+    "2026-05-21": {
+      "headline": "Sichuan Spicy Boiled Pork",
+      "icon": "🌶️",
+      "main_dish": "地瓜飯 · Sweet Potato Rice",
+      "items": [
+        {"name": "Sichuan Spicy Boiled Meat", "name_zh": "水煮肉片", "station": "Dish 1"},
+        {"name": "Carrot Scrambled Eggs", "name_zh": "紅蘿蔔炒蛋", "station": "Dish 2", "allergens": ["egg"]},
+        {"name": "Fried Capelin Fish", "name_zh": "酥炸柳葉魚", "station": "Dish 3", "allergens": ["seafood"]},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Garlic Chicken Soup", "name_zh": "蒜頭雞湯", "station": "Soup"},
+        {"name": "Fruit", "name_zh": "水果", "station": "Snack"}
+      ],
+      "allergens": ["egg", "seafood"],
+      "prior_avg_rating": 2.4,
+      "prior_rating_count": 89
+    },
+    "2026-05-22": {
+      "headline": "Beef Noodle Soup",
+      "icon": "🍜",
+      "main_dish": "白麵 · Wheat Noodles",
+      "items": [
+        {"name": "Beef Noodle Soup", "name_zh": "蔥燒牛肉麵", "station": "Dish 1"},
+        {"name": "Chinese Braised Assorted Foods", "name_zh": "中式滷味", "station": "Dish 2"},
+        {"name": "Pickled Vegetables", "name_zh": "酸菜", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Banana Cake", "name_zh": "香蕉蛋糕", "station": "Snack", "allergens": ["egg"]}
+      ],
+      "allergens": ["egg"],
+      "prior_avg_rating": 4.3,
+      "prior_rating_count": 154
+    },
+    "2026-05-25": {
+      "headline": "Curry Pork",
+      "icon": "🍛",
+      "main_dish": "白飯 · White Rice",
+      "items": [
+        {"name": "Curry Pork", "name_zh": "咖哩豬", "station": "Dish 1"},
+        {"name": "Egg Yolk Taro Balls", "name_zh": "蛋黃芋圓", "station": "Dish 2"},
+        {"name": "Stir-fried Courgette", "name_zh": "清炒胡瓜", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Sliced Pork & Pickled Vegetable Soup", "name_zh": "酸菜肉片湯", "station": "Soup"},
+        {"name": "Fruit", "name_zh": "水果", "station": "Snack"}
+      ],
+      "allergens": [],
+      "prior_avg_rating": 4.7,
+      "prior_rating_count": 198
+    },
+    "2026-05-26": {
+      "headline": "Kung Pao Chicken",
+      "icon": "🌶️",
+      "main_dish": "白飯 · White Rice",
+      "items": [
+        {"name": "Spicy Stir Fried Chicken (Kung Pao)", "name_zh": "宮保雞丁", "station": "Dish 1"},
+        {"name": "Minced Pork Winter Noodles", "name_zh": "螞蟻上樹", "station": "Dish 2"},
+        {"name": "Celery Bean Bag", "name_zh": "芹菜豆包", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Pork Ribs Soup with Radish", "name_zh": "蘿蔔排骨湯", "station": "Soup"},
+        {"name": "Egg Buns", "name_zh": "雞蛋小饅頭", "station": "Snack"}
+      ],
+      "allergens": [],
+      "prior_avg_rating": 4.5,
+      "prior_rating_count": 174
+    },
+    "2026-05-27": {
+      "headline": "Creamy Bacon Spaghetti",
+      "icon": "🍝",
+      "main_dish": "義大利麵 · Pasta",
+      "items": [
+        {"name": "Creamy Bacon Spaghetti (Carbonara)", "name_zh": "奶油培根義大利麵", "station": "Dish 1", "allergens": ["dairy"]},
+        {"name": "Chicken Nuggets", "name_zh": "麥克雞塊", "station": "Dish 2"},
+        {"name": "Roasted Vegetables", "name_zh": "烤菜", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Cheddar Soup", "name_zh": "巧達濃湯", "station": "Soup", "allergens": ["dairy"]},
+        {"name": "Brown Sugar Red Bean Roll", "name_zh": "黑糖紅豆捲", "station": "Snack"}
+      ],
+      "allergens": ["dairy"],
+      "prior_avg_rating": 4.9,
+      "prior_rating_count": 232
+    },
+    "2026-05-28": {
+      "headline": "Beef Fillet with Spring Onion",
+      "icon": "🥩",
+      "main_dish": "白飯 · White Rice",
+      "items": [
+        {"name": "Beef Fillet with Spring Onion", "name_zh": "蔥爆牛柳", "station": "Dish 1"},
+        {"name": "Corn with Scrambled Eggs", "name_zh": "玉米炒蛋", "station": "Dish 2", "allergens": ["egg"]},
+        {"name": "Basil Tempura", "name_zh": "塔香甜不辣", "station": "Dish 3"},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Pork with Sichuan Cabbage Soup", "name_zh": "榨菜肉絲湯", "station": "Soup"},
+        {"name": "Fruit", "name_zh": "水果", "station": "Snack"}
+      ],
+      "allergens": ["egg"],
+      "prior_avg_rating": 4.5,
+      "prior_rating_count": 169
+    },
+    "2026-05-29": {
+      "headline": "Tomato Meatballs",
+      "icon": "🍞",
+      "main_dish": "軟法麵包 · Soft French Bread",
+      "items": [
+        {"name": "Tomato Meatballs", "name_zh": "番茄肉丸子", "station": "Dish 1"},
+        {"name": "Popcorn Chicken", "name_zh": "雞米花", "station": "Dish 2"},
+        {"name": "Potato Salad", "name_zh": "馬鈴薯沙拉", "station": "Dish 3", "allergens": ["egg"]},
+        {"name": "Vegetable", "name_zh": "時蔬", "station": "Dish 4"},
+        {"name": "Cola / Juice", "name_zh": "可樂/果汁", "station": "Drink"},
+        {"name": "Dorayaki", "name_zh": "銅鑼燒", "station": "Snack", "allergens": ["egg"]}
+      ],
+      "allergens": ["egg"],
+      "prior_avg_rating": 4.6,
+      "prior_rating_count": 192
+    }
+  },
+  "uber_suggestions": [
+    {"name": "MOS Burger", "cuisine": "Burgers", "price": "$$", "est_minutes": 22, "url": "https://www.ubereats.com/tw/search?q=mos+burger"},
+    {"name": "McDonald's", "cuisine": "Fast Food", "price": "$", "est_minutes": 18, "url": "https://www.ubereats.com/tw/search?q=mcdonalds"},
+    {"name": "KFC", "cuisine": "Chicken", "price": "$$", "est_minutes": 22, "url": "https://www.ubereats.com/tw/search?q=kfc"},
+    {"name": "Subway", "cuisine": "Sandwiches", "price": "$$", "est_minutes": 20, "url": "https://www.ubereats.com/tw/search?q=subway"},
+    {"name": "鼎泰豐 Din Tai Fung", "cuisine": "Dumplings", "price": "$$$", "est_minutes": 30, "url": "https://www.ubereats.com/tw/search?q=din+tai+fung"},
+    {"name": "Local Bento", "cuisine": "Taiwanese", "price": "$", "est_minutes": 15, "url": "https://www.ubereats.com/tw/search?q=便當"},
+    {"name": "Sushi Express", "cuisine": "Sushi", "price": "$$", "est_minutes": 25, "url": "https://www.ubereats.com/tw/search?q=sushi+express"},
+    {"name": "Pizza Hut", "cuisine": "Pizza", "price": "$$", "est_minutes": 28, "url": "https://www.ubereats.com/tw/search?q=pizza+hut"},
+    {"name": "Domino's", "cuisine": "Pizza", "price": "$$", "est_minutes": 26, "url": "https://www.ubereats.com/tw/search?q=dominos"},
+    {"name": "Burger King", "cuisine": "Burgers", "price": "$$", "est_minutes": 20, "url": "https://www.ubereats.com/tw/search?q=burger+king"},
+    {"name": "Starbucks", "cuisine": "Coffee", "price": "$$", "est_minutes": 15, "url": "https://www.ubereats.com/tw/search?q=starbucks"},
+    {"name": "Louisa Coffee", "cuisine": "Coffee", "price": "$", "est_minutes": 17, "url": "https://www.ubereats.com/tw/search?q=louisa+coffee"},
+    {"name": "85°C Bakery", "cuisine": "Bakery", "price": "$", "est_minutes": 18, "url": "https://www.ubereats.com/tw/search?q=85度c"},
+    {"name": "TKK Fried Chicken", "cuisine": "Chicken", "price": "$$", "est_minutes": 22, "url": "https://www.ubereats.com/tw/search?q=tkk"},
+    {"name": "Coco 都可", "cuisine": "Bubble Tea", "price": "$", "est_minutes": 14, "url": "https://www.ubereats.com/tw/search?q=coco"},
+    {"name": "50嵐", "cuisine": "Bubble Tea", "price": "$", "est_minutes": 13, "url": "https://www.ubereats.com/tw/search?q=50嵐"},
+    {"name": "三商巧福", "cuisine": "Beef Noodles", "price": "$$", "est_minutes": 24, "url": "https://www.ubereats.com/tw/search?q=三商巧福"},
+    {"name": "胡椒餅", "cuisine": "Street Food", "price": "$", "est_minutes": 19, "url": "https://www.ubereats.com/tw/search?q=胡椒餅"},
+    {"name": "爭鮮迴轉壽司", "cuisine": "Sushi", "price": "$$", "est_minutes": 27, "url": "https://www.ubereats.com/tw/search?q=爭鮮"},
+    {"name": "頂呱呱", "cuisine": "Chicken", "price": "$$", "est_minutes": 21, "url": "https://www.ubereats.com/tw/search?q=頂呱呱"},
+    {"name": "Yoshinoya 吉野家", "cuisine": "Japanese", "price": "$$", "est_minutes": 22, "url": "https://www.ubereats.com/tw/search?q=yoshinoya"},
+    {"name": "Sukiya すき家", "cuisine": "Japanese", "price": "$$", "est_minutes": 22, "url": "https://www.ubereats.com/tw/search?q=sukiya"},
+    {"name": "Matsuya 松屋", "cuisine": "Japanese", "price": "$$", "est_minutes": 23, "url": "https://www.ubereats.com/tw/search?q=松屋"},
+    {"name": "Mister Donut", "cuisine": "Dessert", "price": "$$", "est_minutes": 20, "url": "https://www.ubereats.com/tw/search?q=mister+donut"},
+    {"name": "Krispy Kreme", "cuisine": "Dessert", "price": "$$", "est_minutes": 24, "url": "https://www.ubereats.com/tw/search?q=krispy+kreme"},
+    {"name": "Cold Stone", "cuisine": "Ice Cream", "price": "$$$", "est_minutes": 22, "url": "https://www.ubereats.com/tw/search?q=cold+stone"},
+    {"name": "Häagen-Dazs", "cuisine": "Ice Cream", "price": "$$$", "est_minutes": 23, "url": "https://www.ubereats.com/tw/search?q=haagen-dazs"},
+    {"name": "Pho Hoa 越南河粉", "cuisine": "Vietnamese", "price": "$$", "est_minutes": 24, "url": "https://www.ubereats.com/tw/search?q=pho"},
+    {"name": "Thai Town", "cuisine": "Thai", "price": "$$", "est_minutes": 26, "url": "https://www.ubereats.com/tw/search?q=thai"},
+    {"name": "韓式炸雞 BBQ", "cuisine": "Korean", "price": "$$$", "est_minutes": 28, "url": "https://www.ubereats.com/tw/search?q=korean+fried+chicken"},
+    {"name": "本家韓國料理", "cuisine": "Korean", "price": "$$", "est_minutes": 27, "url": "https://www.ubereats.com/tw/search?q=韓國料理"},
+    {"name": "鬍鬚張", "cuisine": "Lu Rou Fan", "price": "$", "est_minutes": 16, "url": "https://www.ubereats.com/tw/search?q=鬍鬚張"},
+    {"name": "麥味登", "cuisine": "Breakfast", "price": "$", "est_minutes": 15, "url": "https://www.ubereats.com/tw/search?q=麥味登"},
+    {"name": "美而美早餐", "cuisine": "Breakfast", "price": "$", "est_minutes": 14, "url": "https://www.ubereats.com/tw/search?q=美而美"},
+    {"name": "永和豆漿", "cuisine": "Breakfast", "price": "$", "est_minutes": 16, "url": "https://www.ubereats.com/tw/search?q=永和豆漿"},
+    {"name": "Cama Café", "cuisine": "Coffee", "price": "$$", "est_minutes": 17, "url": "https://www.ubereats.com/tw/search?q=cama"},
+    {"name": "丹堤咖啡", "cuisine": "Coffee", "price": "$", "est_minutes": 16, "url": "https://www.ubereats.com/tw/search?q=丹堤"},
+    {"name": "蘇杭餐廳", "cuisine": "Chinese", "price": "$$$", "est_minutes": 32, "url": "https://www.ubereats.com/tw/search?q=蘇杭"},
+    {"name": "陶板屋", "cuisine": "Steak", "price": "$$$", "est_minutes": 35, "url": "https://www.ubereats.com/tw/search?q=陶板屋"},
+    {"name": "我家牛排", "cuisine": "Steak", "price": "$$", "est_minutes": 28, "url": "https://www.ubereats.com/tw/search?q=我家牛排"},
+    {"name": "Shake Shack", "cuisine": "Burgers", "price": "$$$", "est_minutes": 26, "url": "https://www.ubereats.com/tw/search?q=shake+shack"},
+    {"name": "Five Guys", "cuisine": "Burgers", "price": "$$$", "est_minutes": 27, "url": "https://www.ubereats.com/tw/search?q=five+guys"},
+    {"name": "TacoBell", "cuisine": "Mexican", "price": "$$", "est_minutes": 23, "url": "https://www.ubereats.com/tw/search?q=taco+bell"},
+    {"name": "Eddy's Cantina", "cuisine": "Mexican", "price": "$$$", "est_minutes": 30, "url": "https://www.ubereats.com/tw/search?q=mexican"},
+    {"name": "Mr.Onion", "cuisine": "Western", "price": "$$$", "est_minutes": 32, "url": "https://www.ubereats.com/tw/search?q=mr+onion"},
+    {"name": "貳樓 Second Floor", "cuisine": "Brunch", "price": "$$$", "est_minutes": 30, "url": "https://www.ubereats.com/tw/search?q=second+floor"},
+    {"name": "Eggs 'n Things", "cuisine": "Brunch", "price": "$$$", "est_minutes": 28, "url": "https://www.ubereats.com/tw/search?q=eggs+things"},
+    {"name": "鼎王麻辣鍋", "cuisine": "Hot Pot", "price": "$$$$", "est_minutes": 38, "url": "https://www.ubereats.com/tw/search?q=鼎王"},
+    {"name": "海底撈", "cuisine": "Hot Pot", "price": "$$$$", "est_minutes": 40, "url": "https://www.ubereats.com/tw/search?q=海底撈"},
+    {"name": "藏壽司 Kura Sushi", "cuisine": "Sushi", "price": "$$", "est_minutes": 28, "url": "https://www.ubereats.com/tw/search?q=kura+sushi"},
+    {"name": "壽司郎 Sushiro", "cuisine": "Sushi", "price": "$$", "est_minutes": 27, "url": "https://www.ubereats.com/tw/search?q=sushiro"},
+    {"name": "丸亀製麵", "cuisine": "Udon", "price": "$$", "est_minutes": 22, "url": "https://www.ubereats.com/tw/search?q=marugame"},
+    {"name": "勝博殿 豬排", "cuisine": "Japanese", "price": "$$$", "est_minutes": 30, "url": "https://www.ubereats.com/tw/search?q=勝博殿"}
+  ],
+  "teams": [
+    {
+      "id": "ap_bio",
+      "name": "AP Biology — Period 3",
+      "kind": "Class",
+      "url": "https://teams.microsoft.com/l/team/19%3a-replace-with-your-team-id-%40thread.tacv2/conversations",
+      "today_meeting": {"starts_at": "2026-05-11T10:30", "title": "Lecture: Cell Cycle"},
+      "unread": 3
+    },
+    {
+      "id": "english_9",
+      "name": "English 9 — Period 5",
+      "kind": "Class",
+      "url": "https://teams.microsoft.com/l/team/19%3a-replace-with-your-team-id-%40thread.tacv2/conversations",
+      "today_meeting": null,
+      "unread": 1
+    },
+    {
+      "id": "algebra2",
+      "name": "Algebra 2 — Period 1",
+      "kind": "Class",
+      "url": "https://teams.microsoft.com/l/team/19%3a-replace-with-your-team-id-%40thread.tacv2/conversations",
+      "today_meeting": {"starts_at": "2026-05-11T08:15", "title": "Quadratics review"},
+      "unread": 0
+    },
+    {
+      "id": "world_hist",
+      "name": "World History — Period 4",
+      "kind": "Class",
+      "url": "https://teams.microsoft.com/l/team/19%3a-replace-with-your-team-id-%40thread.tacv2/conversations",
+      "today_meeting": null,
+      "unread": 7
+    },
+    {
+      "id": "mandarin",
+      "name": "Mandarin — Period 6",
+      "kind": "Class",
+      "url": "https://teams.microsoft.com/l/team/19%3a-replace-with-your-team-id-%40thread.tacv2/conversations",
+      "today_meeting": null,
+      "unread": 0
+    },
+    {
+      "id": "bio_lab_a",
+      "name": "Bio Lab — Photosynthesis Group A",
+      "kind": "Group Project",
+      "url": "https://teams.microsoft.com/l/team/19%3a-replace-with-your-team-id-%40thread.tacv2/conversations",
+      "today_meeting": null,
+      "unread": 12
+    },
+    {
+      "id": "robotics",
+      "name": "HCAS Robotics Club",
+      "kind": "Club",
+      "url": "https://teams.microsoft.com/l/team/19%3a-replace-with-your-team-id-%40thread.tacv2/conversations",
+      "today_meeting": {"starts_at": "2026-05-11T15:30", "title": "Build session — drivetrain"},
+      "unread": 4
+    },
+    {
+      "id": "model_un",
+      "name": "Model UN",
+      "kind": "Club",
+      "url": "https://teams.microsoft.com/l/team/19%3a-replace-with-your-team-id-%40thread.tacv2/conversations",
+      "today_meeting": null,
+      "unread": 0
+    },
+    {
+      "id": "g9_chat",
+      "name": "Grade 9 Group Chat",
+      "kind": "Chat",
+      "url": "https://teams.microsoft.com/l/chat/0/0?users=",
+      "today_meeting": null,
+      "unread": 28
+    }
+  ],
+  "demo_assignments": [
+    {"title": "AP Bio Quiz 5 prep", "subject": "AP Bio", "due_at": "2026-05-11T23:59", "priority": 1},
+    {"title": "English essay outline", "subject": "English", "due_at": "2026-05-13T23:59", "priority": 2},
+    {"title": "Algebra 2 homework p.234", "subject": "Algebra 2", "due_at": "2026-05-12T08:00", "priority": 3},
+    {"title": "World History reading Ch.14", "subject": "History", "due_at": "2026-05-14T08:00", "priority": 4},
+    {"title": "Mandarin vocab quiz Friday", "subject": "Mandarin", "due_at": "2026-05-15T13:00", "priority": 5}
+  ]
+}

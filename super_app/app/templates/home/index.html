@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Super App · All-in-One Flask Suite{% endblock %}
+{% block body_class %}home-page{% endblock %}
+{% block content %}
+<section class="home-hero">
+  <span class="badge-pill">ALL · IN · ONE · FLASK</span>
+  <h1>Five standalone projects,<br>one Super App.</h1>
+  <p class="lead">
+    book, calendar, calories, cs (study summary) and vibespec-generator — all unified
+    into a single Flask site, each preserving its original design language and
+    rewritten under a strict 4-layer architecture.
+  </p>
+</section>
+
+<section class="home-grid">
+  <a class="home-card is-book" href="{{ url_for('book.index') }}">
+    <div class="icon">📚</div>
+    <h3>Books.com.tw Search</h3>
+    <p>Real Playwright scraper grabbing title, author, publisher, price and full description.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="home-card is-calendar" href="{{ url_for('calendar.index') }}">
+    <div class="icon">📅</div>
+    <h3>Calendar + Room Booking</h3>
+    <p>Personal events, meeting-room reservations with conflict checks and admin approval flow.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="home-card is-calories" href="{{ url_for('calories.index') }}">
+    <div class="icon">🍱</div>
+    <h3>MyCam · Calorie AI</h3>
+    <p>Google Gemini Vision analyzes food photos and estimates calories &amp; macros.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="home-card is-summary" href="{{ url_for('summary.index') }}">
+    <div class="icon">📖</div>
+    <h3>Textbook Summarizer</h3>
+    <p>Type a topic keyword, Gemini REST API generates a concise study summary.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="home-card is-vibespec" href="{{ url_for('vibespec.index') }}">
+    <div class="icon">💡</div>
+    <h3>VibeSpec Generator</h3>
+    <p>Turn a product idea into a complete Markdown spec ready for AI coding assistants.</p>
+    <span class="arrow">→</span>
+  </a>
+</section>
+{% endblock %}

@@ -1,0 +1,8 @@
+[
+  { "code": "3d",   "threshold_days": 3,   "reward_type": "theme",  "reward_payload": { "theme_code": "ocean" } },
+  { "code": "7d",   "threshold_days": 7,   "reward_type": "theme",  "reward_payload": { "theme_code": "sunset" } },
+  { "code": "30d",  "threshold_days": 30,  "reward_type": "theme",  "reward_payload": { "theme_code": "aurora" } },
+  { "code": "50d",  "threshold_days": 50,  "reward_type": "theme",  "reward_payload": { "theme_code": "midnight" } },
+  { "code": "100d", "threshold_days": 100, "reward_type": "theme",  "reward_payload": { "theme_code": "retro" } },
+  { "code": "365d", "threshold_days": 365, "reward_type": "badge",  "reward_payload": { "badge_code": "year_one" } }
+]

@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+instance/*.sqlite
+app/static/vendor/
+.pytest_cache/
+.DS_Store

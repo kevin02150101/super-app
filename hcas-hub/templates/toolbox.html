@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}TOOLBOX · HCAS HUB{% endblock %}
+
+{% block content %}
+<div class="pt-2 pb-6">
+  <div class="eyebrow mb-3">Workshop</div>
+  <h1 class="display text-[44px] sm:text-[60px]">Toolbox</h1>
+  <p class="mt-3 text-[14px] text-ink-soft max-w-md">Side projects and utilities I've built. Hit <span class="text-white">Start</span> to spin up the local dev server, then <span class="text-white">Open</span> to use it.</p>
+</div>
+
+<section class="mt-2">
+  <ul class="border-t border-line" id="toolbox-list">
+  {% for tool in tools %}
+    <li class="border-b border-line py-5 flex items-start gap-5 group" data-key="{{ tool.key }}" data-url="{{ tool.url }}">
+      <span class="text-[11px] font-mono text-ink-mute w-8 shrink-0 mt-1">{{ '%02d' % (loop.index) }}</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-3 flex-wrap">
+          <div class="display text-[20px] text-white">{{ tool.name }}</div>
+          <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 hairline text-ink-soft">{{ tool.badge }}</span>
+          <span class="status-pill text-[10px] uppercase tracking-wider px-2 py-0.5 font-mono inline-flex items-center gap-1.5"
+                data-status="{{ 'on' if tool.running else 'off' }}">
+            <span class="status-dot inline-block w-1.5 h-1.5 rounded-full"></span>
+            <span class="status-label">{{ 'Running' if tool.running else 'Stopped' }}</span>
+            <span class="text-ink-mute">:{{ tool.port }}</span>
+          </span>
+        </div>
+        <div class="text-[12px] uppercase tracking-wider text-ink-mute mt-1">{{ tool.tagline }}</div>
+        <p class="text-[13px] text-ink-soft mt-2 max-w-2xl">{{ tool.description }}</p>
+        <div class="text-[11px] font-mono text-ink-mute mt-2">{{ tool.stack }}</div>
+        <div class="error-msg hidden text-[11px] text-red-400 mt-2 font-mono"></div>
+      </div>
+      <div class="flex flex-col gap-2 shrink-0 items-stretch min-w-[110px]">
+        <button type="button" class="btn-start text-[10px] uppercase tracking-wider px-3 py-1.5 hairline text-white hover:bg-paper-soft transition display"
+                {% if tool.running %}disabled{% endif %}>
+          {% if tool.running %}Started{% else %}Start{% endif %}
+        </button>
+        <a href="{{ tool.url }}" target="_blank" rel="noopener"
+           class="btn-open text-[10px] uppercase tracking-wider px-3 py-1.5 display text-center transition
+                  {% if tool.running %}bg-white text-black hover:bg-ink-soft{% else %}hairline text-ink-mute pointer-events-none opacity-50{% endif %}">
+          Open →
+        </a>
+      </div>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+
+<section class="mt-12 hairline p-4">
+  <h2 class="eyebrow mb-2">How it works</h2>
+  <p class="text-[12px] text-ink-soft mb-2"><span class="text-white">Start</span> spawns the project's dev server as a detached subprocess on this machine. Logs are written to <code class="bg-paper-tint px-1">hcas-hub/logs/&lt;tool&gt;.log</code>.</p>
+  <p class="text-[11px] text-ink-mute">Status is polled every 3 seconds via <code class="bg-paper-tint px-1">/toolbox/status</code>. Python tools prefer their own <code class="bg-paper-tint px-1">.venv</code> if present; the VibeSpec generator requires <code class="bg-paper-tint px-1">npm install</code> to have been run.</p>
+</section>
+
+<style>
+  .status-pill[data-status="on"] .status-dot { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+  .status-pill[data-status="off"] .status-dot { background: #6b7280; }
+  .status-pill[data-status="pending"] .status-dot { background: #f59e0b; animation: tb-pulse 1s ease-in-out infinite; }
+  @keyframes tb-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+</style>
+
+<script>
+(function () {
+  const list = document.getElementById('toolbox-list');
+  if (!list) return;
+
+  function setRow(row, running, pending, error) {
+    const pill = row.querySelector('.status-pill');
+    const label = row.querySelector('.status-label');
+    const btn = row.querySelector('.btn-start');
+    const open = row.querySelector('.btn-open');
+    const err = row.querySelector('.error-msg');
+
+    pill.dataset.status = pending ? 'pending' : (running ? 'on' : 'off');
+    label.textContent = pending ? 'Starting…' : (running ? 'Running' : 'Stopped');
+
+    btn.disabled = running || pending;
+    btn.textContent = running ? 'Started' : (pending ? 'Starting…' : 'Start');
+
+    if (running) {
+      open.classList.remove('hairline', 'text-ink-mute', 'pointer-events-none', 'opacity-50');
+      open.classList.add('bg-white', 'text-black', 'hover:bg-ink-soft');
+    } else {
+      open.classList.add('hairline', 'text-ink-mute', 'pointer-events-none', 'opacity-50');
+      open.classList.remove('bg-white', 'text-black', 'hover:bg-ink-soft');
+    }
+
+    if (error) { err.textContent = error; err.classList.remove('hidden'); }
+    else { err.classList.add('hidden'); err.textContent = ''; }
+  }
+
+  async function poll() {
+    try {
+      const r = await fetch('/toolbox/status');
+      if (!r.ok) return;
+      const data = await r.json();
+      for (const t of data.tools) {
+        const row = list.querySelector(`[data-key="${t.key}"]`);
+        if (!row) continue;
+        const pending = row.dataset.pending === '1' && !t.running;
+        if (t.running) row.dataset.pending = '';
+        setRow(row, t.running, pending, null);
+      }
+    } catch (_) { /* ignore */ }
+  }
+
+  list.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.btn-start');
+    if (!btn || btn.disabled) return;
+    const row = btn.closest('li');
+    const key = row.dataset.key;
+    row.dataset.pending = '1';
+    setRow(row, false, true, null);
+    try {
+      const r = await fetch(`/toolbox/launch/${key}`, { method: 'POST' });
+      const data = await r.json();
+      if (data.error) {
+        row.dataset.pending = '';
+        setRow(row, !!data.running, false, data.error);
+      }
+    } catch (err) {
+      row.dataset.pending = '';
+      setRow(row, false, false, String(err));
+    }
+  });
+
+  setInterval(poll, 3000);
+})();
+</script>
+{% endblock %}

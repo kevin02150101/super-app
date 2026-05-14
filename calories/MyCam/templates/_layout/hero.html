@@ -1,0 +1,21 @@
+<section class="mc-hero">
+  <div class="mc-hero__inner">
+    <div class="mc-hero__text">
+      <h1 class="mc-hero__title">{{ title }}</h1>
+      <p class="mc-hero__sub">{{ subtitle }}</p>
+      {% if cta %}<a href="{{ cta.url }}" class="btn btn-light btn-lg rounded-pill px-4">
+        <i class="bi bi-camera-fill me-2"></i>{{ cta.text }}
+      </a>{% endif %}
+    </div>
+    {% if kpis %}
+    <div class="mc-hero__kpis">
+      {% for k in kpis %}
+        <div class="mc-kpi">
+          <div class="mc-kpi__label">{{ k.label }}</div>
+          <div class="mc-kpi__value">{{ k.value }}</div>
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>

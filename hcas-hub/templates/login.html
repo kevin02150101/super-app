@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Sign in · HCAS HUB{% endblock %}
+{% block content %}
+<section class="max-w-md mx-auto mt-6">
+  <p class="eyebrow text-[11px] tracking-[0.22em] mb-1">SIGN&nbsp;IN</p>
+  <h1 class="display text-2xl mb-6">Welcome back.</h1>
+
+  {% if ms_oauth_on %}
+    <a href="/auth/microsoft/login"
+       class="block w-full text-center py-3 rounded-md bg-white text-black font-medium hover:bg-ink-soft">
+      Continue with Microsoft
+    </a>
+    <p class="text-[12px] text-ink-mute mt-2">Uses your school account to sync Teams &amp; Calendar.</p>
+  {% else %}
+    <div class="hairline p-3 mb-4 text-[12px] text-ink-soft">
+      Microsoft sign-in is not configured on this instance.
+    </div>
+  {% endif %}
+
+  {% if dev_login_on %}
+    <div class="mt-8">
+      <p class="eyebrow text-[11px] tracking-[0.22em] mb-2">SIGN&nbsp;IN</p>
+      <form action="/auth/dev/login" method="post" class="space-y-2">
+        <input name="email" type="email" required placeholder="you@school.edu"
+               class="w-full bg-paper-soft border border-line rounded-md px-3 py-2 text-sm" />
+        <input name="name" type="text" placeholder="Display name (optional)"
+               class="w-full bg-paper-soft border border-line rounded-md px-3 py-2 text-sm" />
+        <input name="password" type="password" placeholder="Password (admins only)"
+               class="w-full bg-paper-soft border border-line rounded-md px-3 py-2 text-sm" />
+        <button class="w-full py-2 rounded-md bg-white text-black font-medium text-sm hover:bg-ink-soft">
+          Sign in
+        </button>
+      </form>
+      <p class="text-[11px] text-ink-mute mt-2">Students sign in with just their school email. Admins must also supply a password.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

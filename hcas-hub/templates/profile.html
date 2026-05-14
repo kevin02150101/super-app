@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Profile · HCAS HUB{% endblock %}
+{% block content %}
+<section class="space-y-6">
+
+  {# ── User card ─────────────────────────────────────────── #}
+  <div class="hairline p-4 flex items-center gap-3">
+    <div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center display text-lg">
+      {{ (user.display_name or user.email)[:1]|upper }}
+    </div>
+    <div class="flex-1 min-w-0">
+      <p class="display text-base truncate">{{ user.display_name }}</p>
+      <p class="text-[12px] text-ink-mute truncate">{{ user.email }}</p>
+    </div>
+    <form action="/auth/logout" method="post">
+      <button class="text-[12px] px-3 py-1.5 rounded-md border border-line hover:bg-paper-soft">Sign out</button>
+    </form>
+  </div>
+
+  {# ── Streak ────────────────────────────────────────────── #}
+  <div class="hairline p-4">
+    <p class="eyebrow text-[11px] tracking-[0.22em] mb-2">STREAK</p>
+    <div class="flex items-baseline gap-4">
+      <div>
+        <p class="display text-3xl">🔥 {{ streak.current_count }}</p>
+        <p class="text-[11px] text-ink-mute">current</p>
+      </div>
+      <div>
+        <p class="display text-xl text-ink-soft">{{ streak.longest_count }}</p>
+        <p class="text-[11px] text-ink-mute">longest</p>
+      </div>
+      {% if streak.last_login_date %}
+        <p class="ml-auto text-[11px] text-ink-mute">last login {{ streak.last_login_date }}</p>
+      {% endif %}
+    </div>
+
+    {# 30-day mini grid #}
+    <div class="mt-3 grid grid-cols-15 gap-1" style="grid-template-columns: repeat(15, minmax(0, 1fr));">
+      {% for d in history %}
+        <div class="h-3 rounded-sm {{ 'bg-white' if d.present else 'bg-line' }}" title="{{ d.date }}"></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# ── Milestones ────────────────────────────────────────── #}
+  <div>
+    <p class="eyebrow text-[11px] tracking-[0.22em] mb-2">MILESTONES</p>
+    <div class="space-y-2">
+      {% for m in milestones %}
+        <div class="hairline p-3 flex items-center gap-3">
+          <div class="display text-sm w-14">{{ m.threshold_days }}d</div>
+          <div class="flex-1">
+            <p class="text-sm">{{ m.code }}</p>
+            <div class="h-1.5 rounded-full bg-line mt-1 overflow-hidden">
+              <div class="h-full bg-white" style="width: {{ m.progress }}%;"></div>
+            </div>
+          </div>
+          <div class="text-[12px] {{ 'text-white' if m.achieved else 'text-ink-mute' }}">
+            {{ '✓ unlocked' if m.achieved else m.progress ~ '%' }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# ── Themes ───────────────────────────────────────────── #}
+  <div>
+    <p class="eyebrow text-[11px] tracking-[0.22em] mb-2">THEMES</p>
+    <div class="grid grid-cols-2 gap-3">
+      {% for t in themes %}
+        <div class="hairline p-3">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="display text-sm flex-1 truncate">{{ t.preview_emoji or '🎨' }} {{ t.name }}</span>
+            {% if t.active %}
+              <span class="text-[10px] tracking-wide px-2 py-0.5 rounded-full bg-white text-black">ACTIVE</span>
+            {% elif not t.unlocked %}
+              <span class="text-[10px] tracking-wide text-ink-mute">🔒 LOCKED</span>
+            {% endif %}
+          </div>
+          <div class="flex gap-1 mb-2">
+            {% for k in ['bg','text','accent','accent2'] %}
+              {% if t.palette and t.palette[k] %}
+                <span class="h-4 flex-1 rounded-sm border border-line" style="background: {{ t.palette[k] }};"></span>
+              {% endif %}
+            {% endfor %}
+          </div>
+          {% if t.unlocked and not t.active %}
+            <form action="/me/themes/activate" method="post">
+              <input type="hidden" name="theme_code" value="{{ t.code }}">
+              <button class="w-full text-[12px] py-1.5 rounded-md border border-line hover:bg-paper-soft">Activate</button>
+            </form>
+          {% elif not t.unlocked %}
+            <p class="text-[11px] text-ink-mute">
+              {% if t.unlock_rule.type == 'streak' %}
+                Reach {{ t.unlock_rule.threshold_days }}-day streak
+              {% else %}
+                {{ t.unlock_rule.type }}
+              {% endif %}
+            </p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# ── Activity ─────────────────────────────────────────── #}
+  {% if recent %}
+    <div>
+      <p class="eyebrow text-[11px] tracking-[0.22em] mb-2">RECENT ACTIVITY</p>
+      <ul class="space-y-1">
+        {% for e in recent %}
+          <li class="text-[12px] text-ink-soft flex gap-2">
+            <span class="text-ink-mute">{{ (e.occurred_at or '')[:16] }}</span>
+            <span class="font-medium">{{ e.event_type }}</span>
+            {% if e.payload %}<span class="text-ink-mute truncate">{{ e.payload|tojson }}</span>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+</section>
+{% endblock %}

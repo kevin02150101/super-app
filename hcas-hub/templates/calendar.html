@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}CALENDAR · HCAS HUB{% endblock %}
+
+{% block content %}
+<div class="pt-2 pb-6 flex items-end justify-between gap-4">
+  <div>
+    <div class="eyebrow mb-3">{{ week_label }}</div>
+    <h1 class="display text-[44px] sm:text-[60px]">Calendar</h1>
+    <p class="mt-3 text-[14px] text-ink-soft">
+      All your assignments, by day. Sync from Microsoft Teams with the Chrome extension.
+      {% set in_week_count = by_day.values() | map('length') | sum %}
+      <span class="ml-2 inline-block px-2 py-0.5 bg-white text-black text-[11px] font-bold tracking-wider">
+        {{ in_week_count }} this week · {{ upcoming|length }} upcoming
+      </span>
+    </p>
+  </div>
+  <div class="flex items-center gap-2 shrink-0">
+    <a href="/calendar?week_start={{ prev_week }}" class="hairline px-3 py-1.5 text-[11px] uppercase tracking-wider hover:bg-paper-soft">←</a>
+    <a href="/calendar" class="hairline px-3 py-1.5 text-[11px] uppercase tracking-wider hover:bg-paper-soft">Today</a>
+    <a href="/calendar?week_start={{ next_week }}" class="hairline px-3 py-1.5 text-[11px] uppercase tracking-wider hover:bg-paper-soft">→</a>
+  </div>
+</div>
+
+<div class="flex items-center justify-between mb-3">
+  <h2 class="eyebrow">Week</h2>
+  <a href="/assignments" class="text-[11px] uppercase tracking-wider text-ink-soft hover:text-white">List view →</a>
+</div>
+
+{# Mobile-first: one column per day, vertical list. On wide screens: 7-col grid. #}
+<div class="grid grid-cols-1 sm:grid-cols-7 gap-px bg-line border border-line">
+  {% for iso, wd, dd, is_today in days %}
+    <div class="bg-black p-3 min-h-[120px] {% if is_today %}ring-1 ring-white -m-px{% endif %}">
+      <div class="flex items-baseline justify-between mb-2">
+        <div class="text-[10px] uppercase tracking-[0.18em] {{ 'text-white' if is_today else 'text-ink-mute' }}">{{ wd }}</div>
+        <div class="display text-[18px] {{ 'text-white' if is_today else 'text-ink-soft' }}">{{ dd }}</div>
+      </div>
+      {% set list = by_day[iso] %}
+      {% if list %}
+        <ul class="space-y-1.5">
+          {% for a in list %}
+          <li class="text-[12px] text-white leading-snug">
+            <div class="flex items-start gap-1.5">
+              {% if a.source == 'teams' %}
+                <span class="text-[8px] font-mono mt-0.5 px-1 py-0.5 bg-white text-black shrink-0" title="From Microsoft Teams">T</span>
+              {% endif %}
+              <div class="min-w-0">
+                <div class="truncate">{{ a.title }}</div>
+                {% if a.subject %}<div class="text-[10px] uppercase tracking-wider text-ink-mute truncate">{{ a.subject }}</div>{% endif %}
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="text-[11px] text-ink-mute">—</div>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+{% if no_due %}
+<section class="mt-8">
+  <h2 class="eyebrow mb-3">No due date · {{ no_due|length }}</h2>
+  <ul class="border-t border-line">
+    {% for a in no_due %}
+    <li class="border-b border-line py-2.5 flex items-center gap-3 text-[13px]">
+      {% if a.source == 'teams' %}
+        <span class="text-[9px] font-mono px-1 py-0.5 bg-white text-black">T</span>
+      {% endif %}
+      <span class="flex-1 truncate text-white">{{ a.title }}</span>
+      {% if a.subject %}<span class="text-[10px] uppercase tracking-wider text-ink-mute">{{ a.subject }}</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if upcoming %}
+<section class="mt-8">
+  <h2 class="eyebrow mb-3">Upcoming (later weeks) · {{ upcoming|length }}</h2>
+  <ul class="border-t border-line">
+    {% for a in upcoming %}
+    <li class="border-b border-line py-2.5 flex items-center gap-3 text-[13px]">
+      {% if a.source == 'teams' %}
+        <span class="text-[9px] font-mono px-1 py-0.5 bg-white text-black">T</span>
+      {% endif %}
+      <span class="flex-1 truncate text-white">{{ a.title }}</span>
+      {% if a.subject %}<span class="text-[10px] uppercase tracking-wider text-ink-mute">{{ a.subject }}</span>{% endif %}
+      <span class="text-[10px] uppercase tracking-wider text-ink-soft shrink-0">due {{ a.due_at }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section class="mt-12 hairline p-4">
+  <h2 class="eyebrow mb-2">Sync from Microsoft Teams</h2>
+  <ol class="text-[12px] text-ink-soft space-y-1 list-decimal pl-5">
+    <li>Install the Chrome extension at <code class="bg-paper-tint px-1">extension/</code> (chrome://extensions → Load unpacked).</li>
+    <li>Open <a class="underline" href="https://teams.microsoft.com" target="_blank">teams.microsoft.com</a> and go to <b>Assignments</b>.</li>
+    <li>Click <b>SYNC TO HCAS HUB</b> in the bottom-right of the Teams page (or the extension popup).</li>
+    <li>Refresh this calendar — your Teams assignments appear, marked with a small <b class="bg-white text-black font-mono px-1">T</b> badge.</li>
+  </ol>
+</section>
+
+<script>
+  (function () {
+    let baseline = {{ assignments_sig | tojson }};
+    function sigOf(rows) {
+      return rows.map(r => `${r.id}:${r.done}:${r.title}:${r.due_at || ''}`).join('|');
+    }
+    async function check() {
+      try {
+        const res = await fetch('/api/assignments.json', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const sig = sigOf(data.assignments || []);
+        if (sig !== baseline) {
+          baseline = sig;
+          window.location.reload();
+        }
+      } catch (e) { /* ignore */ }
+    }
+    check();
+    setInterval(check, 3000);
+    window.addEventListener('focus', check);
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Analysis detail #{{ analysis.id }} · MyCam{% endblock %}
+
+{% block hero %}
+  {% with title="Analysis detail #" + analysis.id|string,
+          subtitle=analysis.analyzed_at.strftime('%Y-%m-%d %H:%M') %}
+    {% include "_layout/hero.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="mc-card">
+      <img src="{{ analysis.image_path }}" class="img-fluid rounded mb-3" alt="Food image" />
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="text-muted small">Total calories</div>
+          <div class="display-6 fw-bold" style="color:var(--mc-primary)">{{ analysis.total_calories|round|int }} <small class="fs-6">kcal</small></div>
+        </div>
+        <button class="btn btn-outline-danger" onclick="deleteAnalysis({{ analysis.id }})">
+          <i class="bi bi-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="mc-card">
+      <h5 class="mc-card__title"><i class="bi bi-card-text me-1"></i>Analysis summary</h5>
+      <p>{{ analysis.summary or '—' }}</p>
+      <h5 class="mc-card__title mt-3"><i class="bi bi-heart-pulse me-1"></i>Health tips</h5>
+      <p class="text-muted">{{ analysis.health_advice or '—' }}</p>
+    </div>
+
+    <div class="mc-card mt-3">
+      <h5 class="mc-card__title"><i class="bi bi-list-ul me-1"></i>Food breakdown</h5>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead><tr>
+            <th>Food</th><th>Category</th><th class="text-end">Calories</th>
+            <th class="text-end">Protein</th><th class="text-end">Fat</th>
+            <th class="text-end">Carbs</th><th class="text-end">Confidence</th>
+          </tr></thead>
+          <tbody>
+            {% for it in analysis.items %}
+            <tr>
+              <td>{{ it.name }}</td>
+              <td><span class="mc-tag">{{ it.category or 'Other' }}</span></td>
+              <td class="text-end">{{ it.calories|round|int }} kcal</td>
+              <td class="text-end">{{ it.protein_g if it.protein_g is not none else '—' }}</td>
+              <td class="text-end">{{ it.fat_g if it.fat_g is not none else '—' }}</td>
+              <td class="text-end">{{ it.carbs_g if it.carbs_g is not none else '—' }}</td>
+              <td class="text-end">{{ ((it.confidence or 0)*100)|round|int }}%</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center text-muted">No food detected</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function deleteAnalysis(id) {
+  const r = await Swal.fire({ icon: 'warning', title: 'Delete this entry?', showCancelButton: true, confirmButtonText: 'Delete', cancelButtonText: 'Cancel' });
+  if (!r.isConfirmed) return;
+  try {
+    await axios.delete('/api/analyses/' + id);
+    location.href = '/history/';
+  } catch (e) {
+    Swal.fire({ icon: 'error', title: 'Delete failed', text: e.response?.data?.error?.message || e.message });
+  }
+}
+</script>
+{% endblock %}

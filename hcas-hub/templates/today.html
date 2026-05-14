@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}TODAY · HCAS HUB{% endblock %}
+
+{% block content %}
+<div class="pt-2 pb-8">
+  <div class="eyebrow mb-3">{{ now.strftime('%A · %B %-d, %Y') | upper }}</div>
+  <h1 class="display text-[44px] sm:text-[60px]">
+    Good {% if now.hour < 12 %}morning{% elif now.hour < 18 %}afternoon{% else %}evening{% endif %}
+  </h1>
+  <p class="mt-3 text-[14px] text-ink-soft max-w-md">Everything for your day at HCAS — lunch verdict, work, toolbox, study notes.</p>
+</div>
+
+{# ── Quick announcement composer (admins only) ── #}
+{% if user and user.role == 'admin' %}
+  <details class="mb-6 hairline p-3">
+    <summary class="cursor-pointer text-[12px] flex items-center gap-2">
+      <span class="eyebrow" style="color:#FF8020;">📢 POST ANNOUNCEMENT</span>
+      <span class="text-ink-mute ml-auto">Click to expand</span>
+    </summary>
+    <form action="/admin/announcements/new" method="post" class="mt-3 space-y-2">
+      <input name="title" required placeholder="Title (e.g. School closed Friday)"
+             class="w-full bg-paper-soft border border-line rounded-md px-3 py-2 text-sm" />
+      <textarea name="body" rows="2" placeholder="Optional details…"
+                class="w-full bg-paper-soft border border-line rounded-md px-3 py-2 text-sm"></textarea>
+      <div class="flex flex-wrap items-center gap-2 text-[12px]">
+        <select name="tone" class="bg-paper-soft border border-line rounded-md px-2 py-1.5">
+          <option value="info">Info</option>
+          <option value="warn" selected>Important</option>
+          <option value="success">Good news</option>
+        </select>
+        <label class="inline-flex items-center gap-1 text-ink-soft">
+          <input type="checkbox" name="pinned" value="1" /> 📌 Pin
+        </label>
+        <a href="/admin" class="text-ink-mute hover:text-white">Manage all →</a>
+        <button class="ml-auto px-4 py-1.5 rounded-md bg-white text-black font-medium text-sm hover:bg-ink-soft">Publish</button>
+      </div>
+    </form>
+  </details>
+{% endif %}
+
+{# ── Announcements (admin-posted, visible to everyone) ── #}
+{% if announcements %}
+  {% set tones = {
+      'info':    {'bg':'rgba(59,207,255,0.08)','rule':'rgba(59,207,255,0.35)','fg':'#3BCFFF','label':'NOTICE'},
+      'warn':    {'bg':'rgba(255,128,32,0.10)','rule':'rgba(255,128,32,0.45)','fg':'#FF8020','label':'IMPORTANT'},
+      'success': {'bg':'rgba(110,204,113,0.10)','rule':'rgba(110,204,113,0.45)','fg':'#6ECC71','label':'GOOD NEWS'},
+  } %}
+  <div class="mb-6 space-y-2">
+    {% for a in announcements %}
+      {% set t = tones.get(a.tone, tones['info']) %}
+      <div class="rounded-md border px-4 py-3" style="background: {{ t.bg }}; border-color: {{ t.rule }};">
+        <div class="flex items-baseline gap-2 mb-1">
+          <span class="eyebrow text-[10px]" style="color: {{ t.fg }};">
+            {% if a.pinned %}📌 {% endif %}{{ t.label }}
+          </span>
+          <span class="text-[10px] text-ink-mute uppercase tracking-wider ml-auto">{{ a.created_at[:10] }}</span>
+          {% if user and user.role == 'admin' %}
+            <form action="/admin/announcements/{{ a.id }}/delete" method="post"
+                  onsubmit="return confirm('Delete this announcement?');" class="inline-flex">
+              <button class="text-[10px] text-ink-mute hover:text-white uppercase tracking-wider"
+                      title="Delete">✕ Delete</button>
+            </form>
+          {% endif %}
+        </div>
+        <div class="display text-[16px] text-white">{{ a.title }}</div>
+        {% if a.body %}<div class="text-[13px] text-ink-soft mt-1 whitespace-pre-wrap">{{ a.body }}</div>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{# Streak — only when signed in #}
+{% if user and streak %}
+  {% set newly = (streak_info.newly_unlocked if streak_info else []) %}
+  <a href="/me" class="block group mb-6">
+    <div class="hairline p-4 flex items-center gap-4">
+      <div class="display text-[36px] leading-none">🔥</div>
+      <div class="flex-1 min-w-0">
+        <div class="eyebrow">{{ streak.current_count }}-DAY STREAK</div>
+        <div class="text-[13px] text-ink-soft">
+          {% if streak_info and streak_info.streak.delta == 'incremented' %}
+            Nice — +1 today. Longest: {{ streak.longest_count }}.
+          {% elif streak_info and streak_info.streak.delta == 'reset' %}
+            Streak reset — let's start a new one.
+          {% else %}
+            Longest: {{ streak.longest_count }} · last login {{ streak.last_login_date }}
+          {% endif %}
+        </div>
+        {% if newly %}
+          <div class="mt-1 text-[11px] uppercase tracking-wider" style="color:#3BCFFF;">
+            ✦ Unlocked: {% for n in newly %}{{ n.milestone }}{% if not loop.last %}, {% endif %}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="display text-[22px] opacity-0 group-hover:opacity-100 transition">→</div>
+    </div>
+  </a>
+{% elif not user %}
+  <div class="hairline p-4 mb-6">
+    <p class="eyebrow text-[11px] tracking-[0.22em] mb-2">SIGN&nbsp;IN</p>
+    <form action="/auth/dev/login" method="post" class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-2">
+      <input name="email" type="email" required placeholder="you@school.edu"
+             class="bg-paper-soft border border-line rounded-md px-3 py-2 text-sm" />
+      <input name="password" type="password" placeholder="Password (admins only)"
+             class="bg-paper-soft border border-line rounded-md px-3 py-2 text-sm" />
+      <button class="px-4 py-2 rounded-md bg-white text-black font-medium text-sm hover:bg-ink-soft">Sign in</button>
+    </form>
+    <p class="text-[11px] text-ink-mute mt-2">Students: any school email — no password. Admins: use your admin password.</p>
+  </div>
+{% endif %}
+
+{# Verdict — full-width SpaceX block #}
+{% set tone = {
+  'EAT_LUNCH':  {'bg': 'rgba(110,204,113,0.10)', 'fg': '#6ECC71', 'rule': 'rgba(110,204,113,0.45)'},
+  'YOUR_CALL':  {'bg': 'rgba(255,128,32,0.10)',  'fg': '#FF8020', 'rule': 'rgba(255,128,32,0.45)'},
+  'ORDER_UBER': {'bg': 'rgba(255,64,64,0.10)',   'fg': '#FF4040', 'rule': 'rgba(255,64,64,0.45)'},
+}[verdict.label] %}
+<a href="/lunch?day={{ day }}" class="block group">
+  <div class="callout" style="background: {{ tone.bg }}; border-color: {{ tone.rule }};">
+    <div class="eyebrow" style="color: {{ tone.fg }};">{{ day_label }} · Lunch</div>
+    <div class="display text-[28px] sm:text-[36px] text-white">{{ menu.headline }}</div>
+    <div class="display text-[14px] sm:text-[16px]" style="color: {{ tone.fg }}; letter-spacing: 0.08em;">{{ verdict.headline | upper }}</div>
+    {% if menu.main_dish %}<div class="text-[12px] text-ink-soft">{{ menu.main_dish }}</div>{% endif %}
+    <div class="mt-2 flex items-center gap-4 text-[11px] text-ink-mute uppercase tracking-wider">
+      <span>★ {{ '%.1f' % avg if avg else '—' }}</span>
+      <span>·</span>
+      <span>{{ rating_count }} ratings</span>
+      <span class="ml-auto opacity-0 group-hover:opacity-100 transition text-white">Open →</span>
+    </div>
+  </div>
+</a>
+
+{# To-do #}
+<section class="mt-12">
+  <div class="flex items-end justify-between mb-3">
+    <h2 class="eyebrow">To-do</h2>
+    <a href="/assignments" class="text-[11px] uppercase tracking-wider text-ink-soft hover:text-white">Manage</a>
+  </div>
+  {% if assignments %}
+    <ul class="border-t border-line">
+    {% for a in assignments %}
+      <li class="border-b border-line py-3 flex items-start gap-4">
+        <span class="mt-1.5 w-3 h-3 border border-white/40 shrink-0"></span>
+        <div class="min-w-0 flex-1">
+          <div class="text-[15px] text-white truncate">{{ a.title }}</div>
+          <div class="text-[11px] text-ink-mute uppercase tracking-wider">
+            {% if a.subject %}{{ a.subject }}{% endif %}{% if a.due_at %} · due {{ a.due_at }}{% endif %}
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-[13px] text-ink-mute">All caught up. <a class="text-white underline" href="/assignments">Add one</a></p>
+  {% endif %}
+</section>
+
+{# Toolbox shortcut #}
+<section class="mt-12">
+  <div class="flex items-end justify-between mb-3">
+    <h2 class="eyebrow">Toolbox</h2>
+    <a href="/toolbox" class="text-[11px] uppercase tracking-wider text-ink-soft hover:text-white">Open toolbox</a>
+  </div>
+  <ul class="border-t border-line">
+    <li class="border-b border-line py-3 flex items-center gap-4 text-[14px]">
+      <span class="text-[11px] uppercase tracking-wider text-ink-mute w-16 shrink-0">AI</span>
+      <div class="flex-1 truncate"><span class="text-white">MyCam</span><span class="text-ink-soft"> · food image analysis</span></div>
+    </li>
+    <li class="border-b border-line py-3 flex items-center gap-4 text-[14px]">
+      <span class="text-[11px] uppercase tracking-wider text-ink-mute w-16 shrink-0">Search</span>
+      <div class="flex-1 truncate"><span class="text-white">BookFinder</span><span class="text-ink-soft"> · Books.com.tw lookup</span></div>
+    </li>
+    <li class="border-b border-line py-3 flex items-center gap-4 text-[14px]">
+      <span class="text-[11px] uppercase tracking-wider text-ink-mute w-16 shrink-0">AI</span>
+      <div class="flex-1 truncate"><span class="text-white">VibeSpec</span><span class="text-ink-soft"> · spec generator</span></div>
+    </li>
+  </ul>
+</section>
+
+{# Notes shortcut — SpaceX-style block CTA #}
+<a href="/notes" class="mt-12 block group">
+  <div class="hairline p-5 hover:bg-paper-soft transition flex items-center gap-4">
+    <div class="flex-1">
+      <div class="eyebrow text-white">Generate Study Notes</div>
+      <div class="text-[12px] text-ink-soft mt-1">Type a topic. Organized notes, in seconds.</div>
+    </div>
+    <div class="display text-[14px] tracking-wider text-white group-hover:translate-x-1 transition">→</div>
+  </div>
+</a>
+{% endblock %}

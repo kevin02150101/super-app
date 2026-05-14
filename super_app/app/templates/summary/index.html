@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %}📖 Textbook Summary · Study Edition{% endblock %}
+{% block body_class %}theme-summary{% endblock %}
+{% block content %}
+<div id="sumApp" v-cloak class="cs-page">
+  <header style="margin-bottom: 2rem;">
+    <span class="eyebrow">CS · STUDY GUIDE</span>
+    <h1>Turn your textbook<br>into your notes.</h1>
+    <p class="lead-copy">Type a topic keyword and Gemini instantly produces an English summary plus a concept graph — perfect for review and teaching.</p>
+  </header>
+
+  <div class="cs-search">
+    <input v-model="keyword" @keyup.enter="generate" placeholder="e.g. photosynthesis, AI, cell division, quadratic equations…">
+    <button class="btn-amber" :disabled="loading" @click="generate">
+      <span v-if="loading" class="spinner"></span>
+      [[ loading ? 'Writing…' : '✨ Write Summary' ]]
+    </button>
+  </div>
+
+  <div class="cs-card" v-if="current" style="margin-top:1.5rem;">
+    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem;">
+      <h2 style="margin:0; font-size:1.8rem;">[[ current.keyword ]]</h2>
+      <span class="text-muted" style="font-size:.85rem;">Model · [[ current.source_model ]]</span>
+    </div>
+
+    <div v-if="layout" class="graph-card">
+      <div class="graph-card__head">
+        <h3>🕸️ [[ current.graph.title ]]</h3>
+        <div class="graph-legend">
+          <span class="dot core"></span>Core
+          <span class="dot concept"></span>Concept
+          <span class="dot example"></span>Example
+          <span class="dot caveat"></span>Caveat
+        </div>
+      </div>
+      <div class="graph-card__body">
+        <svg :viewBox="'0 0 ' + layout.w + ' ' + layout.h"
+             :style="{height: layout.h + 'px', width: '100%'}"
+             preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#cbd5e1"/>
+            </marker>
+          </defs>
+          <!-- edges -->
+          <g class="edges">
+            <g v-for="(e, i) in layout.edges" :key="'e'+i">
+              <line :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2"
+                    stroke="#cbd5e1" stroke-width="1.6"
+                    marker-end="url(#arrow)"/>
+              <text v-if="e.label" :x="e.mx" :y="e.my" class="edge-label"
+                    text-anchor="middle">[[ e.label ]]</text>
+            </g>
+          </g>
+          <!-- nodes -->
+          <g class="nodes">
+            <g v-for="n in layout.nodes" :key="n.id"
+               :transform="'translate(' + n.x + ',' + n.y + ')'"
+               :class="'node node-' + n.group">
+              <rect :x="-n.w/2" :y="-n.h/2" :width="n.w" :height="n.h"
+                    :rx="n.h/2" :ry="n.h/2"/>
+              <text text-anchor="middle" dominant-baseline="middle"
+                    :y="2">[[ n.label ]]</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="summary-text">[[ current.summary_text ]]</div>
+  </div>
+
+  <div style="margin-top:3rem;">
+    <span class="eyebrow">ARCHIVE</span>
+    <h2 style="font-size:1.8rem; margin:.75rem 0 1.25rem;">Past Notes</h2>
+    <a class="history-link" v-for="r in history" :key="r.id" href="#" @click.prevent="load(r.id)">
+      <div style="display:flex; justify-content:space-between;">
+        <b style="font-size:1.05rem;">[[ r.keyword ]]</b>
+        <span class="text-muted" style="font-size:.85rem;">[[ r.created_at ]]</span>
+      </div>
+    </a>
+    <div class="empty" v-if="history.length===0">No records yet. Enter a keyword above to write your first summary.</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const { createApp, computed } = Vue;
+createApp({
+  delimiters: ['[[', ']]'],
+  data() { return { keyword:'', loading:false, current:null, history:[] }; },
+  mounted() { this.refresh(); },
+  computed: {
+    layout() {
+      const g = this.current && this.current.graph;
+      if (!g || !g.nodes || !g.nodes.length) return null;
+
+      // Canvas
+      const W = 900, H = 520;
+      const cx = W / 2, cy = H / 2;
+
+      // Find core node (first one or group=core)
+      const nodes = g.nodes.map(n => ({...n}));
+      let coreIdx = nodes.findIndex(n => n.group === 'core');
+      if (coreIdx < 0) coreIdx = 0;
+      const core = nodes[coreIdx];
+      const others = nodes.filter((_, i) => i !== coreIdx);
+
+      // Estimate node box from label
+      const sizeFor = (label) => {
+        const len = (label || '').length;
+        const w = Math.min(220, Math.max(70, len * 8.2 + 22));
+        return { w, h: 36 };
+      };
+
+      // Place core in center
+      Object.assign(core, sizeFor(core.label), { x: cx, y: cy });
+
+      // Place others on a ring (or two rings if many)
+      const N = others.length;
+      const ringRadius = Math.min(W, H) * 0.38;
+      const innerRing = Math.min(W, H) * 0.22;
+      others.forEach((n, i) => {
+        Object.assign(n, sizeFor(n.label));
+        // alternate ring when crowded
+        const useInner = N > 7 && i % 2 === 1;
+        const r = useInner ? innerRing : ringRadius;
+        const angle = (i / N) * Math.PI * 2 - Math.PI / 2;
+        n.x = cx + r * Math.cos(angle);
+        n.y = cy + r * Math.sin(angle);
+      });
+
+      const byId = {};
+      nodes.forEach(n => { byId[n.id] = n; });
+
+      // Build edges with endpoint trimming so arrow lands on rect edge
+      const trim = (from, to) => {
+        const dx = to.x - from.x, dy = to.y - from.y;
+        const len = Math.hypot(dx, dy) || 1;
+        const ux = dx / len, uy = dy / len;
+        // exit core/target at ellipse approx: use half-width along x, half-height along y, pick min
+        const tw = to.w / 2 + 4, th = to.h / 2 + 4;
+        const t = Math.min(tw / Math.abs(ux || 0.0001), th / Math.abs(uy || 0.0001));
+        return { x: to.x - ux * t, y: to.y - uy * t };
+      };
+
+      const edges = (g.edges || []).map(e => {
+        const s = byId[e.source], t = byId[e.target];
+        if (!s || !t) return null;
+        const p1 = trim(t, s);
+        const p2 = trim(s, t);
+        return {
+          x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y,
+          mx: (p1.x + p2.x) / 2, my: (p1.y + p2.y) / 2 - 4,
+          label: e.label || ''
+        };
+      }).filter(Boolean);
+
+      return { w: W, h: H, nodes, edges };
+    }
+  },
+  methods: {
+    async generate() {
+      if (!this.keyword.trim()) return;
+      this.loading = true;
+      try {
+        const { data } = await axios.post('/api/summary/generate', { keyword: this.keyword });
+        if (!data.success) throw new Error(data.message);
+        this.current = data.data; this.refresh();
+        Swal.fire({icon:'success', title:'Summary generated', timer:1200, showConfirmButton:false});
+      } catch (e) { Swal.fire({icon:'error', title:'Failed', text: e.response?.data?.message || e.message}); }
+      finally { this.loading = false; }
+    },
+    async refresh() {
+      const { data } = await axios.get('/api/summary/history');
+      if (data.success) this.history = data.data;
+    },
+    async load(id) {
+      const { data } = await axios.get(`/api/summary/records/${id}`);
+      if (data.success) { this.current = data.data; window.scrollTo({top:0, behavior:'smooth'}); }
+    }
+  }
+}).mount('#sumApp');
+</script>
+{% endblock %}

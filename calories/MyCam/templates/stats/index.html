@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Statistics · MyCam{% endblock %}
+
+{% block hero %}
+  {% with title="Statistics", subtitle="Calorie trends, food-category breakdown, top foods" %}
+    {% include "_layout/hero.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="mc-card">
+      <h5 class="mc-card__title">Calories (last 60 days)</h5>
+      <canvas id="caloriesChart" height="100"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="mc-card">
+      <h5 class="mc-card__title">Food category breakdown</h5>
+      <canvas id="categoryChart" height="200"></canvas>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="mc-card">
+      <h5 class="mc-card__title">Category details</h5>
+      <div class="table-responsive">
+        <table class="table">
+          <thead><tr><th>Category</th><th class="text-end">count</th><th class="text-end">Cumulative calories</th></tr></thead>
+          <tbody id="catTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/pages/stats.js') }}"></script>
+{% endblock %}

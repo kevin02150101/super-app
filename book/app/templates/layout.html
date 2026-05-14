@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="Search Books.com.tw and display results as cards, with full history and a statistics dashboard." />
+  <title>{{ title or "BookFinder" }}</title>
+
+  {# Offline stylesheets:Bootstrap 5.3 + Custom styles #}
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E📚%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}" />
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="{{ url_for('home.index') }}">📚 BookFinder</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link {% if active=='home' %}active{% endif %}"
+               href="{{ url_for('home.index') }}">Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if active=='history' %}active{% endif %}"
+               href="{{ url_for('history.index') }}">History</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if active=='dashboard' %}active{% endif %}"
+               href="{{ url_for('dashboard.index') }}">Dashboard</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  {% block hero %}{% endblock %}
+
+  <main class="py-5">
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="bg-dark text-white-50 py-4 mt-5">
+    <div class="container small text-center">
+      © BookFinder · Powered by Flask + React + Bootstrap 5.3
+    </div>
+  </footer>
+
+  {#
+    Front-end stack (fully offline — no CDN)
+      · React 18.3.1 · ReactDOM 18.3.1
+      · Babel Standalone 7.25.6 (dev only;production should be pre-compiled in production)
+      · Axios 1.7.7
+      · Bootstrap 5.3.3 (CSS in <head>;JS bundle incl. Popper)
+    order:framework → HTTP · UI Tools → JSX compiler → site client → page-specific app
+  #}
+  <script defer src="{{ url_for('static', filename='js/react.production.min.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/react-dom.production.min.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/axios.min.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/babel.min.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/api-client.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}📅 MyCalendar · Personal Events{% endblock %}
+{% block body_class %}theme-calendar{% endblock %}
+{% block content %}
+<div id="calApp" v-cloak>
+  <section class="cal-hero">
+    <div class="cal-hero-inner">
+      <div style="opacity:.9;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;">CALENDAR MODULE</div>
+      <h1>📅 MyCalendar</h1>
+      <p>Plan your week. Capture events, deadlines and reminders in one calm place.</p>
+    </div>
+  </section>
+
+  <div class="container-cal">
+    <div style="display:grid; grid-template-columns: 360px 1fr; gap:1.5rem;" class="cal-layout">
+      <!-- Left: form -->
+      <div>
+        <div class="panel">
+          <div class="panel-title">➕ New Event</div>
+          <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" v-model="form.title" placeholder="e.g. Weekly sync, doctor appointment">
+          </div>
+          <div class="form-group">
+            <label>Start time</label>
+            <input class="form-control" type="datetime-local" v-model="form.start_time">
+          </div>
+          <div class="form-group">
+            <label>End time</label>
+            <input class="form-control" type="datetime-local" v-model="form.end_time">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" v-model="form.description" rows="3" placeholder="Optional notes…"></textarea>
+          </div>
+          <button class="btn-purple" @click="createEvent">Create event</button>
+        </div>
+      </div>
+
+      <!-- Right: list -->
+      <div>
+        <div class="panel">
+          <div class="panel-title" style="justify-content:space-between; width:100%; display:flex;">
+            <span>📋 All events · [[ events.length ]]</span>
+            <button class="btn-outline" @click="refresh">⟳ Refresh</button>
+          </div>
+          <div v-for="e in events" :key="e.id" class="event-row">
+            <div style="flex:1; min-width:0;">
+              <div class="event-title">[[ e.title ]]
+                <span :class="'badge ' + (e.status || 'confirmed')">[[ e.status || 'confirmed' ]]</span>
+              </div>
+              <div class="event-meta">[[ fmt(e.start) ]] → [[ fmt(e.end) ]]</div>
+              <div class="event-meta" v-if="e.description">[[ e.description ]]</div>
+            </div>
+            <button class="btn-danger-sm" @click="del(e.id)">Delete</button>
+          </div>
+          <div class="empty" v-if="events.length===0">No events yet. Create your first one on the left.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@media (max-width: 900px) { .cal-layout { grid-template-columns: 1fr !important; } }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const { createApp } = Vue;
+createApp({
+  delimiters: ['[[', ']]'],
+  data() {
+    return {
+      form: { title:'', start_time:'', end_time:'', description:'' },
+      events: []
+    };
+  },
+  mounted() { this.refresh(); },
+  methods: {
+    fmt(s) { return s ? s.replace('T',' ').slice(0,16) : ''; },
+    async refresh() {
+      const { data } = await axios.get('/api/calendar/events');
+      this.events = data.data || [];
+    },
+    async createEvent() {
+      if (!this.form.title || !this.form.start_time || !this.form.end_time) {
+        return Swal.fire({icon:'warning', title:'Missing fields', text:'Title, start and end are required.'});
+      }
+      const payload = { ...this.form, event_type: 'general' };
+      try {
+        const { data } = await axios.post('/api/calendar/events', payload);
+        if (!data.success) throw new Error(data.message);
+        Swal.fire({icon:'success', title:'Created', timer:1200, showConfirmButton:false});
+        this.form = { title:'', start_time:'', end_time:'', description:'' };
+        this.refresh();
+      } catch (e) {
+        Swal.fire({icon:'error', title:'Failed', text: e.response?.data?.message || e.message});
+      }
+    },
+    async del(id) {
+      const r = await Swal.fire({icon:'warning', title:'Delete this event?', showCancelButton:true});
+      if (!r.isConfirmed) return;
+      await axios.delete(`/api/calendar/events/${id}`);
+      this.refresh();
+    }
+  }
+}).mount('#calApp');
+</script>
+{% endblock %}

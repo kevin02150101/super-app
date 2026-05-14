@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}NOTES · HCAS HUB{% endblock %}
+
+{% block head %}
+<script src="/static/js/marked.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="pt-2 pb-6">
+  <div class="eyebrow mb-3">Study tools</div>
+  <h1 class="display text-[44px] sm:text-[60px]">Notes</h1>
+  <p class="mt-3 text-[14px] text-ink-soft">Type a topic. Get organized class notes in seconds.</p>
+</div>
+
+{% if not has_key %}
+<div class="callout mb-6" style="background:rgba(255,128,32,0.10); border-color:rgba(255,128,32,0.45);">
+  <div class="eyebrow" style="color:#FF8020;">API key required</div>
+  <div class="text-[13px] text-ink-soft">
+    <code class="font-mono text-[12px] code-chip px-1 py-0.5">GOOGLE_API_KEY</code> not set — see the README. The form still works, it just shows a placeholder.
+  </div>
+</div>
+{% endif %}
+
+<form id="topicForm" class="hairline p-4 mb-6 bg-paper-soft/40">
+  <input id="topic" name="topic" required maxlength="120"
+         placeholder="e.g., photosynthesis stages"
+         class="w-full bg-transparent text-[18px] placeholder-ink-mute focus:outline-none" />
+  <div class="flex flex-wrap gap-2 mt-3">
+    {% for chip in ['photosynthesis stages', 'mitosis vs meiosis', 'quadratic formula', 'French Revolution causes', "Newton's 3 laws"] %}
+      <button type="button" data-chip="{{ chip }}"
+              class="chip text-[10px] uppercase tracking-wider px-2.5 py-1.5 hairline-soft text-ink-soft hover:text-white hover:bg-paper-tint transition">{{ chip }}</button>
+    {% endfor %}
+    <button id="genBtn" class="ml-auto px-5 py-1.5 bg-white text-black display text-[12px] tracking-wider hover:bg-ink-soft transition">
+      Generate
+    </button>
+  </div>
+</form>
+
+<article id="output"
+         class="prose prose-invert prose-sm max-w-none px-1 py-2 min-h-[10rem]">
+  <p class="text-ink-mute text-[13px] uppercase tracking-wider m-0">Notes will appear here</p>
+</article>
+
+<style>
+  #output h1 { font-family: "D-DIN", Inter, sans-serif; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; margin: .25rem 0 .5rem; color: var(--page-text); }
+  #output h2 { font-family: "D-DIN", Inter, sans-serif; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; margin: 1.75rem 0 .5rem; color: var(--ink-soft); }
+  #output h3 { font-size: 1rem; font-weight: 700; margin: 1rem 0 .25rem; color: var(--page-text); }
+  #output p  { margin: .5rem 0; line-height: 1.6; color: var(--page-text); opacity: 0.85; font-size: 14px; }
+  #output ul { margin: .25rem 0 .75rem 1.1rem; list-style: disc; }
+  #output ol { margin: .25rem 0 .75rem 1.25rem; list-style: decimal; }
+  #output li { margin: .2rem 0; color: var(--page-text); opacity: 0.85; font-size: 14px; }
+  #output strong { color: var(--page-text); font-weight: 700; }
+  #output code { background: rgba(127,127,127,0.18); padding: 1px 5px; font-size: 0.85em; }
+  #output blockquote { border-left: 2px solid var(--bar-border); padding-left: .9rem; color: var(--ink-soft); }
+
+  /* Inline code chip for the API-key banner (themed) */
+  .code-chip { background: rgba(127,127,127,0.18); }
+
+  /* Placeholder color follows theme */
+  #topic::placeholder { color: var(--ink-mute); }
+</style>
+
+<script>
+  const out = document.getElementById('output');
+  const form = document.getElementById('topicForm');
+  const topicEl = document.getElementById('topic');
+  const btn = document.getElementById('genBtn');
+
+  document.querySelectorAll('.chip').forEach(b => {
+    b.addEventListener('click', () => {
+      topicEl.value = b.dataset.chip;
+      form.requestSubmit();
+    });
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const topic = topicEl.value.trim();
+    if (!topic) return;
+    btn.disabled = true; btn.textContent = 'Generating…';
+    out.innerHTML = '<p class="text-ink-mute text-[13px] uppercase tracking-wider m-0">…</p>';
+    let text = '';
+    try {
+      const res = await fetch('/notes/generate', {
+        method: 'POST',
+        body: new URLSearchParams({ topic }),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      });
+      if (!res.ok || !res.body) throw new Error('request failed');
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        text += decoder.decode(value, { stream: true });
+        out.innerHTML = marked.parse(text);
+      }
+    } catch (err) {
+      out.innerHTML = '<p style="color:#e69b9b">Error: ' + err.message + '</p>';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Generate';
+    }
+  });
+</script>
+{% endblock %}

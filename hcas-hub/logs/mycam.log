@@ -1,0 +1,138 @@
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_limiter/_extension.py:364: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+  warnings.warn(
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/services/ai_service.py:16: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.108.99:5001
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_limiter/_extension.py:364: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+  warnings.warn(
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/services/ai_service.py:16: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Debugger is active!
+ * Debugger PIN: 129-242-835
+127.0.0.1 - - [14/May/2026 08:25:24] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [14/May/2026 08:25:24] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:25:24] "GET /static/css/components.css HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:25:24] "GET /static/css/hero-dashboard.css HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:25:24] "GET /static/js/app.js HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:25:24] "GET /static/js/components/AnalysisCard.js HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:25:24] "GET /static/js/pages/dashboard.js HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:25:25] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:25:25] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:25:25] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:25:25] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+ * Detected change in '/Users/zhangruifeng/Desktop/super app/calories/MyCam/api/analysis_api.py', reloading
+ * Restarting with stat
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_limiter/_extension.py:364: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+  warnings.warn(
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/services/ai_service.py:16: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Debugger is active!
+ * Debugger PIN: 129-242-835
+ * Detected change in '/Users/zhangruifeng/Desktop/super app/calories/MyCam/services/image_service.py', reloading
+ * Restarting with stat
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_limiter/_extension.py:364: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+  warnings.warn(
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/services/ai_service.py:16: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Debugger is active!
+ * Debugger PIN: 129-242-835
+ * Detected change in '/Users/zhangruifeng/Desktop/super app/calories/MyCam/services/ai_service.py', reloading
+ * Restarting with stat
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_limiter/_extension.py:364: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+  warnings.warn(
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/services/ai_service.py:16: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Debugger is active!
+ * Debugger PIN: 129-242-835
+ * Detected change in '/Users/zhangruifeng/Desktop/super app/calories/MyCam/repositories/food_item_repository.py', reloading
+ * Restarting with stat
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_limiter/_extension.py:364: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+  warnings.warn(
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/services/ai_service.py:16: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Debugger is active!
+ * Debugger PIN: 129-242-835
+ * Detected change in '/Users/zhangruifeng/Desktop/super app/calories/MyCam/repositories/food_item_repository.py', reloading
+ * Restarting with stat
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_limiter/_extension.py:364: UserWarning: Using the in-memory storage for tracking rate limits as no storage was explicitly specified. This is not recommended for production use. See: https://flask-limiter.readthedocs.io#configuring-a-storage-backend for documentation about configuring the storage backend.
+  warnings.warn(
+/Users/zhangruifeng/Desktop/super app/calories/MyCam/services/ai_service.py:16: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Debugger is active!
+ * Debugger PIN: 129-242-835
+127.0.0.1 - - [14/May/2026 08:40:01] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [14/May/2026 08:40:01] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:40:01] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [14/May/2026 08:40:01] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [14/May/2026 08:40:01] "GET /static/js/components/AnalysisCard.js HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:40:01] "GET /static/js/pages/dashboard.js HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:40:01] "GET /static/js/app.js HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:40:01] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:40:01] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:40:01] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:41:40] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [14/May/2026 08:41:40] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:41:40] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [14/May/2026 08:41:40] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [14/May/2026 08:41:40] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [14/May/2026 08:41:40] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [14/May/2026 08:41:40] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [14/May/2026 08:41:41] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:41:41] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [14/May/2026 08:41:41] "GET /api/stats/categories HTTP/1.1" 200 -

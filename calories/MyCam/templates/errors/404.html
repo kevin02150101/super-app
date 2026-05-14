@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Page not found · MyCam{% endblock %}
+{% block content %}
+<div class="text-center py-5">
+  <h1 class="display-1 fw-bold" style="color:var(--mc-primary)">404</h1>
+  <p class="lead">We couldn't find that page</p>
+  <a href="{{ url_for('home.index') }}" class="mc-btn-primary">Back to home</a>
+</div>
+{% endblock %}

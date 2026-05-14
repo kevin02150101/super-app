@@ -1,0 +1,15 @@
+/* D-DIN — self-hosted from fonts.cdnfonts.com (foundry id 23112) */
+@font-face {
+  font-family: 'D-DIN';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('D-DIN'), url('/static/fonts/d-din/D-DIN.woff') format('woff');
+}
+@font-face {
+  font-family: 'D-DIN';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('D-DIN'), url('/static/fonts/d-din/D-DIN-Bold.woff') format('woff');
+}

@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block title %}LUNCH · HCAS HUB{% endblock %}
+
+{% block content %}
+<div class="pt-2 pb-6 flex items-end justify-between gap-4">
+  <div class="min-w-0">
+    <div class="eyebrow mb-3">{{ day_label | upper }}</div>
+    <h1 class="display text-[44px] sm:text-[60px]">Lunch</h1>
+  </div>
+  <select onchange="location='?day='+this.value"
+          class="bg-paper-soft hairline px-3 py-2 text-[12px] uppercase tracking-wider focus:outline-none">
+    {% for d, label in all_dates %}
+      <option value="{{ d }}" {% if d == day %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+{# Week strip #}
+{% if week %}
+<div class="grid grid-cols-5 gap-px bg-line mb-8">
+  {% for d, wd, dd in week %}
+    <a href="/lunch?day={{ d }}"
+       class="bg-black text-center py-3 transition
+              {{ 'bg-white text-black' if d == day else 'text-ink-soft hover:text-white' }}">
+      <div class="text-[10px] uppercase tracking-[0.18em] {{ 'opacity-70' if d == day else '' }}">{{ wd }}</div>
+      <div class="display text-[18px]">{{ dd }}</div>
+    </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{# Verdict callout #}
+{% set tone = {
+  'EAT_LUNCH':  {'bg': 'rgba(110,204,113,0.10)', 'fg': '#6ECC71', 'rule': 'rgba(110,204,113,0.45)'},
+  'YOUR_CALL':  {'bg': 'rgba(255,128,32,0.10)',  'fg': '#FF8020', 'rule': 'rgba(255,128,32,0.45)'},
+  'ORDER_UBER': {'bg': 'rgba(255,64,64,0.10)',   'fg': '#FF4040', 'rule': 'rgba(255,64,64,0.45)'},
+}[verdict.label] %}
+<div class="callout mb-2" style="background: {{ tone.bg }}; border-color: {{ tone.rule }};">
+  <div class="eyebrow" style="color: {{ tone.fg }};">Verdict</div>
+  <div class="display text-[28px] sm:text-[36px] text-white">{{ menu.headline }}</div>
+  <div class="display text-[16px]" style="color: {{ tone.fg }}; letter-spacing: 0.10em;">{{ verdict.headline | upper }}</div>
+  {% if menu.main_dish %}<div class="text-[12px] text-ink-soft">{{ menu.main_dish }}</div>{% endif %}
+</div>
+
+{% if not menu.is_holiday %}
+
+{# Stats row #}
+<div class="grid grid-cols-3 mt-2 mb-10 border-t border-b border-line">
+  <div class="py-4 px-2 text-center border-r border-line">
+    <div class="display text-[22px]">★ {{ '%.1f' % avg if avg else '—' }}</div>
+    <div class="eyebrow mt-1">Avg</div>
+  </div>
+  <div class="py-4 px-2 text-center border-r border-line">
+    <div class="display text-[22px]">{{ rating_count }}</div>
+    <div class="eyebrow mt-1">Ratings</div>
+  </div>
+  <div class="py-4 px-2 text-center">
+    <div class="display text-[22px]">{{ crowd_n }}</div>
+    <div class="eyebrow mt-1">From you</div>
+  </div>
+</div>
+
+{# Menu list #}
+<section>
+  <h2 class="eyebrow mb-3">Menu</h2>
+  <ul class="border-t border-line">
+    {% for it in menu['items'] %}
+    <li class="border-b border-line py-4 flex items-start gap-4">
+      <span class="text-[10px] uppercase tracking-[0.18em] text-ink-mute mt-1 w-16 shrink-0">{{ it.station }}</span>
+      <div class="flex-1 min-w-0">
+        <div class="text-[15px] text-white">{{ it.name }}</div>
+        {% if it.name_zh %}<div class="text-[12px] text-ink-mute mt-0.5">{{ it.name_zh }}</div>{% endif %}
+        {% if it.allergens %}
+          <div class="mt-2 flex flex-wrap gap-1.5">
+            {% for a in it.allergens %}
+              <span class="text-[10px] uppercase tracking-wider px-1.5 py-0.5 border border-line text-ink-soft">{{ a }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+{# Rate it #}
+<section class="mt-12">
+  <h2 class="eyebrow mb-3">Rate this lunch</h2>
+  <form method="post" action="/lunch/rate" class="space-y-3">
+    <input type="hidden" name="day" value="{{ day }}" />
+    <div class="grid grid-cols-5 gap-px bg-line">
+      {% for s in [1,2,3,4,5] %}
+      <label class="bg-black">
+        <input type="radio" name="stars" value="{{ s }}" class="peer sr-only" {% if s == 5 %}required{% endif %} />
+        <div class="text-center py-3 text-ink-soft peer-checked:bg-white peer-checked:text-black font-bold cursor-pointer text-[14px] hover:bg-paper-soft display tracking-wider">{{ s }}★</div>
+      </label>
+      {% endfor %}
+    </div>
+    <input name="comment" placeholder="Optional comment" maxlength="120"
+           class="w-full bg-paper-soft hairline px-3 py-3 text-[14px] placeholder-ink-mute focus:outline-none" />
+    <button class="w-full py-3 bg-white text-black display text-[13px] tracking-wider hover:bg-ink-soft transition">Submit Rating</button>
+  </form>
+</section>
+
+{# Order in #}
+<section class="mt-12">
+  <div class="flex items-end justify-between mb-3">
+    <h2 class="eyebrow">Order in instead</h2>
+    <div class="flex items-center gap-4">
+      <button type="button" id="uber-refresh"
+              class="text-[11px] uppercase tracking-wider text-white underline underline-offset-4 hover:text-ink-soft transition disabled:opacity-50"
+              aria-label="Refresh suggestions">
+        <span data-refresh-label>Refresh</span>
+      </button>
+      <a href="{{ uber_url }}" target="_blank" class="text-[11px] uppercase tracking-wider text-white underline underline-offset-4">Open Uber Eats</a>
+    </div>
+  </div>
+  <ul id="uber-suggestions" class="grid grid-cols-2 gap-px bg-line">
+    {% for r in uber_suggestions %}
+    <li>
+      <a href="{{ r.url }}" target="_blank" class="block bg-black p-4 hover:bg-paper-soft transition h-full">
+        <div class="text-[14px] font-medium text-white truncate">{{ r.name }}</div>
+        <div class="text-[11px] uppercase tracking-wider text-ink-mute mt-1">{{ r.cuisine }} · {{ r.price }} · ~{{ r.est_minutes }}m</div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  <script>
+    (function () {
+      const btn = document.getElementById('uber-refresh');
+      const list = document.getElementById('uber-suggestions');
+      if (!btn || !list) return;
+      const label = btn.querySelector('[data-refresh-label]');
+      btn.addEventListener('click', async () => {
+        if (btn.disabled) return;
+        btn.disabled = true;
+        const prev = label.textContent;
+        label.textContent = 'Refreshing…';
+        try {
+          const res = await fetch('/lunch/uber_suggestions.json', { cache: 'no-store' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          const items = (data && data.suggestions) || [];
+          list.classList.add('opacity-0');
+          await new Promise(r => setTimeout(r, 120));
+          list.innerHTML = items.map(r => `
+            <li>
+              <a href="${r.url}" target="_blank" class="block bg-black p-4 hover:bg-paper-soft transition h-full">
+                <div class="text-[14px] font-medium text-white truncate"></div>
+                <div class="text-[11px] uppercase tracking-wider text-ink-mute mt-1"></div>
+              </a>
+            </li>`).join('');
+          // Fill text safely to avoid HTML injection from data
+          const lis = list.querySelectorAll('li');
+          items.forEach((r, i) => {
+            const li = lis[i];
+            if (!li) return;
+            li.querySelector('div.text-\\[14px\\]').textContent = r.name;
+            li.querySelector('div.text-\\[11px\\]').textContent = `${r.cuisine} · ${r.price} · ~${r.est_minutes}m`;
+          });
+          list.classList.remove('opacity-0');
+        } catch (e) {
+          console.error('refresh failed', e);
+          label.textContent = 'Retry';
+          setTimeout(() => { label.textContent = prev; }, 1500);
+          btn.disabled = false;
+          return;
+        }
+        label.textContent = prev;
+        btn.disabled = false;
+      });
+    })();
+  </script>
+</section>
+
+{% else %}
+<p class="text-center text-ink-mute uppercase tracking-wider text-[12px] py-16">No school lunch today</p>
+{% endif %}
+
+<p class="mt-12 text-[10px] uppercase tracking-wider text-ink-mute text-center">Source · <a class="underline underline-offset-2" href="{{ school.menu_source_url }}" target="_blank">hcas.tw/school-lunch</a></p>
+{% endblock %}

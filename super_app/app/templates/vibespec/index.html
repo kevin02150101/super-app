@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}💡 VibeSpec · AI Technical Spec Generator{% endblock %}
+{% block body_class %}theme-vibespec{% endblock %}
+{% block content %}
+<div id="vibeApp" v-cloak class="vibe-page">
+  <header class="vibe-hero">
+    <div class="sparkle">✨</div>
+    <div class="eyebrow">AI TECHNICAL SPEC GENERATOR</div>
+    <h1>VibeSpec</h1>
+    <p>Polish a vague idea into a technical spec your AI coding assistant can execute directly.</p>
+  </header>
+
+  <div class="vibe-shell">
+    <div class="vibe-grid">
+      <!-- Left: input -->
+      <div>
+        <label class="field-label">Product Idea / Vision</label>
+        <textarea class="vibe-input" v-model="idea" rows="6"
+                  placeholder="e.g. A health assistant app where users upload meal photos and get instant AI-driven diet recommendations"></textarea>
+
+        <div style="margin-top:1.5rem;">
+          <label class="field-label">Tech Stack Preferences</label>
+          <div class="vibe-techs">
+            <input class="vibe-input" v-model="tech.frontend"        placeholder="Frontend framework">
+            <input class="vibe-input" v-model="tech.ui"              placeholder="UI library">
+            <input class="vibe-input" v-model="tech.api"             placeholder="Backend API">
+            <input class="vibe-input" v-model="tech.database"        placeholder="Database">
+            <input class="vibe-input" v-model="tech.infrastructure"  placeholder="Deployment">
+            <input class="vibe-input" v-model="tech.aiProvider"      placeholder="AI provider">
+          </div>
+        </div>
+
+        <button class="btn-vibe" style="margin-top:1.5rem;" :disabled="loading" @click="generate">
+          <span v-if="loading" class="spinner"></span>
+          [[ loading ? 'AI is tuning…' : 'Optimize Spec with AI ✨' ]]
+        </button>
+      </div>
+
+      <!-- Right: output -->
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.75rem;">
+          <label class="field-label">Spec Output</label>
+          <span class="pill" v-if="current">[[ current.source_model ]]</span>
+        </div>
+        <pre v-if="current" class="spec-output">[[ current.spec_markdown ]]</pre>
+        <div v-else class="empty" style="border:2px dashed #e2e8f0; border-radius:1.5rem; padding:4rem 1rem;">
+          Fill in the left and generate →<br>
+          <small>The result is plain Markdown — paste it straight into your AI coding assistant.</small>
+        </div>
+        <button v-if="current" class="btn-vibe" style="margin-top:.75rem; background:#0f172a;" @click="copySpec">
+          📋 Copy Spec
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <section style="margin-top:3rem;">
+    <h2 style="font-size:1.6rem; font-weight:900; margin-bottom:1rem;">🕘 Past Specs</h2>
+    <div class="vibe-history">
+      <a v-for="r in history" :key="r.id" href="#" @click.prevent="load(r.id)">
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <b>[[ r.idea.slice(0,80) ]][[ r.idea.length>80?'…':'' ]]</b>
+          <small class="text-muted">[[ r.created_at ]]</small>
+        </div>
+      </a>
+      <div class="empty" v-if="history.length===0">No records yet</div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const { createApp } = Vue;
+createApp({
+  delimiters: ['[[', ']]'],
+  data() {
+    return {
+      idea: '',
+      tech: {
+        frontend: 'React (Vite)',
+        ui: 'Bootstrap 5.3 + Vue',
+        api: 'Python (Flask)',
+        database: 'SQLite',
+        infrastructure: 'Docker',
+        aiProvider: 'Gemini API'
+      },
+      loading: false, current: null, history: []
+    };
+  },
+  mounted() { this.refresh(); },
+  methods: {
+    async generate() {
+      if (!this.idea.trim()) {
+        Swal.fire({icon:'info', title:'Please enter an idea'}); return;
+      }
+      this.loading = true;
+      try {
+        const { data } = await axios.post('/api/vibespec/generate', { idea: this.idea, tech_stack: this.tech });
+        if (!data.success) throw new Error(data.message);
+        this.current = data.data; this.refresh();
+        Swal.fire({icon:'success', title:'Spec generated', timer:1200, showConfirmButton:false});
+      } catch (e) { Swal.fire({icon:'error', title:'Failed', text: e.response?.data?.message || e.message}); }
+      finally { this.loading = false; }
+    },
+    async refresh() {
+      const { data } = await axios.get('/api/vibespec/history');
+      if (data.success) this.history = data.data;
+    },
+    async load(id) {
+      const { data } = await axios.get(`/api/vibespec/records/${id}`);
+      if (data.success) { this.current = data.data; window.scrollTo({top:0, behavior:'smooth'}); }
+    },
+    copySpec() {
+      navigator.clipboard.writeText(this.current.spec_markdown);
+      Swal.fire({icon:'success', title:'Copied', timer:1000, showConfirmButton:false});
+    }
+  }
+}).mount('#vibeApp');
+</script>
+{% endblock %}

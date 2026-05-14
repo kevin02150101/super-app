@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}📚 BookFinder · Books.com.tw Search{% endblock %}
+{% block body_class %}theme-book{% endblock %}
+{% block content %}
+<div id="bookApp" v-cloak>
+  <section class="book-hero">
+    <div class="book-hero-inner">
+      <div style="opacity:.85; font-size:.9rem; letter-spacing:.18em; text-transform:uppercase;">BOOK MODULE</div>
+      <h1>Explore Books.com.tw — never miss a good read.</h1>
+      <p class="lead">Type a keyword, Playwright fetches title, author, publisher, price and full description in real time.</p>
+    </div>
+  </section>
+
+  <div class="container-book">
+    <div class="search-bar" style="display:flex; gap:.75rem; align-items:center;">
+      <input v-model="keyword" @keyup.enter="search" placeholder="Enter a title or keyword, e.g. Flask, deep learning, Murakami">
+      <button class="btn-primary" :disabled="loading" @click="search">
+        <span v-if="loading" class="spinner"></span>
+        [[ loading ? 'Searching…' : '🔍 Search' ]]
+      </button>
+    </div>
+    <div class="text-muted small mt-2" v-if="lastQuery" style="margin-top:.75rem;">
+      Searched “<b>[[ lastQuery.keyword ]]</b>”: [[ lastQuery.result_count ]] result(s) in [[ lastQuery.duration_ms ]] ms.
+    </div>
+
+    <div class="grid-books">
+      <div class="book-card" v-for="b in results" :key="b.id">
+        <img class="book-cover" :src="b.image_url || ''" :alt="b.title" v-if="b.image_url">
+        <div class="book-cover" v-else style="display:flex;align-items:center;justify-content:center;color:#9ca3af;">No cover</div>
+        <div class="body">
+          <h3 class="title"><a :href="b.product_url" target="_blank" rel="noopener">[[ b.title ]]</a></h3>
+          <div class="meta">Author: [[ b.authors || '—' ]]</div>
+          <div class="meta">[[ b.publisher || '—' ]] · [[ b.published_at || '' ]]</div>
+          <div class="price" v-if="b.price">NT$ [[ b.price ]]</div>
+          <details v-if="b.description">
+            <summary>📖 Description</summary>
+            <div class="desc">[[ b.description ]]</div>
+          </details>
+        </div>
+      </div>
+      <div class="empty" v-if="!loading && results.length===0" style="grid-column: 1/-1;">
+        No search yet. Enter a keyword above to begin.
+      </div>
+    </div>
+
+    <div class="history-table">
+      <h3 style="margin:0 0 1rem; color:#0d1b3e;">🕘 History</h3>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr><th>Keyword</th><th>Count</th><th>Duration</th><th>Time</th><th></th></tr></thead>
+          <tbody>
+            <tr v-for="h in history" :key="h.id">
+              <td><b>[[ h.keyword ]]</b></td>
+              <td>[[ h.result_count ]]</td>
+              <td>[[ h.duration_ms ]] ms</td>
+              <td class="text-muted">[[ h.created_at ]]</td>
+              <td><button class="btn-primary" style="padding:.35rem .8rem;font-size:.85rem;" @click="loadDetail(h.id)">View</button></td>
+            </tr>
+            <tr v-if="history.length===0"><td colspan="5" class="empty">No history yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const { createApp } = Vue;
+createApp({
+  delimiters: ['[[', ']]'],
+  data() { return { keyword:'', loading:false, results:[], lastQuery:null, history:[] }; },
+  mounted() { this.refreshHistory(); },
+  methods: {
+    async search() {
+      if (!this.keyword.trim()) return;
+      this.loading = true;
+      try {
+        const { data } = await axios.post('/api/book/search', { keyword: this.keyword });
+        if (!data.success) throw new Error(data.message);
+        this.lastQuery = data.data.query; this.results = data.data.results;
+        this.refreshHistory();
+        Swal.fire({icon:'success', title:'Search complete', text:`${this.results.length} result(s)`, timer:1500, showConfirmButton:false});
+      } catch (e) { Swal.fire({icon:'error', title:'Search failed', text: e.response?.data?.message || e.message}); }
+      finally { this.loading = false; }
+    },
+    async refreshHistory() {
+      const { data } = await axios.get('/api/book/history');
+      if (data.success) this.history = data.data;
+    },
+    async loadDetail(id) {
+      const { data } = await axios.get(`/api/book/queries/${id}`);
+      if (data.success) { this.lastQuery = data.data.query; this.results = data.data.results; window.scrollTo({top:0,behavior:'smooth'}); }
+    }
+  }
+}).mount('#bookApp');
+</script>
+{% endblock %}

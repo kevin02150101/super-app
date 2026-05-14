@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Admin · HCAS HUB{% endblock %}
+{% block content %}
+<section class="space-y-8">
+
+  <div>
+    <p class="eyebrow text-[11px] tracking-[0.22em] mb-1">ADMIN CONSOLE</p>
+    <h1 class="display text-[36px]">Announcements</h1>
+    <p class="text-[13px] text-ink-soft">Posted notices appear on every student's home page.</p>
+  </div>
+
+  {# ── New announcement form ─────────────────────────── #}
+  <div class="hairline p-4">
+    <p class="eyebrow text-[11px] tracking-[0.22em] mb-2">NEW POST</p>
+    <form action="/admin/announcements/new" method="post" class="space-y-2">
+      <input name="title" required maxlength="120" placeholder="Title (required)"
+             class="w-full bg-paper-soft border border-line rounded-md px-3 py-2 text-sm" />
+      <textarea name="body" rows="3" placeholder="Body (optional, supports line breaks)"
+                class="w-full bg-paper-soft border border-line rounded-md px-3 py-2 text-sm"></textarea>
+      <div class="flex gap-3 items-center">
+        <label class="text-[12px] text-ink-soft">Tone</label>
+        <select name="tone" class="bg-paper-soft border border-line rounded-md px-2 py-1 text-sm">
+          <option value="info">Info (blue)</option>
+          <option value="warn">Important (orange)</option>
+          <option value="success">Good news (green)</option>
+        </select>
+        <label class="inline-flex items-center gap-1.5 text-[12px] text-ink-soft">
+          <input type="checkbox" name="pinned" value="1" />
+          <span>📌 Pin to top</span>
+        </label>
+        <button class="ml-auto px-4 py-1.5 rounded-md bg-white text-black text-sm font-medium hover:bg-ink-soft">
+          Publish
+        </button>
+      </div>
+    </form>
+  </div>
+
+  {# ── Existing announcements ───────────────────────── #}
+  <div>
+    <p class="eyebrow text-[11px] tracking-[0.22em] mb-2">ALL POSTS · {{ announcements|length }}</p>
+    {% if announcements %}
+      <ul class="border-t border-line">
+        {% for a in announcements %}
+          <li class="border-b border-line py-3 flex items-start gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-baseline gap-2">
+                {% if a.pinned %}<span class="text-[11px]">📌</span>{% endif %}
+                <span class="text-[11px] uppercase tracking-wider {{ 'text-white' if a.active else 'text-ink-mute line-through' }}">
+                  {{ a.tone }}
+                </span>
+                <span class="text-[11px] text-ink-mute ml-auto">{{ a.created_at[:16] }}</span>
+              </div>
+              <p class="text-sm text-white truncate {{ '' if a.active else 'opacity-50' }}">{{ a.title }}</p>
+              {% if a.body %}<p class="text-[12px] text-ink-mute truncate">{{ a.body }}</p>{% endif %}
+            </div>
+            <div class="flex gap-1">
+              <form action="/admin/announcements/{{ a.id }}/toggle" method="post">
+                <button class="text-[11px] px-2 py-1 rounded-md border border-line hover:bg-paper-soft">
+                  {{ 'Hide' if a.active else 'Show' }}
+                </button>
+              </form>
+              <form action="/admin/announcements/{{ a.id }}/delete" method="post"
+                    onsubmit="return confirm('Delete this announcement?');">
+                <button class="text-[11px] px-2 py-1 rounded-md border border-line hover:bg-paper-soft text-ink-mute">
+                  Delete
+                </button>
+              </form>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-[13px] text-ink-mute">No announcements yet.</p>
+    {% endif %}
+  </div>
+
+</section>
+{% endblock %}

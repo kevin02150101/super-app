@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}History · MyCam{% endblock %}
+
+{% block hero %}
+  {% with title="History", subtitle="Browse every analysis you've run" %}
+    {% include "_layout/hero.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+  <div class="mc-card">
+    <history-table></history-table>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/components/HistoryTable.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/pages/history.js') }}"></script>
+{% endblock %}
