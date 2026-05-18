@@ -1,16 +1,23 @@
-<nav class="mc-navbar">
-  <a class="mc-brand" href="{{ url_for('home.index') }}">
-    <i class="bi bi-camera-fill me-2"></i>MyCam
-  </a>
-  <div class="ms-auto d-flex align-items-center gap-2">
+<header class="hcas-header">
+  <div class="hcas-inner">
+    <a class="hcas-brand" href="{{ url_for('home.index') }}">
+      <span class="mark"></span>
+      <span class="name">MYCAM</span>
+    </a>
+    <nav class="hcas-nav">
+      <a class="hcas-nav-link {% if request.endpoint and request.endpoint.startswith('home') %}active{% endif %}" href="{{ url_for('home.index') }}">Home</a>
+      {% if current_user.is_authenticated %}
+        <a class="hcas-nav-link {% if request.endpoint and request.endpoint.startswith('capture') %}active{% endif %}" href="{{ url_for('capture.index') }}">Capture</a>
+        <a class="hcas-nav-link {% if request.endpoint and request.endpoint.startswith('history') %}active{% endif %}" href="{{ url_for('history.list_page') }}">History</a>
+        <a class="hcas-nav-link {% if request.endpoint and request.endpoint.startswith('dashboard') %}active{% endif %}" href="{{ url_for('dashboard.index') }}">Dashboard</a>
+        <a class="hcas-nav-link {% if request.endpoint and request.endpoint.startswith('stats') %}active{% endif %}" href="{{ url_for('stats.index') }}">Stats</a>
+      {% endif %}
+    </nav>
     {% if current_user.is_authenticated %}
-      <span class="text-white-50 small d-none d-md-inline">Hi, {{ current_user.nickname or current_user.email }}</span>
-      <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-outline-light rounded-pill">
-        <i class="bi bi-box-arrow-right"></i> Sign out
-      </a>
+      <a href="{{ url_for('auth.logout') }}" class="hcas-pill">Sign out</a>
     {% else %}
-      <a href="{{ url_for('auth.login_page') }}" class="btn btn-sm btn-outline-light rounded-pill">Sign in</a>
-      <a href="{{ url_for('auth.register_page') }}" class="btn btn-sm btn-light rounded-pill">Sign up</a>
+      <a href="{{ url_for('auth.login_page') }}" class="hcas-pill">Sign in</a>
+      <a href="{{ url_for('auth.register_page') }}" class="hcas-pill hcas-pill-primary">Sign up</a>
     {% endif %}
   </div>
-</nav>
+</header>

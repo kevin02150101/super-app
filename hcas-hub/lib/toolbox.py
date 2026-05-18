@@ -45,8 +45,17 @@ class Tool:
     env: dict = field(default_factory=dict)
 
     @property
+    def remote_url(self) -> str | None:
+        """If HCAS_TOOL_<KEY>_URL is set, the tool is hosted remotely."""
+        return os.environ.get(f"HCAS_TOOL_{self.key.upper()}_URL")
+
+    @property
     def url(self) -> str:
-        return f"http://127.0.0.1:{self.port}"
+        return self.remote_url or f"http://127.0.0.1:{self.port}"
+
+    @property
+    def is_remote(self) -> bool:
+        return bool(self.remote_url)
 
     def cmd(self) -> list[str]:
         return self.build_cmd(self.cwd)
@@ -115,15 +124,26 @@ def is_running(port: int, host: str = "127.0.0.1", timeout: float = 0.25) -> boo
 
 
 def status(tool: Tool) -> dict:
+    if tool.is_remote:
+        # Remote deployment — treat as always-on; the Start button is hidden.
+        return {
+            "key": tool.key,
+            "running": True,
+            "url": tool.url,
+            "remote": True,
+        }
     return {
         "key": tool.key,
         "running": is_running(tool.port),
         "url": tool.url,
+        "remote": False,
     }
 
 
 def launch(tool: Tool) -> dict:
     """Start the tool's dev server if it isn't already up. Non-blocking."""
+    if tool.is_remote:
+        return {"key": tool.key, "running": True, "url": tool.url, "started": False, "remote": True}
     if is_running(tool.port):
         return {"key": tool.key, "running": True, "url": tool.url, "started": False}
 

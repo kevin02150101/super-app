@@ -1,0 +1,41 @@
+# Render Blueprint — deploys MyCam + BookFinder from this monorepo.
+# Connect this repo at https://dashboard.render.com/blueprints and Render
+# will create both services automatically. VibeSpec is deployed separately
+# to Vercel (see vibespec-generator/vercel.json).
+
+services:
+  # ─── MyCam · Flask + Gemini food image analysis ────────────────────────
+  - type: web
+    name: mycam
+    runtime: python
+    plan: free
+    rootDir: calories/MyCam
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 2 -b 0.0.0.0:$PORT run:app
+    healthCheckPath: /
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: GOOGLE_API_KEY
+        sync: false        # set in Render dashboard
+      - key: SECRET_KEY
+        generateValue: true
+      # SQLite stored on ephemeral disk — fine for demo, reset on each deploy.
+      # For persistence: attach a disk (paid) or migrate to Postgres.
+
+  # ─── BookFinder · Flask + Playwright scraping ──────────────────────────
+  # Runs in Docker because Playwright needs Chromium + system libs.
+  - type: web
+    name: bookfinder
+    runtime: docker
+    plan: free
+    rootDir: book
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true

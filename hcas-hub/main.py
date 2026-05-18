@@ -14,6 +14,12 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import quote_plus
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / ".env")
+except ImportError:
+    pass
+
 from fastapi import FastAPI, Request, Form, HTTPException, Depends, Body
 from fastapi.responses import (
     HTMLResponse,
@@ -432,6 +438,7 @@ def schedule_clear(request: Request):
 def toolbox(request: Request):
     tools = []
     for t in toolbox_lib.TOOLS.values():
+        remote = t.is_remote
         tools.append(
             {
                 "key": t.key,
@@ -442,7 +449,8 @@ def toolbox(request: Request):
                 "badge": t.badge,
                 "url": t.url,
                 "port": t.port,
-                "running": toolbox_lib.is_running(t.port),
+                "remote": remote,
+                "running": True if remote else toolbox_lib.is_running(t.port),
             }
         )
     return render(request, "toolbox.html", active="toolbox", tools=tools)

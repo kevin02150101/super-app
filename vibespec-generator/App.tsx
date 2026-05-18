@@ -130,57 +130,72 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col transition-all duration-500 ease-in-out ${theme === 'dark' ? 'bg-[#020617] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
-      <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 px-4 py-3 sm:px-8 shadow-sm transition-colors duration-500">
+    <div className="min-h-screen flex flex-col text-slate-100">
+      <header className="sticky top-0 z-50 px-4 py-3 sm:px-8 backdrop-blur-md"
+              style={{ background: 'var(--bar-bg)', borderBottom: '1px solid var(--bar-border)' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => goToStep(1)}>
-            <div className="w-11 h-11 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-6 transition-transform">
-              <Sparkles className="w-6 h-6" />
+            <div className="w-9 h-9 rounded-md flex items-center justify-center text-white group-hover:scale-105 transition-transform"
+                 style={{ background: 'linear-gradient(135deg, #3BCFFF, #1E96E5)' }}>
+              <Sparkles className="w-5 h-5" />
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-xl font-black tracking-tight leading-none flex items-center gap-1.5 dark:text-white">
-                VibeSpec <TermHelp term="Vibe Coding" />
+              <h1 className="hcas-display text-[18px] flex items-center gap-1.5 text-white">
+                VIBESPEC <TermHelp term="Vibe Coding" />
               </h1>
-              <p className="text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase tracking-[0.2em] mt-1">AI Tech Spec Generator</p>
+              <p className="hcas-eyebrow mt-1">AI Tech Spec Generator</p>
             </div>
           </div>
           <div className="hidden lg:flex items-center gap-2">
             <StepIndicator currentStep={step} onStepClick={goToStep} />
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={toggleTheme} className="p-2.5 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all duration-300">
+            <button onClick={toggleTheme} className="p-2 rounded-full transition-all duration-300"
+                    style={{ color: 'var(--ink-soft)', background: 'transparent' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--paper-soft)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--ink-soft)'; }}>
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6 sm:py-10 flex flex-col mb-24 lg:mb-0 transition-all duration-500">
-        <div className="bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-[2.5rem] p-6 sm:p-12 shadow-2xl border border-white dark:border-slate-800/50 flex-1 flex flex-col min-h-[600px] animate-in fade-in duration-700 transition-colors duration-500">
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6 sm:py-10 flex flex-col mb-24 lg:mb-0">
+        <div className="hcas-hairline p-6 sm:p-10 flex-1 flex flex-col min-h-[600px]"
+             style={{ background: 'rgba(21,36,65,0.55)', backdropFilter: 'blur(8px)' }}>
           <div className="flex-1">
             {renderStep()}
           </div>
         </div>
       </main>
 
-      <footer className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 fixed bottom-0 left-0 right-0 p-4 lg:p-5 z-50 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] transition-colors duration-500">
+      <footer className="fixed bottom-0 left-0 right-0 p-4 lg:p-5 z-50 backdrop-blur-md"
+              style={{ background: 'var(--bar-bg)', borderTop: '1px solid var(--bar-border)' }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
-          <button onClick={() => setStep(s => Math.max(s - 1, 1) as Step)} disabled={step === 1} className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all ${step === 1 ? 'opacity-30 pointer-events-none' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'}`}>
+          <button onClick={() => setStep(s => Math.max(s - 1, 1) as Step)} disabled={step === 1}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-md font-bold transition-all ${step === 1 ? 'opacity-30 pointer-events-none' : ''}`}
+                  style={{ background: 'var(--paper-soft)', color: 'var(--ink-soft)', border: '1px solid var(--bar-border)' }}>
             <ArrowLeft className="w-5 h-5" /> <span className="hidden sm:inline">Back</span>
           </button>
           <div className="flex gap-2 items-center lg:hidden">
-             <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">STEP {step}/6</span>
+             <span className="hcas-eyebrow">STEP {step}/6</span>
           </div>
           {step < 5 ? (
-            <button onClick={() => setStep(s => Math.min(s + 1, 6) as Step)} className="flex items-center gap-2 bg-slate-900 dark:bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold hover:shadow-xl transition-all active:scale-95 shadow-blue-500/10">
+            <button onClick={() => setStep(s => Math.min(s + 1, 6) as Step)}
+                    className="flex items-center gap-2 px-8 py-3 rounded-md font-bold transition-all active:scale-95"
+                    style={{ background: '#fff', color: '#000' }}>
               Next Step <ArrowRight className="w-5 h-5" />
             </button>
           ) : step === 5 ? (
-            <button onClick={() => setStep(6)} className="flex items-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/30 active:scale-95">
+            <button onClick={() => setStep(6)}
+                    className="flex items-center gap-2 px-8 py-3 rounded-md font-bold transition-all active:scale-95"
+                    style={{ background: 'var(--accent)', color: '#000' }}>
               View Summary <FileText className="w-5 h-5" />
             </button>
           ) : (
-            <button onClick={handleRefine} disabled={isRefining} className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-3 rounded-2xl font-black hover:shadow-2xl hover:-translate-y-1 transition-all disabled:opacity-50 active:scale-95 shadow-lg shadow-blue-500/30">
+            <button onClick={handleRefine} disabled={isRefining}
+                    className="flex items-center gap-2 px-10 py-3 rounded-md font-bold transition-all disabled:opacity-50 active:scale-95"
+                    style={{ background: 'linear-gradient(90deg, #3BCFFF, #1E96E5)', color: '#000' }}>
               {isRefining ? 'AI is refining...' : 'Refine with AI'} <Sparkles className="w-5 h-5" />
             </button>
           )}

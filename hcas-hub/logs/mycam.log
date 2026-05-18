@@ -136,3 +136,306 @@ https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/READM
 127.0.0.1 - - [14/May/2026 08:41:41] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
 127.0.0.1 - - [14/May/2026 08:41:41] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
 127.0.0.1 - - [14/May/2026 08:41:41] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:42] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [15/May/2026 09:30:42] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:42] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:42] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:42] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:42] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:42] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:42] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:42] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:42] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:42] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [15/May/2026 09:30:45] "GET /capture/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:45] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:45] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:45] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:45] "GET /static/js/components/CaptureUploader.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:45] "GET /static/js/pages/capture.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:45] "GET /history/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:45] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:45] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:45] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:45] "GET /static/js/components/HistoryTable.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:45] "GET /static/js/pages/history.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:45] "GET /api/analyses?page=1&per_page=12 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:45] "GET /static/uploads/1/e9d1446474964552971f5a39930c48ba.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:46] "GET /stats/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:46] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:46] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:46] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 09:30:46] "GET /static/js/pages/stats.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:46] "GET /api/stats/calories?days=60 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 09:30:46] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:39:52] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [15/May/2026 10:39:52] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:39:52] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:39:52] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:39:52] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:39:52] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:39:52] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:39:52] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:39:52] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:39:52] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:39] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [15/May/2026 10:42:39] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:39] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:39] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:39] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:39] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:39] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:39] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:39] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:39] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:47] "GET /history/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:47] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:47] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:47] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:47] "[36mGET /static/js/components/HistoryTable.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:47] "[36mGET /static/js/pages/history.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:47] "GET /api/analyses?page=1&per_page=12 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:47] "[36mGET /static/uploads/1/e9d1446474964552971f5a39930c48ba.jpg HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:49] "GET /history/1 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:49] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:49] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:49] "[36mGET /static/uploads/1/e9d1446474964552971f5a39930c48ba.jpg HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:49] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:55] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:55] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:55] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:55] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:55] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:55] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:42:55] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:55] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:42:55] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:43:02] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [15/May/2026 10:43:02] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:43:02] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:02] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:02] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:02] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:02] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:02] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:43:02] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:43:02] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:43:06] "GET /capture/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 10:43:07] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:07] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:07] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:07] "[36mGET /static/js/components/CaptureUploader.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:07] "[36mGET /static/js/pages/capture.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 10:43:35] "[35m[1mPOST /api/analyze HTTP/1.1[0m" 502 -
+127.0.0.1 - - [15/May/2026 12:28:13] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [15/May/2026 12:28:13] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 12:28:13] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 12:28:13] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 12:28:13] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 12:28:13] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 12:28:13] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [15/May/2026 12:28:13] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 12:28:13] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [15/May/2026 12:28:14] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:35:58] "[32mGET / HTTP/1.1[0m" 302 -
+Traceback (most recent call last):
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/controllers/dashboard_controller.py", line 13, in index
+    return render_template("dashboard/index.html", kpi=kpi)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/dashboard/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/base.html", line 27, in top-level template code
+    {% include "_layout/navbar.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/_layout/navbar.html", line 11, in top-level template code
+    <a class="hcas-nav-link {% if request.endpoint and request.endpoint.startswith('history') %}active{% endif %}" href="{{ url_for('history.index') }}">History</a>
+    ^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/werkzeug/routing/map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'history.index'. Did you mean 'home.index' instead?
+[2026-05-18 14:35:59,003] ERROR in app: Unhandled exception: Could not build url for endpoint 'history.index'. Did you mean 'home.index' instead?
+Traceback (most recent call last):
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/controllers/dashboard_controller.py", line 13, in index
+    return render_template("dashboard/index.html", kpi=kpi)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/dashboard/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/base.html", line 27, in top-level template code
+    {% include "_layout/navbar.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/_layout/navbar.html", line 11, in top-level template code
+    <a class="hcas-nav-link {% if request.endpoint and request.endpoint.startswith('history') %}active{% endif %}" href="{{ url_for('history.index') }}">History</a>
+    ^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/werkzeug/routing/map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'history.index'. Did you mean 'home.index' instead?
+127.0.0.1 - - [18/May/2026 14:35:59] "[35m[1mGET /dashboard/ HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/controllers/dashboard_controller.py", line 13, in index
+    return render_template("dashboard/index.html", kpi=kpi)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/dashboard/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/base.html", line 27, in top-level template code
+    {% include "_layout/navbar.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/_layout/navbar.html", line 11, in top-level template code
+    <a class="hcas-nav-link {% if request.endpoint and request.endpoint.startswith('history') %}active{% endif %}" href="{{ url_for('history.index') }}">History</a>
+    ^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/werkzeug/routing/map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'history.index'. Did you mean 'home.index' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 809, in handle_user_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/app.py", line 103, in handle_uncaught
+    return render_template("errors/500.html"), 500
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/errors/500.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/base.html", line 27, in top-level template code
+    {% include "_layout/navbar.html" %}
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/templates/_layout/navbar.html", line 11, in top-level template code
+    <a class="hcas-nav-link {% if request.endpoint and request.endpoint.startswith('history') %}active{% endif %}" href="{{ url_for('history.index') }}">History</a>
+    ^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "/Users/zhangruifeng/Desktop/super app/calories/MyCam/.venv/lib/python3.14/site-packages/werkzeug/routing/map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'history.index'. Did you mean 'home.index' instead?
+127.0.0.1 - - [18/May/2026 14:35:59] "GET /dashboard/?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:35:59] "GET /dashboard/?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:35:59] "GET /dashboard/?__debugger__=yes&cmd=resource&f=console.png&s=O0Dmrxj7GOxjI1rppeAq HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:35:59] "GET /dashboard/?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:38:17] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [18/May/2026 14:38:17] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:38:17] "GET /static/css/hcas-theme.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:38:17] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:38:17] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:38:17] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:38:17] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:38:17] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:38:18] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:38:18] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:38:18] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:43:49] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [18/May/2026 14:43:49] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:43:49] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:49] "[36mGET /static/css/hcas-theme.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:49] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:49] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:49] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:49] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:49] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:43:49] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:43:50] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:43:55] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [18/May/2026 14:43:55] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:43:55] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:55] "[36mGET /static/css/hcas-theme.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:55] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:55] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:55] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:55] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:43:55] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:43:56] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:43:56] "GET /api/stats/categories HTTP/1.1" 200 -

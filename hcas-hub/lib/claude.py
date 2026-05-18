@@ -7,9 +7,10 @@ NOTES_PROMPT_PATH = Path(__file__).parent.parent / "prompts" / "notes_system.md"
 # Models to try, in order. Google retires old ones; we try a current name first
 # and fall back to older names if the API rejects them.
 MODEL_CANDIDATES = [
+    "gemini-2.5-flash-preview-05-20",
     "gemini-2.5-flash",
     "gemini-2.0-flash",
-    "gemini-flash-latest",
+    "gemini-2.0-flash-lite",
     "gemini-1.5-flash-latest",
     "gemini-1.5-flash",
 ]

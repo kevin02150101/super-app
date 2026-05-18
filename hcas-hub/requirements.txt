@@ -8,3 +8,4 @@ pillow
 anthropic  # optional — only needed if you use scripts/fetch_menu.py --parse
 msal             # Microsoft OAuth2 (school sign-in); optional in dev
 cryptography     # AES-GCM encryption for stored refresh tokens
+python-dotenv

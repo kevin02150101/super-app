@@ -1,0 +1,11 @@
+# Ignore everything except what we need for the build.
+.venv/
+__pycache__/
+*.pyc
+instance/
+.pytest_cache/
+.env
+.env.*
+node_modules/
+.DS_Store
+tests/

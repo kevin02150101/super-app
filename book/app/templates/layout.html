@@ -10,33 +10,25 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E📚%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/hcas-theme.css') }}" />
 </head>
-<body class="bg-light">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="{{ url_for('home.index') }}">📚 BookFinder</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-              data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link {% if active=='home' %}active{% endif %}"
-               href="{{ url_for('home.index') }}">Search</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if active=='history' %}active{% endif %}"
-               href="{{ url_for('history.index') }}">History</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if active=='dashboard' %}active{% endif %}"
-               href="{{ url_for('dashboard.index') }}">Dashboard</a>
-          </li>
-        </ul>
-      </div>
+<body>
+  <header class="hcas-header">
+    <div class="hcas-inner">
+      <a class="hcas-brand" href="{{ url_for('home.index') }}">
+        <span class="mark"></span>
+        <span class="name">BOOKFINDER</span>
+      </a>
+      <nav class="hcas-nav">
+        <a class="hcas-nav-link {% if active=='home' %}active{% endif %}"
+           href="{{ url_for('home.index') }}">Search</a>
+        <a class="hcas-nav-link {% if active=='history' %}active{% endif %}"
+           href="{{ url_for('history.index') }}">History</a>
+        <a class="hcas-nav-link {% if active=='dashboard' %}active{% endif %}"
+           href="{{ url_for('dashboard.index') }}">Dashboard</a>
+      </nav>
     </div>
-  </nav>
+  </header>
 
   {% block hero %}{% endblock %}
 
@@ -46,9 +38,9 @@
     </div>
   </main>
 
-  <footer class="bg-dark text-white-50 py-4 mt-5">
+  <footer class="py-4 mt-5" style="border-top: 1px solid var(--bar-border); color: var(--ink-mute);">
     <div class="container small text-center">
-      © BookFinder · Powered by Flask + React + Bootstrap 5.3
+      © BookFinder · Flask + React + Bootstrap
     </div>
   </footer>
 

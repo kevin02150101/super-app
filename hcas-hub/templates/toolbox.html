@@ -2,40 +2,53 @@
 {% block title %}TOOLBOX · HCAS HUB{% endblock %}
 
 {% block content %}
-<div class="pt-2 pb-6">
+<div class="pt-2 pb-8">
   <div class="eyebrow mb-3">Workshop</div>
   <h1 class="display text-[44px] sm:text-[60px]">Toolbox</h1>
-  <p class="mt-3 text-[14px] text-ink-soft max-w-md">Side projects and utilities I've built. Hit <span class="text-white">Start</span> to spin up the local dev server, then <span class="text-white">Open</span> to use it.</p>
+  <p class="mt-3 text-[14px] text-ink-soft max-w-md">Side projects and utilities. Hit <span class="text-white">Start</span> to spin up the local dev server, then <span class="text-white">Open</span> to use it.</p>
 </div>
 
+{# Tools — homepage-style rows #}
 <section class="mt-2">
+  <div class="flex items-end justify-between mb-3">
+    <h2 class="eyebrow">Projects</h2>
+    <span class="text-[11px] uppercase tracking-wider text-ink-mute">{{ tools|length }} total</span>
+  </div>
   <ul class="border-t border-line" id="toolbox-list">
   {% for tool in tools %}
-    <li class="border-b border-line py-5 flex items-start gap-5 group" data-key="{{ tool.key }}" data-url="{{ tool.url }}">
-      <span class="text-[11px] font-mono text-ink-mute w-8 shrink-0 mt-1">{{ '%02d' % (loop.index) }}</span>
+    <li class="border-b border-line py-4 flex items-center gap-4 group"
+        data-key="{{ tool.key }}" data-url="{{ tool.url }}">
+      <span class="text-[11px] uppercase tracking-wider text-ink-mute w-16 shrink-0">{{ tool.badge }}</span>
       <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-3 flex-wrap">
-          <div class="display text-[20px] text-white">{{ tool.name }}</div>
-          <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 hairline text-ink-soft">{{ tool.badge }}</span>
-          <span class="status-pill text-[10px] uppercase tracking-wider px-2 py-0.5 font-mono inline-flex items-center gap-1.5"
+        <div class="flex items-baseline gap-2 flex-wrap">
+          <span class="text-[15px] text-white">{{ tool.name }}</span>
+          <span class="text-[13px] text-ink-soft truncate">· {{ tool.tagline }}</span>
+        </div>
+        <div class="mt-1 flex items-center gap-3 text-[11px] uppercase tracking-wider text-ink-mute">
+          <span class="status-pill inline-flex items-center gap-1.5"
                 data-status="{{ 'on' if tool.running else 'off' }}">
             <span class="status-dot inline-block w-1.5 h-1.5 rounded-full"></span>
-            <span class="status-label">{{ 'Running' if tool.running else 'Stopped' }}</span>
-            <span class="text-ink-mute">:{{ tool.port }}</span>
+            <span class="status-label">{% if tool.remote %}Live{% else %}{{ 'Running' if tool.running else 'Stopped' }}{% endif %}</span>
           </span>
+          <span>·</span>
+          {% if tool.remote %}
+            <span class="font-mono normal-case tracking-normal truncate max-w-[180px]" title="{{ tool.url }}">{{ tool.url.replace('https://','').replace('http://','') }}</span>
+          {% else %}
+            <span class="font-mono normal-case tracking-normal">:{{ tool.port }}</span>
+          {% endif %}
         </div>
-        <div class="text-[12px] uppercase tracking-wider text-ink-mute mt-1">{{ tool.tagline }}</div>
-        <p class="text-[13px] text-ink-soft mt-2 max-w-2xl">{{ tool.description }}</p>
-        <div class="text-[11px] font-mono text-ink-mute mt-2">{{ tool.stack }}</div>
         <div class="error-msg hidden text-[11px] text-red-400 mt-2 font-mono"></div>
       </div>
-      <div class="flex flex-col gap-2 shrink-0 items-stretch min-w-[110px]">
-        <button type="button" class="btn-start text-[10px] uppercase tracking-wider px-3 py-1.5 hairline text-white hover:bg-paper-soft transition display"
+      <div class="flex items-center gap-2 shrink-0">
+        {% if not tool.remote %}
+        <button type="button"
+                class="btn-start text-[11px] uppercase tracking-wider px-3 py-1.5 hairline text-white hover:bg-paper-soft transition"
                 {% if tool.running %}disabled{% endif %}>
           {% if tool.running %}Started{% else %}Start{% endif %}
         </button>
+        {% endif %}
         <a href="{{ tool.url }}" target="_blank" rel="noopener"
-           class="btn-open text-[10px] uppercase tracking-wider px-3 py-1.5 display text-center transition
+           class="btn-open text-[11px] uppercase tracking-wider px-3 py-1.5 text-center transition
                   {% if tool.running %}bg-white text-black hover:bg-ink-soft{% else %}hairline text-ink-mute pointer-events-none opacity-50{% endif %}">
           Open →
         </a>
@@ -45,11 +58,15 @@
   </ul>
 </section>
 
-<section class="mt-12 hairline p-4">
-  <h2 class="eyebrow mb-2">How it works</h2>
-  <p class="text-[12px] text-ink-soft mb-2"><span class="text-white">Start</span> spawns the project's dev server as a detached subprocess on this machine. Logs are written to <code class="bg-paper-tint px-1">hcas-hub/logs/&lt;tool&gt;.log</code>.</p>
-  <p class="text-[11px] text-ink-mute">Status is polled every 3 seconds via <code class="bg-paper-tint px-1">/toolbox/status</code>. Python tools prefer their own <code class="bg-paper-tint px-1">.venv</code> if present; the VibeSpec generator requires <code class="bg-paper-tint px-1">npm install</code> to have been run.</p>
-</section>
+{# About — SpaceX-style block matching homepage CTAs #}
+<div class="mt-12 hairline p-5">
+  <div class="eyebrow text-white mb-2">How it works</div>
+  <p class="text-[13px] text-ink-soft">
+    <span class="text-white">Start</span> spawns the project's dev server as a detached subprocess.
+    Logs go to <code class="bg-paper-tint px-1 font-mono text-[12px]">hcas-hub/logs/&lt;tool&gt;.log</code>.
+    Status polls every 3s via <code class="bg-paper-tint px-1 font-mono text-[12px]">/toolbox/status</code>.
+  </p>
+</div>
 
 <style>
   .status-pill[data-status="on"] .status-dot { background: #22c55e; box-shadow: 0 0 6px #22c55e; }

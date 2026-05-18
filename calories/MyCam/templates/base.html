@@ -12,6 +12,16 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/hero-dashboard.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/hcas-theme.css') }}">
+  <style>
+    /* MyCam-specific HCAS overrides */
+    .mc-shell { background: transparent; }
+    .mc-main  { background: transparent; }
+    .mc-sidebar, .mc-sidebar * { color: var(--ink-soft); }
+    .mc-sidebar a, .mc-sidebar .nav-link { color: var(--ink-soft) !important; }
+    .mc-sidebar a:hover, .mc-sidebar .nav-link:hover { color: var(--page-text) !important; background: var(--paper-soft) !important; }
+    .mc-sidebar a.active, .mc-sidebar .nav-link.active { color: var(--accent) !important; background: var(--paper-soft) !important; }
+  </style>
 </head>
 <body>
   {% include "_layout/navbar.html" %}
