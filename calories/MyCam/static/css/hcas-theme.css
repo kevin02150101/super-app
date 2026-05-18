@@ -232,3 +232,33 @@ hr { border-color: var(--bar-border) !important; opacity: 1 !important; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-thumb { background: rgba(59,207,255,0.25); border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
+
+/* MyCam component overrides — keep navy theme on auth/feature/analysis cards */
+.mc-auth__card,
+.mc-feature,
+.mc-analysis {
+  background: var(--paper-soft) !important;
+  border: 1px solid var(--bar-border) !important;
+  color: var(--page-text) !important;
+  box-shadow: none !important;
+}
+.mc-auth__card h1, .mc-auth__card h2, .mc-auth__card h3,
+.mc-auth__card h4, .mc-auth__card h5, .mc-auth__card label {
+  color: var(--page-text) !important;
+}
+.mc-auth__card .text-muted,
+.mc-feature .text-muted,
+.mc-analysis .text-muted { color: var(--ink-soft) !important; }
+.mc-analysis { border-color: var(--bar-border) !important; }
+
+/* SweetAlert2 dialog — navy theme */
+.swal2-popup {
+  background: var(--page-bg) !important;
+  color: var(--page-text) !important;
+  border: 1px solid var(--bar-border) !important;
+}
+.swal2-title, .swal2-html-container { color: var(--page-text) !important; }
+.swal2-styled.swal2-confirm {
+  background: var(--accent) !important; color: #000 !important;
+}
+
