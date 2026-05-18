@@ -17,7 +17,7 @@
   <ul class="border-t border-line" id="toolbox-list">
   {% for tool in tools %}
     <li class="border-b border-line py-4 flex items-center gap-4 group"
-        data-key="{{ tool.key }}" data-url="{{ tool.url }}">
+        data-key="{{ tool.key }}" data-url="{{ tool.url }}" data-remote="{{ '1' if tool.remote else '0' }}">
       <span class="text-[11px] uppercase tracking-wider text-ink-mute w-16 shrink-0">{{ tool.badge }}</span>
       <div class="flex-1 min-w-0">
         <div class="flex items-baseline gap-2 flex-wrap">
@@ -86,12 +86,19 @@
     const btn = row.querySelector('.btn-start');
     const open = row.querySelector('.btn-open');
     const err = row.querySelector('.error-msg');
+    const remote = row.dataset.remote === '1';
 
     pill.dataset.status = pending ? 'pending' : (running ? 'on' : 'off');
-    label.textContent = pending ? 'Starting…' : (running ? 'Running' : 'Stopped');
+    if (remote) {
+      label.textContent = 'Live';
+    } else {
+      label.textContent = pending ? 'Starting…' : (running ? 'Running' : 'Stopped');
+    }
 
-    btn.disabled = running || pending;
-    btn.textContent = running ? 'Started' : (pending ? 'Starting…' : 'Start');
+    if (btn) {
+      btn.disabled = running || pending;
+      btn.textContent = running ? 'Started' : (pending ? 'Starting…' : 'Start');
+    }
 
     if (running) {
       open.classList.remove('hairline', 'text-ink-mute', 'pointer-events-none', 'opacity-50');

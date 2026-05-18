@@ -439,3 +439,14 @@ werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'histor
 127.0.0.1 - - [18/May/2026 14:43:55] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
 127.0.0.1 - - [18/May/2026 14:43:56] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
 127.0.0.1 - - [18/May/2026 14:43:56] "GET /api/stats/categories HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:58:18] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [18/May/2026 14:58:18] "GET /dashboard/ HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:58:18] "[36mGET /static/css/hero-dashboard.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:58:18] "[36mGET /static/css/components.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:58:18] "[36mGET /static/css/hcas-theme.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:58:18] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:58:18] "[36mGET /static/js/pages/dashboard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:58:18] "[36mGET /static/js/components/AnalysisCard.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [18/May/2026 14:58:18] "GET /api/analyses?page=1&per_page=6 HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:58:18] "GET /api/stats/calories?days=30 HTTP/1.1" 200 -
+127.0.0.1 - - [18/May/2026 14:58:18] "GET /api/stats/categories HTTP/1.1" 200 -
