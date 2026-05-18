@@ -236,19 +236,23 @@ hr { border-color: var(--bar-border) !important; opacity: 1 !important; }
 /* MyCam component overrides — keep navy theme on auth/feature/analysis cards */
 .mc-auth__card,
 .mc-feature,
-.mc-analysis {
+.mc-analysis,
+.mc-card {
   background: var(--paper-soft) !important;
   border: 1px solid var(--bar-border) !important;
   color: var(--page-text) !important;
   box-shadow: none !important;
 }
 .mc-auth__card h1, .mc-auth__card h2, .mc-auth__card h3,
-.mc-auth__card h4, .mc-auth__card h5, .mc-auth__card label {
+.mc-auth__card h4, .mc-auth__card h5, .mc-auth__card label,
+.mc-card h1, .mc-card h2, .mc-card h3, .mc-card h4, .mc-card h5,
+.mc-card__title, .mc-card p, .mc-card span, .mc-card td, .mc-card th {
   color: var(--page-text) !important;
 }
 .mc-auth__card .text-muted,
 .mc-feature .text-muted,
-.mc-analysis .text-muted { color: var(--ink-soft) !important; }
+.mc-analysis .text-muted,
+.mc-card .text-muted { color: var(--ink-soft) !important; }
 .mc-analysis { border-color: var(--bar-border) !important; }
 
 /* SweetAlert2 dialog — navy theme */
