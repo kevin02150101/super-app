@@ -37,7 +37,8 @@ def create_app(config_class: type = Config) -> Flask:
 
 def _ensure_columns() -> None:
     """對既有 SQLite 資料庫進行最小遷移:補齊新版欄位。"""
-    from sqlalchemy import text
+    from sqlalchemy import text, inspect
+    from sqlalchemy.exc import SQLAlchemyError
 
     required = {
         "search_queries": [
@@ -50,14 +51,24 @@ def _ensure_columns() -> None:
             ("summary", "VARCHAR(500)"),
         ],
     }
+    inspector = inspect(db.engine)
+
     for table, columns in required.items():
-        existing = {
-            row[1]
-            for row in db.session.execute(text(f"PRAGMA table_info({table})"))
-        }
+        existing = {col["name"] for col in inspector.get_columns(table)}
         for name, col_type in columns:
-            if name not in existing:
+            if name in existing:
+                continue
+            try:
                 db.session.execute(
                     text(f"ALTER TABLE {table} ADD COLUMN {name} {col_type}")
                 )
-        db.session.commit()
+                db.session.commit()
+                existing.add(name)
+            except SQLAlchemyError as exc:
+                db.session.rollback()
+                # Multiple workers may race on startup: one adds the column,
+                # the other sees a duplicate-column error. Safe to ignore.
+                msg = str(exc).lower()
+                if "duplicate column" in msg or "already exists" in msg:
+                    continue
+                raise

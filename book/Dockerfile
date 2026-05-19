@@ -16,4 +16,4 @@ COPY . .
 ENV PORT=8000
 EXPOSE 8000
 
-CMD gunicorn -w 2 -b 0.0.0.0:${PORT:-8000} --timeout 120 run:app
+CMD gunicorn -w 1 -b 0.0.0.0:${PORT:-8000} --timeout 240 --graceful-timeout 30 run:app

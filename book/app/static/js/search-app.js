@@ -1,5 +1,26 @@
 // Home: title search + card-style result rendering
 const { useState, useCallback } = React;
+
+async function searchWithRetry(keyword, retries = 2) {
+  let attempt = 0;
+  let lastErr;
+  while (attempt <= retries) {
+    try {
+      return await window.apiClient.post("/books/search", { keyword });
+    } catch (e) {
+      const msg = String(e?.message || "");
+      const transient = /\b(502|503|504)\b/.test(msg);
+      lastErr = e;
+      if (!transient || attempt === retries) break;
+      const waitMs = 1200 * (attempt + 1);
+      await new Promise((r) => setTimeout(r, waitMs));
+      attempt += 1;
+      continue;
+    }
+  }
+  throw lastErr;
+}
+
 function SearchForm({ onSubmit, loading }) {
   const [keyword, setKeyword] = useState("");
   return (
@@ -288,10 +309,15 @@ function App() {
     setError("");
     setData(null);
     try {
-      const resp = await window.apiClient.post("/books/search", { keyword });
+      const resp = await searchWithRetry(keyword);
       setData(resp.data);
     } catch (e) {
-      setError(e.message);
+      const msg = String(e?.message || "Request failed");
+      if (/\b(502|503|504)\b/.test(msg)) {
+        setError("Search service is waking up or temporarily unavailable. Please try again in 20-40 seconds.");
+      } else {
+        setError(msg);
+      }
     } finally {
       setLoading(false);
     }
