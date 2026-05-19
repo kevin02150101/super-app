@@ -93,14 +93,16 @@ export default function App() {
   const [spec, setSpec] = useState<TechSpec>(INITIAL_SPEC);
   const [isRefining, setIsRefining] = useState(false);
   const [refinedMarkdown, setRefinedMarkdown] = useState<string | null>(null);
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('vibe-theme') as 'light' | 'dark') || 'light';
-  });
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     localStorage.setItem('vibe-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    setTheme('dark');
+  }, []);
 
   const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
 
@@ -160,7 +162,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6 sm:py-10 flex flex-col mb-24 lg:mb-0">
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6 sm:py-10 flex flex-col pb-36 lg:pb-44">
         <div className="hcas-hairline p-6 sm:p-10 flex-1 flex flex-col min-h-[600px]"
              style={{ background: 'rgba(21,36,65,0.55)', backdropFilter: 'blur(8px)' }}>
           <div className="flex-1">
