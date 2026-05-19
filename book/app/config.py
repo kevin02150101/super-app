@@ -15,7 +15,7 @@ class Config:
 
     # Playwright
     PLAYWRIGHT_HEADLESS = os.getenv("PLAYWRIGHT_HEADLESS", "1") == "1"
-    SCRAPE_TIMEOUT_MS = int(os.getenv("SCRAPE_TIMEOUT_MS", "60000"))
+    SCRAPE_TIMEOUT_MS = int(os.getenv("SCRAPE_TIMEOUT_MS", "45000"))
     SCRAPE_MAX_RESULTS = int(os.getenv("SCRAPE_MAX_RESULTS", "20"))
     # Maximum number of books for which to fetch the synopsis page; high values slow searches.
-    SCRAPE_DETAIL_LIMIT = int(os.getenv("SCRAPE_DETAIL_LIMIT", "8"))
+    SCRAPE_DETAIL_LIMIT = int(os.getenv("SCRAPE_DETAIL_LIMIT", "2"))

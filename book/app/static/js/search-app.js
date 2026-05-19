@@ -9,7 +9,10 @@ async function searchWithRetry(keyword, retries = 2) {
       return await window.apiClient.post("/books/search", { keyword });
     } catch (e) {
       const msg = String(e?.message || "");
-      const transient = /\b(502|503|504)\b/.test(msg);
+      const transient =
+        /\b(502|503|504)\b/.test(msg) ||
+        /timeout .* exceeded/i.test(msg) ||
+        /econnaborted/i.test(msg);
       lastErr = e;
       if (!transient || attempt === retries) break;
       const waitMs = 1200 * (attempt + 1);
@@ -315,6 +318,8 @@ function App() {
       const msg = String(e?.message || "Request failed");
       if (/\b(502|503|504)\b/.test(msg)) {
         setError("Search service is waking up or temporarily unavailable. Please try again in 20-40 seconds.");
+      } else if (/timeout .* exceeded/i.test(msg) || /econnaborted/i.test(msg)) {
+        setError("Search timed out. Please retry once; hosted scraping can be slow during cold start.");
       } else {
         setError(msg);
       }

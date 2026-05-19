@@ -92,7 +92,9 @@ class BookSearchService:
 
                 # 對前 detail_limit 本抓詳情頁簡介
                 detail_page = context.new_page()
-                detail_page.set_default_timeout(min(timeout_ms, 12000))
+                # Detail pages are optional; keep this short so one slow product
+                # page doesn't block the whole search request.
+                detail_page.set_default_timeout(min(timeout_ms, 7000))
                 for book in results[:detail_limit]:
                     if book.product_url:
                         try:
