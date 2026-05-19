@@ -379,8 +379,10 @@ async def api_import_schedule(request: Request):
     body = await request.json()
     rows = body.get("rows", [])
     replace = bool(body.get("replace"))
-    user = auth.current_user(request)
-    uid = user["id"] if user else None
+    # Keep extension-imported schedule install-wide (same behavior as Teams HW).
+    # Chrome extension fetches may not include session cookies on hosted domains;
+    # storing with NULL user_id avoids "synced but invisible" rows.
+    uid = None
     if replace:
         db.clear_classes(uid)
     added = updated = skipped = 0

@@ -726,10 +726,17 @@ def upsert_class(user_id: str | None, *, course: str, teacher: str = "",
 
 def list_classes(user_id: str | None) -> list[dict]:
     with conn() as c:
-        rows = c.execute(
-            "SELECT * FROM class_schedule WHERE user_id IS ?",
-            (user_id,),
-        ).fetchall()
+        if user_id:
+            # Include global (NULL user_id) rows so extension sync still appears
+            # when the browser request doesn't carry session cookies.
+            rows = c.execute(
+                "SELECT * FROM class_schedule WHERE user_id=? OR user_id IS NULL",
+                (user_id,),
+            ).fetchall()
+        else:
+            rows = c.execute(
+                "SELECT * FROM class_schedule WHERE user_id IS NULL",
+            ).fetchall()
     items = [dict(r) for r in rows]
 
     def _minutes(t: str) -> int:
@@ -753,7 +760,13 @@ def list_classes(user_id: str | None) -> list[dict]:
 
 def clear_classes(user_id: str | None) -> int:
     with conn() as c:
-        cur = c.execute("DELETE FROM class_schedule WHERE user_id IS ?", (user_id,))
+        if user_id:
+            cur = c.execute(
+                "DELETE FROM class_schedule WHERE user_id=? OR user_id IS NULL",
+                (user_id,),
+            )
+        else:
+            cur = c.execute("DELETE FROM class_schedule WHERE user_id IS NULL")
         return cur.rowcount
 
 
