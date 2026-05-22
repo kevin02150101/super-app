@@ -20,7 +20,7 @@ try:
 except ImportError:
     pass
 
-from fastapi import FastAPI, Request, Form, HTTPException, Depends, Body
+from fastapi import FastAPI, Request, Form, HTTPException, Depends, Body, UploadFile, File
 from fastapi.responses import (
     HTMLResponse,
     RedirectResponse,
@@ -481,15 +481,44 @@ def notes(request: Request):
 
 
 @app.post("/notes/generate")
-def notes_generate(topic: str = Form(...)):
-    topic = topic.strip()
-    if not topic:
-        raise HTTPException(400, "topic required")
+async def notes_generate(
+    topic: str = Form(""),
+    files: list[UploadFile] = File(default_factory=list),
+):
+    topic = (topic or "").strip()
+    # Read & validate uploads (multimodal). Either topic or files is required.
+    from lib.claude import ALLOWED_MIMES, MAX_FILE_BYTES
+    attachments: list[dict] = []
+    for uf in files or []:
+        if not uf or not uf.filename:
+            continue
+        mime = (uf.content_type or "").lower()
+        # Some browsers send odd mimes for PDFs/images — sniff by extension as fallback.
+        if mime not in ALLOWED_MIMES:
+            ext = (uf.filename.rsplit(".", 1)[-1] or "").lower()
+            ext_map = {
+                "pdf": "application/pdf",
+                "jpg": "image/jpeg", "jpeg": "image/jpeg",
+                "png": "image/png", "webp": "image/webp",
+                "heic": "image/heic", "heif": "image/heif",
+                "txt": "text/plain", "md": "text/markdown", "csv": "text/csv",
+            }
+            mime = ext_map.get(ext, mime)
+        if mime not in ALLOWED_MIMES:
+            raise HTTPException(400, f"Unsupported file type: {uf.filename}")
+        data = await uf.read()
+        if len(data) > MAX_FILE_BYTES:
+            raise HTTPException(413, f"{uf.filename} exceeds 18MB limit")
+        attachments.append({"mime": mime, "data": data, "name": uf.filename})
+
+    if not topic and not attachments:
+        raise HTTPException(400, "topic or file required")
+
     if not os.environ.get("GOOGLE_API_KEY"):
         # Friendly fallback so the demo never hard-fails
         def _missing():
             yield (
-                f"# {topic}\n\n"
+                f"# {topic or 'Notes'}\n\n"
                 "**Notes generator needs an API key.**\n\n"
                 "Set `GOOGLE_API_KEY` in your environment, then restart the server. "
                 "See the README for instructions.\n"
@@ -501,7 +530,7 @@ def notes_generate(topic: str = Form(...)):
 
     def gen():
         try:
-            for chunk in stream_notes(topic):
+            for chunk in stream_notes(topic, attachments=attachments):
                 yield chunk
         except Exception as e:
             yield f"\n\n**Error:** {e}\n"

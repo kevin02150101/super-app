@@ -22,9 +22,28 @@
 {% endif %}
 
 <form id="topicForm" class="hairline p-4 mb-6 bg-paper-soft/40">
-  <input id="topic" name="topic" required maxlength="120"
-         placeholder="e.g., photosynthesis stages"
+  <input id="topic" name="topic" maxlength="120"
+         placeholder="Type a topic, or attach a PDF / image below…"
          class="w-full bg-transparent text-[18px] placeholder-ink-mute focus:outline-none" />
+
+  {# File drop zone #}
+  <div id="dropZone" class="drop-zone mt-3" tabindex="0">
+    <input id="fileInput" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.heic,.heif,.txt,.md,.csv,application/pdf,image/*"
+           class="sr-only" />
+    <div class="drop-empty flex items-center gap-3 text-[12px] text-ink-soft">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <div>
+        <div><strong style="color:var(--page-text)">Drop a file</strong> or click to upload</div>
+        <div class="text-ink-mute mt-0.5">PDF · JPG · PNG · WebP · HEIC · TXT — up to 18 MB each</div>
+      </div>
+    </div>
+    <ul id="fileList" class="file-list hidden"></ul>
+  </div>
+
   <div class="flex flex-wrap gap-2 mt-3">
     {% for chip in ['photosynthesis stages', 'mitosis vs meiosis', 'quadratic formula', 'French Revolution causes', "Newton's 3 laws"] %}
       <button type="button" data-chip="{{ chip }}"
@@ -58,6 +77,34 @@
 
   /* Placeholder color follows theme */
   #topic::placeholder { color: var(--ink-mute); }
+
+  /* Drop zone */
+  .drop-zone {
+    border: 1.5px dashed var(--bar-border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color .18s ease, background .18s ease, transform .18s ease;
+    background: rgba(127,127,127,0.04);
+  }
+  .drop-zone:hover, .drop-zone:focus { border-color: #3BCFFF; outline: none; }
+  .drop-zone.dragging { border-color: #3BCFFF; background: rgba(59,207,255,0.10); transform: scale(1.01); }
+  .file-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .file-list.hidden { display: none; }
+  .file-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 10px; border-radius: 999px;
+    background: linear-gradient(90deg, rgba(59,207,255,0.18), rgba(30,150,229,0.10));
+    border: 1px solid rgba(59,207,255,0.30);
+    font-size: 12px; color: var(--page-text);
+    max-width: 100%;
+  }
+  .file-chip .name { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-chip .size { color: var(--ink-mute); font-size: 11px; }
+  .file-chip button { background: transparent; border: 0; color: var(--ink-soft); cursor: pointer; padding: 0 2px; line-height: 1; }
+  .file-chip button:hover { color: #FF6B6B; }
+  .file-thumb { width: 22px; height: 22px; border-radius: 5px; object-fit: cover; }
+  .file-ico { width: 22px; height: 22px; border-radius: 5px; background: rgba(59,207,255,0.20); display: inline-flex; align-items: center; justify-content: center; color: #3BCFFF; font-size: 10px; font-weight: 800; }
 </style>
 
 <script>
@@ -65,6 +112,61 @@
   const form = document.getElementById('topicForm');
   const topicEl = document.getElementById('topic');
   const btn = document.getElementById('genBtn');
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+  const dropEmpty = dropZone.querySelector('.drop-empty');
+
+  // ----- File handling -----
+  let pendingFiles = [];
+
+  function fmtSize(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+    return (b / 1024 / 1024).toFixed(1) + ' MB';
+  }
+  function renderFiles() {
+    fileList.innerHTML = '';
+    if (!pendingFiles.length) {
+      fileList.classList.add('hidden');
+      dropEmpty.classList.remove('hidden');
+      return;
+    }
+    dropEmpty.classList.add('hidden');
+    fileList.classList.remove('hidden');
+    pendingFiles.forEach((f, i) => {
+      const li = document.createElement('li');
+      li.className = 'file-chip';
+      const isImg = f.type.startsWith('image/');
+      const thumb = isImg
+        ? `<img class="file-thumb" src="${URL.createObjectURL(f)}" alt="" />`
+        : `<span class="file-ico">${(f.name.split('.').pop() || 'F').slice(0, 3).toUpperCase()}</span>`;
+      li.innerHTML = `${thumb}<span class="name" title="${f.name}">${f.name}</span><span class="size">${fmtSize(f.size)}</span><button type="button" aria-label="Remove" data-i="${i}">✕</button>`;
+      li.querySelector('button').addEventListener('click', () => {
+        pendingFiles.splice(i, 1); renderFiles();
+      });
+      fileList.appendChild(li);
+    });
+  }
+  function addFiles(files) {
+    for (const f of files) {
+      if (f.size > 18 * 1024 * 1024) {
+        alert(`${f.name} is larger than 18 MB and will be skipped.`);
+        continue;
+      }
+      pendingFiles.push(f);
+    }
+    renderFiles();
+  }
+  dropZone.addEventListener('click', (e) => {
+    if (e.target.closest('.file-chip')) return;
+    fileInput.click();
+  });
+  dropZone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
+  fileInput.addEventListener('change', () => addFiles(fileInput.files));
+  ['dragenter', 'dragover'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.add('dragging'); }));
+  ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.remove('dragging'); }));
+  dropZone.addEventListener('drop', (e) => { if (e.dataTransfer?.files) addFiles(e.dataTransfer.files); });
 
   document.querySelectorAll('.chip').forEach(b => {
     b.addEventListener('click', () => {
@@ -76,17 +178,22 @@
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const topic = topicEl.value.trim();
-    if (!topic) return;
-    btn.disabled = true; btn.textContent = 'Generating…';
+    if (!topic && !pendingFiles.length) {
+      topicEl.focus();
+      return;
+    }
+    btn.disabled = true; btn.textContent = pendingFiles.length ? 'Analyzing…' : 'Generating…';
     out.innerHTML = '<p class="text-ink-mute text-[13px] uppercase tracking-wider m-0">…</p>';
     let text = '';
     try {
-      const res = await fetch('/notes/generate', {
-        method: 'POST',
-        body: new URLSearchParams({ topic }),
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      });
-      if (!res.ok || !res.body) throw new Error('request failed');
+      const fd = new FormData();
+      fd.append('topic', topic);
+      pendingFiles.forEach(f => fd.append('files', f, f.name));
+      const res = await fetch('/notes/generate', { method: 'POST', body: fd });
+      if (!res.ok || !res.body) {
+        const errTxt = await res.text().catch(() => '');
+        throw new Error(errTxt || ('request failed (' + res.status + ')'));
+      }
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       while (true) {
@@ -96,7 +203,7 @@
         out.innerHTML = marked.parse(text);
       }
     } catch (err) {
-      out.innerHTML = '<p style="color:#e69b9b">Error: ' + err.message + '</p>';
+      out.innerHTML = '<p style="color:#e69b9b">Error: ' + (err.message || err) + '</p>';
     } finally {
       btn.disabled = false; btn.textContent = 'Generate';
     }

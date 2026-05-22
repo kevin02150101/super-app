@@ -31,13 +31,44 @@ def _resolve_model(system_instruction: str):
     raise RuntimeError(f"No usable Gemini model found. Last error: {last_err}")
 
 
-def stream_notes(topic: str):
-    """Yield chunks of generated notes for a topic. Caller renders as they arrive."""
+# Mime types Gemini reliably accepts inline (≤ ~20MB per file).
+ALLOWED_MIMES = {
+    "application/pdf",
+    "image/jpeg", "image/jpg", "image/png", "image/webp", "image/heic", "image/heif",
+    "text/plain", "text/markdown", "text/csv",
+}
+# Hard cap so we don't blow up the request body.
+MAX_FILE_BYTES = 18 * 1024 * 1024  # 18 MB inline limit (Gemini accepts ~20MB)
+
+
+def stream_notes(topic: str, attachments: list[dict] | None = None):
+    """Yield chunks of generated notes.
+
+    Args:
+        topic: free-text topic or question. May be empty if attachments are given.
+        attachments: optional list of {"mime": str, "data": bytes, "name": str}.
+            Each file is sent as inline data to the multimodal model.
+    """
     genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
     system = NOTES_PROMPT_PATH.read_text()
     model, _name = _resolve_model(system)
+
+    parts: list = []
+    attachments = attachments or []
+    if attachments:
+        names = ", ".join(a.get("name") or "file" for a in attachments)
+        header = f"Attached file(s): {names}."
+        if topic:
+            parts.append(f"{header}\nTopic / question: {topic}\n\nUse the attached files as the primary source. Extract the key ideas and produce study notes per the system format.")
+        else:
+            parts.append(f"{header}\n\nAnalyze the attached files and produce study notes per the system format. If the content is a homework problem, explain how to solve it instead of giving only the answer.")
+        for a in attachments:
+            parts.append({"mime_type": a["mime"], "data": a["data"]})
+    else:
+        parts.append(f"Topic: {topic}")
+
     response = model.generate_content(
-        f"Topic: {topic}",
+        parts,
         generation_config={"max_output_tokens": 4096},
         stream=True,
     )
