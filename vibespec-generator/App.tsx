@@ -8,7 +8,7 @@ import {
   Wand2, Loader2, X, Check, Box, LayoutGrid, Code2, Server, Globe
 } from 'lucide-react';
 import { TechSpec, Step, Module, DataEntity } from './types';
-import { refineSpecWithAI, assistField } from './services/geminiService';
+import { refineSpecWithAI, assistField, HAS_API_KEY } from './services/geminiService';
 
 const INITIAL_SPEC: TechSpec = {
   basic: { name: '', type: 'RWD Responsive Web App', description: '', targetAudience: '' },
@@ -226,10 +226,22 @@ function TermHelp({ term }: { term: string }) {
 function AIAssist({ field, currentValue, context, onResult, className = "" }: { field: string, currentValue?: string, context: string, onResult: (val: string) => void, className?: string }) {
   const [loading, setLoading] = useState(false);
   const handleAssist = async () => {
+    if (!HAS_API_KEY) {
+      window.alert('Gemini API key is missing. Add GEMINI_API_KEY in Vercel and redeploy.');
+      return;
+    }
     setLoading(true);
-    const result = await assistField(field, currentValue || "", context);
-    onResult(result);
-    setLoading(false);
+    try {
+      const result = await assistField(field, currentValue || "", context);
+      if (result && result.trim()) {
+        onResult(result);
+      }
+    } catch (err) {
+      const msg = String((err as any)?.message || err || 'AI assist failed');
+      window.alert(msg);
+    } finally {
+      setLoading(false);
+    }
   };
   const hasContent = currentValue && currentValue.trim().length > 0;
   return (

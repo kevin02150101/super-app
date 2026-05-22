@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { TechSpec } from "../types";
 
 const API_KEY = (process.env.API_KEY || process.env.GEMINI_API_KEY || "").trim();
+export const HAS_API_KEY = Boolean(API_KEY);
 
 // Always initialize GoogleGenAI with a named apiKey parameter.
 const ai = new GoogleGenAI({ apiKey: API_KEY });
@@ -26,7 +27,7 @@ function refineErrorMessage(error: unknown): string {
 
 export const assistField = async (fieldName: string, currentValue: string, context: string): Promise<string> => {
   if (!API_KEY) {
-    return currentValue;
+    throw new Error("Gemini API key is missing. Set GEMINI_API_KEY in Vercel project settings, then redeploy.");
   }
 
   // Use systemInstruction for setting the model's persona and output constraints
@@ -60,7 +61,7 @@ Requirements:
     return response.text?.trim() || "";
   } catch (error) {
     console.error("AI Assist Error:", error);
-    return currentValue;
+    throw new Error(refineErrorMessage(error));
   }
 };
 
