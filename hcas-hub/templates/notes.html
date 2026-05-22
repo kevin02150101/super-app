@@ -9,8 +9,23 @@
 <div class="pt-2 pb-6">
   <div class="eyebrow mb-3">Study tools</div>
   <h1 class="display text-[44px] sm:text-[60px]">Notes</h1>
-  <p class="mt-3 text-[14px] text-ink-soft">Type a topic. Get organized class notes in seconds.</p>
+  <p class="mt-3 text-[14px] text-ink-soft">Type a topic or drop a PDF / image. Get organized class notes in seconds.</p>
 </div>
+
+{% if history %}
+<div class="hairline p-3 mb-6 bg-paper-soft/30">
+  <div class="eyebrow text-[10px] tracking-[0.22em] mb-2">Recent saved notes</div>
+  <ul class="flex flex-wrap gap-2">
+    {% for h in history %}
+      <li>
+        <a href="/notes/{{ h.id }}" class="chip text-[11px] px-2.5 py-1 hairline-soft text-ink-soft hover:text-white hover:bg-paper-tint transition">
+          {{ h.topic or 'Untitled' }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
 
 {% if not has_key %}
 <div class="callout mb-6" style="background:rgba(255,128,32,0.10); border-color:rgba(255,128,32,0.45);">
@@ -57,8 +72,22 @@
 
 <article id="output"
          class="prose prose-invert prose-sm max-w-none px-1 py-2 min-h-[10rem]">
-  <p class="text-ink-mute text-[13px] uppercase tracking-wider m-0">Notes will appear here</p>
+  {% if preload %}
+    <div id="preload-content" data-topic="{{ preload.topic|e }}" hidden>{{ preload.content }}</div>
+  {% else %}
+    <p class="text-ink-mute text-[13px] uppercase tracking-wider m-0">Notes will appear here</p>
+  {% endif %}
 </article>
+
+{% if supa_on %}
+<div id="saveRow" class="mt-3 flex items-center gap-2 hidden">
+  <button id="saveBtn" type="button"
+          class="px-3 py-1.5 hairline-soft text-[11px] uppercase tracking-wider text-ink-soft hover:text-white hover:bg-paper-tint transition">
+    Save to history
+  </button>
+  <span id="saveMsg" class="text-[11px] text-ink-mute"></span>
+</div>
+{% endif %}
 
 <style>
   #output h1 { font-family: "D-DIN", Inter, sans-serif; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; margin: .25rem 0 .5rem; color: var(--page-text); }
@@ -168,6 +197,49 @@
   ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.remove('dragging'); }));
   dropZone.addEventListener('drop', (e) => { if (e.dataTransfer?.files) addFiles(e.dataTransfer.files); });
 
+  // ----- Save current notes to Supabase history -----
+  const saveRow = document.getElementById('saveRow');
+  const saveBtn = document.getElementById('saveBtn');
+  const saveMsg = document.getElementById('saveMsg');
+  let lastNotesText = '';
+  let lastTopic = '';
+
+  function showSaveRow(text, topic) {
+    lastNotesText = text || '';
+    lastTopic = topic || '';
+    if (saveRow && lastNotesText.trim().length > 30) {
+      saveRow.classList.remove('hidden');
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save to history'; }
+      if (saveMsg) saveMsg.textContent = '';
+    }
+  }
+  if (saveBtn) {
+    saveBtn.addEventListener('click', async () => {
+      if (!lastNotesText) return;
+      saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+      try {
+        const fd = new FormData();
+        fd.append('topic', lastTopic);
+        fd.append('content', lastNotesText);
+        const r = await fetch('/notes/save', { method: 'POST', body: fd });
+        if (!r.ok) throw new Error(await r.text());
+        saveBtn.textContent = 'Saved ✓';
+        if (saveMsg) saveMsg.textContent = 'Reload to see it in history.';
+      } catch (e) {
+        saveBtn.disabled = false; saveBtn.textContent = 'Save to history';
+        if (saveMsg) saveMsg.textContent = 'Save failed: ' + (e.message || e);
+      }
+    });
+  }
+
+  // ----- Preload a saved note (when on /notes/<id>) -----
+  const preEl = document.getElementById('preload-content');
+  if (preEl) {
+    const md = preEl.textContent || '';
+    out.innerHTML = marked.parse(md);
+    showSaveRow(md, preEl.dataset.topic || '');
+  }
+
   document.querySelectorAll('.chip').forEach(b => {
     b.addEventListener('click', () => {
       topicEl.value = b.dataset.chip;
@@ -184,6 +256,7 @@
     }
     btn.disabled = true; btn.textContent = pendingFiles.length ? 'Analyzing…' : 'Generating…';
     out.innerHTML = '<p class="text-ink-mute text-[13px] uppercase tracking-wider m-0">…</p>';
+    if (saveRow) saveRow.classList.add('hidden');
     let text = '';
     try {
       const fd = new FormData();
@@ -202,6 +275,7 @@
         text += decoder.decode(value, { stream: true });
         out.innerHTML = marked.parse(text);
       }
+      showSaveRow(text, topic);
     } catch (err) {
       out.innerHTML = '<p style="color:#e69b9b">Error: ' + (err.message || err) + '</p>';
     } finally {

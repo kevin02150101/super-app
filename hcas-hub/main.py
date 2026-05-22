@@ -476,8 +476,40 @@ def toolbox_launch(key: str):
 # --------- NOTES ---------
 @app.get("/notes", response_class=HTMLResponse)
 def notes(request: Request):
+    from lib import supa
     has_key = bool(os.environ.get("GOOGLE_API_KEY"))
-    return render(request, "notes.html", active="notes", has_key=has_key)
+    user = auth.current_user(request)
+    uid = str(user["id"]) if user else None
+    history = supa.list_notes(uid, limit=10) if supa.is_enabled() else []
+    return render(request, "notes.html", active="notes",
+                  has_key=has_key, history=history, supa_on=supa.is_enabled())
+
+
+@app.post("/notes/save")
+async def notes_save(request: Request,
+                     topic: str = Form(""),
+                     content: str = Form(...)):
+    from lib import supa
+    user = auth.current_user(request)
+    uid = str(user["id"]) if user else None
+    if not supa.is_enabled():
+        raise HTTPException(503, "Supabase not configured")
+    row = supa.save_note(user_id=uid, topic=topic, content=content)
+    if not row:
+        raise HTTPException(500, "Save failed")
+    return JSONResponse({"ok": True, "id": row.get("id")})
+
+
+@app.get("/notes/{note_id}", response_class=HTMLResponse)
+def notes_view(request: Request, note_id: str):
+    from lib import supa
+    row = supa.get_note(note_id) if supa.is_enabled() else None
+    if not row:
+        raise HTTPException(404, "Note not found")
+    return render(request, "notes.html", active="notes",
+                  has_key=bool(os.environ.get("GOOGLE_API_KEY")),
+                  history=supa.list_notes(row.get("user_id"), limit=10),
+                  supa_on=True, preload=row)
 
 
 @app.post("/notes/generate")
