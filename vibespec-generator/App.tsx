@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { TechSpec, Step, Module, DataEntity } from './types';
 import { refineSpecWithAI, assistField, HAS_API_KEY } from './services/geminiService';
+import { SUPA_ENABLED, saveSpec, listSpecs, deleteSpec, type SavedSpec } from './services/supabase';
 
 const INITIAL_SPEC: TechSpec = {
   basic: { name: '', type: 'RWD Responsive Web App', description: '', targetAudience: '' },
@@ -134,6 +135,12 @@ export default function App() {
     setStep(6);
   };
 
+  const handleLoadSaved = (saved: SavedSpec) => {
+    setSpec(saved.spec);
+    setRefinedMarkdown(saved.refined_markdown || null);
+    setStep(6);
+  };
+
   const renderStep = () => {
     switch(step) {
       case 1: return <Step1Basic spec={spec} updateSpec={updateSpec} />;
@@ -141,7 +148,7 @@ export default function App() {
       case 3: return <Step3Features spec={spec} updateSpec={updateSpec} />;
       case 4: return <Step4Tech spec={spec} updateSpec={updateSpec} />;
       case 5: return <Step5Schema spec={spec} updateSpec={updateSpec} />;
-      case 6: return <Step6Preview spec={spec} refinedMarkdown={refinedMarkdown} isRefining={isRefining} onRefine={handleRefine} />;
+      case 6: return <Step6Preview spec={spec} refinedMarkdown={refinedMarkdown} isRefining={isRefining} onRefine={handleRefine} onLoad={handleLoadSaved} />;
     }
   };
 
@@ -579,19 +586,72 @@ function Step5Schema({ spec, updateSpec }: { spec: TechSpec, updateSpec: any }) 
   );
 }
 
-function Step6Preview({ spec, refinedMarkdown, isRefining, onRefine }: { spec: TechSpec, refinedMarkdown: string | null, isRefining: boolean, onRefine: () => void }) {
+function Step6Preview({ spec, refinedMarkdown, isRefining, onRefine, onLoad }: { spec: TechSpec, refinedMarkdown: string | null, isRefining: boolean, onRefine: () => void, onLoad: (s: SavedSpec) => void }) {
   const [copied, setCopied] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveMsg, setSaveMsg] = useState<string>('');
+  const [history, setHistory] = useState<SavedSpec[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  useEffect(() => {
+    if (SUPA_ENABLED) listSpecs(10).then(setHistory);
+  }, []);
+
   const copy = () => {
     navigator.clipboard.writeText(refinedMarkdown || JSON.stringify(spec, null, 2));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const save = async () => {
+    if (!SUPA_ENABLED) { setSaveMsg('Supabase not configured'); return; }
+    setSaving(true); setSaveMsg('');
+    const row = await saveSpec(spec.basic.name || 'Untitled', spec, refinedMarkdown);
+    setSaving(false);
+    if (row) {
+      setSaveMsg('Saved ✓');
+      setHistory(await listSpecs(10));
+      setTimeout(() => setSaveMsg(''), 2500);
+    } else {
+      setSaveMsg('Save failed');
+    }
+  };
+
+  const removeOne = async (id: string) => {
+    if (!confirm('Delete this saved spec?')) return;
+    const ok = await deleteSpec(id);
+    if (ok) setHistory(await listSpecs(10));
+  };
+
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700 pb-12 transition-all">
       <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-6">
         <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-3"><FileText className="w-8 h-8 text-blue-600" /> Spec Summary</h2>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-3 items-center">
           <button onClick={copy} className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-200 transition-all shadow-sm">{copied ? 'Copied!' : 'Copy Spec'} <Save className="w-5 h-5" /></button>
+          {SUPA_ENABLED && (
+            <>
+              <button onClick={save} disabled={saving} className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-200 transition-all shadow-sm disabled:opacity-50">{saving ? 'Saving…' : (saveMsg || 'Save to Cloud')} <Database className="w-5 h-5" /></button>
+              <div className="relative">
+                <button onClick={() => setHistoryOpen(o => !o)} className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-200 transition-all shadow-sm">My Specs ({history.length}) <ChevronDown className="w-4 h-4" /></button>
+                {historyOpen && (
+                  <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-auto rounded-2xl shadow-2xl z-40 p-2"
+                       style={{ background: 'var(--bar-bg)', border: '1px solid var(--bar-border)' }}>
+                    {history.length === 0 && <div className="p-4 text-sm text-slate-500">No saved specs yet.</div>}
+                    {history.map(h => (
+                      <div key={h.id} className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <button onClick={() => { onLoad(h); setHistoryOpen(false); }} className="flex-1 text-left">
+                          <div className="text-sm font-bold truncate" style={{ color: 'var(--page-text)' }}>{h.name}</div>
+                          <div className="text-[11px]" style={{ color: 'var(--ink-mute)' }}>{new Date(h.created_at).toLocaleString()}</div>
+                        </button>
+                        <button onClick={() => removeOne(h.id)} className="p-1 text-slate-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
           {!refinedMarkdown && <button onClick={onRefine} disabled={isRefining} className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-black flex items-center gap-2 hover:shadow-2xl transition-all disabled:opacity-50 shadow-lg shadow-blue-500/30">{isRefining ? 'Analyzing...' : 'Deep Refine with AI'} <Sparkles className="w-5 h-5" /></button>}
         </div>
       </header>
