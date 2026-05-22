@@ -132,6 +132,74 @@
     .hairline      { box-shadow: inset 0 0 0 1px var(--bar-border); }
     .hairline-soft { box-shadow: inset 0 0 0 1px rgba(59,207,255,0.08); }
 
+    /* ── VibeBot guided tour ───────────────────────────────────── */
+    .tour-root { position: fixed; inset: 0; z-index: 9998; display: none; }
+    .tour-root.open { display: block; }
+    .tour-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .tour-arrow {
+      position: absolute; width: 36px; height: 36px; border-radius: 999px;
+      background: linear-gradient(135deg, #3BCFFF, #1E96E5);
+      box-shadow: 0 0 24px rgba(59,207,255,0.55);
+      display: flex; align-items: center; justify-content: center;
+      color: #0F1A2F; pointer-events: none;
+      animation: tour-bounce 1s infinite;
+    }
+    @keyframes tour-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .tour-dialog {
+      position: absolute; width: 340px; max-width: 92vw;
+      padding: 20px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #0f1a2f, #15294a);
+      border: 2px solid #3BCFFF;
+      box-shadow: 0 20px 60px rgba(30,150,229,0.35);
+      color: #F5F7FA;
+      pointer-events: auto;
+    }
+    .tour-dialog .tour-head { display: flex; align-items: flex-start; gap: 12px; }
+    .tour-dialog .tour-avatar {
+      width: 44px; height: 44px; border-radius: 14px; flex-shrink: 0;
+      background: linear-gradient(135deg, #3BCFFF, #1E96E5);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tour-dialog .tour-eyebrow {
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+      font-size: 10px; color: #3BCFFF;
+    }
+    .tour-dialog h3 { font-family: "D-DIN", Inter, sans-serif; font-weight: 800; font-size: 18px; line-height: 1.2; margin: 4px 0 0; color: #fff; }
+    .tour-dialog p { font-size: 14px; line-height: 1.55; color: #E2E8F0; margin-top: 10px; }
+    .tour-dialog .tour-close {
+      background: transparent; border: 0; color: #94A3B8; cursor: pointer; padding: 4px;
+    }
+    .tour-dialog .tour-close:hover { color: #fff; }
+    .tour-progress { display: flex; gap: 4px; margin-top: 14px; }
+    .tour-progress span { flex: 1; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.15); transition: background .2s; }
+    .tour-progress span.done { background: #3BCFFF; }
+    .tour-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+    .tour-skip { background: none; border: 0; color: #94A3B8; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .tour-skip:hover { color: #fff; }
+    .tour-nav { display: flex; gap: 8px; }
+    .tour-btn {
+      padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 800;
+      border: 0; cursor: pointer; font-family: "D-DIN", Inter, sans-serif; letter-spacing: 0.05em;
+    }
+    .tour-btn-back { background: #1E293B; color: #E2E8F0; }
+    .tour-btn-back:hover { background: #334155; }
+    .tour-btn-next { background: linear-gradient(90deg, #3BCFFF, #1E96E5); color: #0F1A2F; }
+    .tour-btn-next:active { transform: scale(0.96); }
+    .guide-btn {
+      width: 32px; height: 32px; border-radius: 50%; border: none;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--page-bg); color: var(--page-text);
+      box-shadow: 0 0 0 1.5px var(--bar-border); cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .guide-btn:hover { transform: scale(1.10); }
+    .guide-btn:active { transform: scale(0.96); }
+
     /* Header */
     .app-header {
       background: var(--bar-bg);
@@ -219,7 +287,7 @@
   <header class="app-header fixed top-0 inset-x-0 z-50 backdrop-blur safe-top">
     {# Logo row — centered on mobile, on the left on desktop #}
     <div class="max-w-screen-md mx-auto px-5 pt-2 sm:pt-0 sm:h-12 flex flex-col sm:flex-row items-center sm:items-stretch">
-      <a href="/" class="flex items-center gap-2 shrink-0 sm:mr-6 sm:self-center">
+      <a href="/" data-tour="logo" class="flex items-center gap-2 shrink-0 sm:mr-6 sm:self-center">
         {# H-mark logo #}
         <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
@@ -241,7 +309,7 @@
         </svg>
         <span class="display text-[14px] tracking-[0.22em] text-white">HCAS&nbsp;HUB</span>
       </a>
-      <nav class="mx-auto sm:mx-0 sm:ml-auto sm:mr-auto flex items-center justify-center gap-3 sm:gap-7 py-1.5 sm:py-0">
+      <nav data-tour="nav" class="mx-auto sm:mx-0 sm:ml-auto sm:mr-auto flex items-center justify-center gap-3 sm:gap-7 py-1.5 sm:py-0">
         {% set items = [
           ('today',       '/',            'Home'),
           ('lunch',       '/lunch',       'Lunch'),
@@ -251,7 +319,7 @@
           ('notes',       '/notes',       'Notes'),
         ] %}
         {% for key, href, label in items %}
-          <a href="{{ href }}" class="nav-link {{ 'active' if active == key else '' }}">{{ label }}</a>
+          <a href="{{ href }}" data-tour="nav-{{ key }}" class="nav-link {{ 'active' if active == key else '' }}">{{ label }}</a>
         {% endfor %}
       </nav>
       {# User / streak chip #}
@@ -273,8 +341,14 @@
       {% else %}
         <a href="/login" class="inline-flex items-center ml-3 px-3 py-1.5 rounded-full bg-white text-black text-[12px] font-medium hover:bg-ink-soft">Sign in</a>
       {% endif %}
+      {# Guide / replay tour #}
+      <button id="guide-btn" data-tour="guide" class="guide-btn sm:ml-2 mb-1 sm:mb-0" aria-label="Replay guided tour" title="Replay tour">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+      </button>
       {# Theme toggle #}
-      <button id="theme-toggle" class="theme-btn sm:ml-3 mb-1 sm:mb-0" aria-label="Toggle theme" aria-pressed="false">
+      <button id="theme-toggle" data-tour="theme" class="theme-btn sm:ml-3 mb-1 sm:mb-0" aria-label="Toggle theme" aria-pressed="false">
         <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
@@ -346,6 +420,196 @@
         btn.setAttribute('aria-pressed', isLight ? 'false' : 'true');
         btn.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
       }
+    })();
+  </script>
+
+  {# ─── VibeBot guided tour ─────────────────────────────────── #}
+  <div id="tour-root" class="tour-root" role="dialog" aria-modal="true" aria-label="Guided tour">
+    <svg class="tour-svg" id="tour-svg">
+      <defs>
+        <mask id="hcas-tour-mask">
+          <rect width="100%" height="100%" fill="white"/>
+          <rect id="tour-hole" x="-100" y="-100" width="0" height="0" rx="14" fill="black"/>
+        </mask>
+      </defs>
+      <rect width="100%" height="100%" fill="rgba(2,8,23,0.72)" mask="url(#hcas-tour-mask)"/>
+      <rect id="tour-outline" x="-100" y="-100" width="0" height="0" rx="14" fill="none" stroke="#3BCFFF" stroke-width="2.5"/>
+    </svg>
+    <div id="tour-arrow" class="tour-arrow" style="display:none">
+      <svg id="tour-arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+      </svg>
+    </div>
+    <div id="tour-dialog" class="tour-dialog">
+      <div class="tour-head">
+        <div class="tour-avatar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l1.6 4.8L18.4 8.4 14.4 11.6 16 16.4 12 13.6 8 16.4l1.6-4.8L5.6 8.4l4.8-1.6L12 2z"/></svg>
+        </div>
+        <div style="flex:1; min-width:0">
+          <p class="tour-eyebrow"><span id="tour-progress-label">HUBBOT · 1 / 1</span></p>
+          <h3 id="tour-title">Hi!</h3>
+        </div>
+        <button type="button" class="tour-close" id="tour-close" aria-label="Skip tour">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p id="tour-body"></p>
+      <div class="tour-progress" id="tour-progress"></div>
+      <div class="tour-actions">
+        <button type="button" class="tour-skip" id="tour-skip">Skip tour</button>
+        <div class="tour-nav">
+          <button type="button" class="tour-btn tour-btn-back" id="tour-back" style="display:none">Back</button>
+          <button type="button" class="tour-btn tour-btn-next" id="tour-next">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const STEPS = [
+        { sel: null,                    title: "Hi, I'm HubBot!", body: "Welcome to HCAS Hub. Let me give you a quick 30-second tour of the app." },
+        { sel: '[data-tour="logo"]',    title: "Home Logo",       body: "Click the HCAS HUB logo any time to return to your home page." },
+        { sel: '[data-tour="nav-today"]',       title: "Home / Today",   body: "Your daily overview — today's schedule, lunch, and what's due." },
+        { sel: '[data-tour="nav-lunch"]',       title: "Lunch",          body: "See today's menu and the AI verdict on whether to eat school lunch." },
+        { sel: '[data-tour="nav-schedule"]',    title: "Schedule",       body: "Your class periods and timing for the day." },
+        { sel: '[data-tour="nav-assignments"]', title: "HW",             body: "Track assignments, due dates, and progress in one place." },
+        { sel: '[data-tour="nav-toolbox"]',     title: "Toolbox",        body: "Handy school links, tools, and shortcuts you use every day." },
+        { sel: '[data-tour="nav-notes"]',       title: "Notes",          body: "Quick personal notes — synced and private to your account." },
+        { sel: '[data-tour="theme"]',  title: "Light / Dark",   body: "Switch between dark and light mode any time. Your choice is remembered." },
+        { sel: '[data-tour="guide"]',  title: "Replay Tour",    body: "Press this Guide button whenever you want to replay this tour. I'll be here!" },
+        { sel: null,                    title: "You're all set!", body: "That's the whole hub. Have a great day at school — HubBot out!" },
+      ];
+
+      const root = document.getElementById('tour-root');
+      const svg = document.getElementById('tour-svg');
+      const hole = document.getElementById('tour-hole');
+      const outline = document.getElementById('tour-outline');
+      const arrow = document.getElementById('tour-arrow');
+      const arrowIcon = document.getElementById('tour-arrow-icon');
+      const dialog = document.getElementById('tour-dialog');
+      const titleEl = document.getElementById('tour-title');
+      const bodyEl = document.getElementById('tour-body');
+      const progressLabel = document.getElementById('tour-progress-label');
+      const progress = document.getElementById('tour-progress');
+      const btnBack = document.getElementById('tour-back');
+      const btnNext = document.getElementById('tour-next');
+      const btnSkip = document.getElementById('tour-skip');
+      const btnClose = document.getElementById('tour-close');
+      const btnGuide = document.getElementById('guide-btn');
+
+      let idx = 0;
+      let active = false;
+      let visibleSteps = STEPS;
+
+      function open() {
+        // Filter steps whose target doesn't exist on this page (except null = centered)
+        visibleSteps = STEPS.filter(s => s.sel === null || document.querySelector(s.sel));
+        if (visibleSteps.length === 0) return;
+        idx = 0;
+        active = true;
+        root.classList.add('open');
+        renderProgress();
+        update();
+      }
+      function close() {
+        active = false;
+        root.classList.remove('open');
+        try { localStorage.setItem('hcas-tour-done', '1'); } catch (e) {}
+      }
+
+      function renderProgress() {
+        progress.innerHTML = '';
+        for (let i = 0; i < visibleSteps.length; i++) {
+          const s = document.createElement('span');
+          progress.appendChild(s);
+        }
+      }
+      function update() {
+        const step = visibleSteps[idx];
+        titleEl.textContent = step.title;
+        bodyEl.textContent = step.body;
+        progressLabel.textContent = `HUBBOT · ${idx + 1} / ${visibleSteps.length}`;
+        Array.from(progress.children).forEach((el, i) => el.classList.toggle('done', i <= idx));
+        btnBack.style.display = idx > 0 ? '' : 'none';
+        btnNext.textContent = idx === visibleSteps.length - 1 ? "Let's go!" : 'Next →';
+        position(step);
+      }
+      function position(step) {
+        const margin = 16;
+        const W = window.innerWidth, H = window.innerHeight;
+        const dialogW = 340, dialogH = 240;
+
+        if (!step.sel) {
+          hole.setAttribute('x', -100); hole.setAttribute('y', -100);
+          hole.setAttribute('width', 0); hole.setAttribute('height', 0);
+          outline.setAttribute('width', 0); outline.setAttribute('height', 0);
+          arrow.style.display = 'none';
+          dialog.style.left = (W/2 - dialogW/2) + 'px';
+          dialog.style.top  = (H/2 - dialogH/2) + 'px';
+          return;
+        }
+        const el = document.querySelector(step.sel);
+        if (!el) { arrow.style.display = 'none'; return; }
+        el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+        const r = el.getBoundingClientRect();
+        const pad = 8;
+        hole.setAttribute('x', r.left - pad);
+        hole.setAttribute('y', r.top - pad);
+        hole.setAttribute('width', r.width + pad*2);
+        hole.setAttribute('height', r.height + pad*2);
+        outline.setAttribute('x', r.left - pad);
+        outline.setAttribute('y', r.top - pad);
+        outline.setAttribute('width', r.width + pad*2);
+        outline.setAttribute('height', r.height + pad*2);
+
+        const cx = r.left + r.width/2;
+        const spaceBelow = H - r.bottom;
+        const dialogLeft = Math.max(margin, Math.min(W - dialogW - margin, cx - dialogW/2));
+        let arrowDown = true, dialogTop;
+        if (spaceBelow > dialogH + 60) {
+          dialogTop = r.bottom + 50;
+          arrowDown = true;
+          arrow.style.left = (cx - 18) + 'px';
+          arrow.style.top  = (r.bottom + 8) + 'px';
+        } else {
+          dialogTop = Math.max(margin, r.top - dialogH - 50);
+          arrowDown = false;
+          arrow.style.left = (cx - 18) + 'px';
+          arrow.style.top  = (r.top - 44) + 'px';
+        }
+        dialog.style.left = dialogLeft + 'px';
+        dialog.style.top  = dialogTop + 'px';
+        arrow.style.display = '';
+        // Flip arrow direction
+        arrowIcon.innerHTML = arrowDown
+          ? '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>'
+          : '<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>';
+      }
+
+      btnNext.addEventListener('click', () => {
+        if (idx >= visibleSteps.length - 1) close();
+        else { idx++; update(); }
+      });
+      btnBack.addEventListener('click', () => { if (idx > 0) { idx--; update(); } });
+      btnSkip.addEventListener('click', close);
+      btnClose.addEventListener('click', close);
+      if (btnGuide) btnGuide.addEventListener('click', open);
+      window.addEventListener('resize', () => { if (active) position(visibleSteps[idx]); });
+      window.addEventListener('scroll', () => { if (active) position(visibleSteps[idx]); }, true);
+      document.addEventListener('keydown', (e) => {
+        if (!active) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === 'ArrowRight') btnNext.click();
+        else if (e.key === 'ArrowLeft') btnBack.click();
+      });
+
+      // Auto-launch on first visit
+      try {
+        if (!localStorage.getItem('hcas-tour-done')) {
+          setTimeout(open, 700);
+        }
+      } catch (e) {}
     })();
   </script>
 </body>
