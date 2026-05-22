@@ -39,3 +39,26 @@ services:
         value: production
       - key: SECRET_KEY
         generateValue: true
+
+  # ─── HCAS Hub · FastAPI student super-app ─────────────────────────────
+  - type: web
+    name: hcas-hub
+    runtime: python
+    plan: free
+    rootDir: hcas-hub
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: GOOGLE_API_KEY
+        sync: false        # set in Render dashboard
+      - key: SECRET_KEY
+        generateValue: true
+      - key: AZURE_CLIENT_ID
+        sync: false
+      - key: AZURE_TENANT_ID
+        sync: false
+      - key: AZURE_CLIENT_SECRET
+        sync: false
