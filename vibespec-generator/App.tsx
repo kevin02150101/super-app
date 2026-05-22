@@ -6,11 +6,15 @@ import {
   Github, Monitor, Smartphone, Palette, CheckCircle2,
   Info, Lightbulb, Moon, Sun, ChevronDown, HelpCircle,
   Wand2, Loader2, X, Check, Box, LayoutGrid, Code2, Server, Globe,
-  ArrowUp, ArrowDown, Play, MessageCircle
+  ArrowUp, ArrowDown, Play, MessageCircle, LogIn, LogOut, User as UserIcon, Mail, Lock
 } from 'lucide-react';
 import { TechSpec, Step, Module, DataEntity } from './types';
 import { refineSpecWithAI, assistField, HAS_API_KEY } from './services/geminiService';
-import { SUPA_ENABLED, saveSpec, listSpecs, deleteSpec, type SavedSpec } from './services/supabase';
+import {
+  SUPA_ENABLED, saveSpec, listSpecs, deleteSpec,
+  getUser, onAuthChange, signIn, signUp, signOut, claimDeviceSpecs,
+  type SavedSpec, type AuthUser,
+} from './services/supabase';
 
 const INITIAL_SPEC: TechSpec = {
   basic: { name: '', type: 'RWD Responsive Web App', description: '', targetAudience: '' },
@@ -108,6 +112,20 @@ export default function App() {
   const themeLabel = theme === 'light' ? 'White Mode' : 'Dark Mode';
   const nextThemeLabel = theme === 'light' ? 'dark' : 'white';
 
+  // ---- Supabase auth ----
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [authOpen, setAuthOpen] = useState(false);
+  useEffect(() => {
+    if (!SUPA_ENABLED) return;
+    getUser().then(setUser);
+    const off = onAuthChange((u) => {
+      setUser(u);
+      if (u) { claimDeviceSpecs().catch(() => {}); setAuthOpen(false); }
+    });
+    return off;
+  }, []);
+  const handleSignOut = async () => { await signOut(); setUser(null); };
+
   const [tourOpen, setTourOpen] = useState(false);
   useEffect(() => {
     if (!localStorage.getItem('vibe-tour-done')) {
@@ -187,6 +205,25 @@ export default function App() {
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
               <span className="text-xs font-bold tracking-wide uppercase hidden sm:inline">{themeLabel}</span>
             </button>
+            {SUPA_ENABLED && (
+              user ? (
+                <button onClick={handleSignOut} aria-label="Sign out" className="px-3 py-2 rounded-full transition-all duration-300 flex items-center gap-2"
+                        style={{ color: 'var(--ink-soft)', background: 'transparent' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'var(--paper-soft)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--ink-soft)'; }}
+                        title={user.email || 'Signed in'}>
+                  <UserIcon className="w-5 h-5" />
+                  <span className="text-xs font-bold tracking-wide hidden sm:inline truncate max-w-[140px]">{user.email || 'Account'}</span>
+                  <LogOut className="w-4 h-4 opacity-70" />
+                </button>
+              ) : (
+                <button onClick={() => setAuthOpen(true)} aria-label="Sign in" className="px-3 py-2 rounded-full transition-all duration-300 flex items-center gap-2 text-white"
+                        style={{ background: 'linear-gradient(135deg, #3BCFFF, #1E96E5)' }}>
+                  <LogIn className="w-5 h-5" />
+                  <span className="text-xs font-bold tracking-wide uppercase hidden sm:inline">Sign in</span>
+                </button>
+              )
+            )}
           </div>
         </div>
       </header>
@@ -233,6 +270,90 @@ export default function App() {
         </div>
       </footer>
       <Tour open={tourOpen} onClose={closeTour} currentStep={step} goToStep={goToStep} />
+      {SUPA_ENABLED && <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />}
+    </div>
+  );
+}
+
+function AuthModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
+
+  useEffect(() => {
+    if (!open) { setError(''); setInfo(''); setPassword(''); }
+  }, [open]);
+
+  if (!open) return null;
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(''); setInfo(''); setBusy(true);
+    try {
+      if (mode === 'signup') {
+        const r = await signUp(email.trim(), password);
+        if (!r.ok) setError(r.error || 'Sign up failed');
+        else if (r.needsConfirm) setInfo('Check your email to confirm, then sign in.');
+        else setInfo('Account created!');
+      } else {
+        const r = await signIn(email.trim(), password);
+        if (!r.ok) setError(r.error || 'Sign in failed');
+      }
+    } finally { setBusy(false); }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+         onClick={onClose}>
+      <form onClick={e => e.stopPropagation()} onSubmit={submit}
+            className="w-full max-w-sm rounded-2xl p-7 shadow-2xl"
+            style={{ background: 'var(--bar-bg)', border: '1px solid var(--bar-border)' }}>
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-2xl font-black" style={{ color: 'var(--page-text)' }}>
+            {mode === 'signin' ? 'Sign in' : 'Create account'}
+          </h2>
+          <button type="button" onClick={onClose} className="p-1 rounded-full hover:bg-slate-200/20" aria-label="Close">
+            <X className="w-5 h-5" style={{ color: 'var(--ink-soft)' }} />
+          </button>
+        </div>
+        <p className="text-sm mb-5" style={{ color: 'var(--ink-soft)' }}>
+          {mode === 'signin' ? 'Sign in to sync your specs across devices.' : 'Create a free account to save your specs.'}
+        </p>
+
+        <label className="block text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--ink-mute)' }}>Email</label>
+        <div className="relative mb-3">
+          <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--ink-mute)' }} />
+          <input type="email" required autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}
+                 className="w-full pl-10 pr-3 py-2.5 rounded-lg outline-none"
+                 style={{ background: 'var(--paper-soft)', color: 'var(--page-text)', border: '1px solid var(--bar-border)' }} />
+        </div>
+
+        <label className="block text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--ink-mute)' }}>Password</label>
+        <div className="relative mb-4">
+          <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--ink-mute)' }} />
+          <input type="password" required minLength={6} autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                 value={password} onChange={e => setPassword(e.target.value)}
+                 className="w-full pl-10 pr-3 py-2.5 rounded-lg outline-none"
+                 style={{ background: 'var(--paper-soft)', color: 'var(--page-text)', border: '1px solid var(--bar-border)' }} />
+        </div>
+
+        {error && <p className="mb-3 text-sm text-red-400">{error}</p>}
+        {info && <p className="mb-3 text-sm text-emerald-400">{info}</p>}
+
+        <button type="submit" disabled={busy}
+                className="w-full py-2.5 rounded-lg font-bold text-white shadow-lg shadow-blue-500/20 disabled:opacity-60"
+                style={{ background: 'linear-gradient(135deg, #3BCFFF, #1E96E5)' }}>
+          {busy ? '…' : (mode === 'signin' ? 'Sign in' : 'Create account')}
+        </button>
+
+        <button type="button" onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(''); setInfo(''); }}
+                className="w-full mt-3 text-sm hover:underline" style={{ color: 'var(--ink-soft)' }}>
+          {mode === 'signin' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
+        </button>
+      </form>
     </div>
   );
 }
