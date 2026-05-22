@@ -339,7 +339,13 @@
           <button class="inline-flex items-center px-3 py-1.5 rounded-full border border-line text-[12px] hover:bg-paper-soft">Sign out</button>
         </form>
       {% else %}
-        <a href="/login" class="inline-flex items-center ml-3 px-3 py-1.5 rounded-full bg-white text-black text-[12px] font-medium hover:bg-ink-soft">Sign in</a>
+        <a href="/login" class="inline-flex items-center gap-1.5 ml-3 px-3.5 py-1.5 rounded-full text-[12px] font-bold tracking-wide"
+           style="background: linear-gradient(90deg, #3BCFFF, #1E96E5); color: #0F1A2F; box-shadow: 0 6px 18px rgba(30,150,229,0.35);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          Sign in
+        </a>
       {% endif %}
       {# Guide / replay tour #}
       <button id="guide-btn" data-tour="guide" class="guide-btn sm:ml-2 mb-1 sm:mb-0" aria-label="Replay guided tour" title="Replay tour">
