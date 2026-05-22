@@ -2,10 +2,33 @@
 import { GoogleGenAI } from "@google/genai";
 import { TechSpec } from "../types";
 
-// Always initialize GoogleGenAI with a named apiKey parameter from process.env.API_KEY
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const API_KEY = (process.env.API_KEY || process.env.GEMINI_API_KEY || "").trim();
+
+// Always initialize GoogleGenAI with a named apiKey parameter.
+const ai = new GoogleGenAI({ apiKey: API_KEY });
+
+function refineErrorMessage(error: unknown): string {
+  if (!API_KEY) {
+    return "Gemini API key is missing. Set GEMINI_API_KEY in Vercel project settings, then redeploy.";
+  }
+  const text = String((error as any)?.message || error || "");
+  if (/401|403|unauthorized|forbidden/i.test(text)) {
+    return "Gemini request was rejected (auth/permission). Check your API key and allowed referrers.";
+  }
+  if (/429|quota|rate/i.test(text)) {
+    return "Gemini quota/rate limit reached. Wait a moment or use a key with available quota.";
+  }
+  if (text) {
+    return `AI refinement failed: ${text}`;
+  }
+  return "An error occurred during AI refinement.";
+}
 
 export const assistField = async (fieldName: string, currentValue: string, context: string): Promise<string> => {
+  if (!API_KEY) {
+    return currentValue;
+  }
+
   // Use systemInstruction for setting the model's persona and output constraints
   const systemInstruction = `You are an experienced product manager and technical advisor.
 The user is currently filling out a technical specification document.
@@ -75,6 +98,6 @@ The user's goal is to generate a high-quality Technical Specification that AI co
     return response.text || "Generation failed. Please try again later.";
   } catch (error) {
     console.error("Gemini Error:", error);
-    return "An error occurred during AI refinement.";
+    return refineErrorMessage(error);
   }
 };
