@@ -103,6 +103,8 @@ export default function App() {
   }, [theme]);
 
   const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  const themeLabel = theme === 'light' ? 'White Mode' : 'Dark Mode';
+  const nextThemeLabel = theme === 'light' ? 'dark' : 'white';
 
   const updateSpec = <K extends keyof TechSpec>(key: K, value: TechSpec[K]) => {
     setSpec(prev => ({ ...prev, [key]: value }));
@@ -130,7 +132,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col text-slate-100">
+    <div className="min-h-screen flex flex-col" style={{ color: 'var(--page-text)' }}>
       <header className="sticky top-0 z-50 px-4 py-3 sm:px-8 backdrop-blur-md"
               style={{ background: 'var(--bar-bg)', borderBottom: '1px solid var(--bar-border)' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -150,11 +152,12 @@ export default function App() {
             <StepIndicator currentStep={step} onStepClick={goToStep} />
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={toggleTheme} className="p-2 rounded-full transition-all duration-300"
+            <button onClick={toggleTheme} aria-label={`Switch to ${nextThemeLabel} mode`} className="px-3 py-2 rounded-full transition-all duration-300 flex items-center gap-2"
                     style={{ color: 'var(--ink-soft)', background: 'transparent' }}
                     onMouseEnter={e => { e.currentTarget.style.background = 'var(--paper-soft)'; e.currentTarget.style.color = 'var(--accent)'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--ink-soft)'; }}>
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+              <span className="text-xs font-bold tracking-wide uppercase">{themeLabel}</span>
             </button>
           </div>
         </div>
