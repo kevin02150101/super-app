@@ -5,7 +5,8 @@ import {
   Settings, Layout, Layers, Database, Sparkles, FileText,
   Github, Monitor, Smartphone, Palette, CheckCircle2,
   Info, Lightbulb, Moon, Sun, ChevronDown, HelpCircle,
-  Wand2, Loader2, X, Check, Box, LayoutGrid, Code2, Server, Globe
+  Wand2, Loader2, X, Check, Box, LayoutGrid, Code2, Server, Globe,
+  ArrowUp, ArrowDown, Play, MessageCircle
 } from 'lucide-react';
 import { TechSpec, Step, Module, DataEntity } from './types';
 import { refineSpecWithAI, assistField, HAS_API_KEY } from './services/geminiService';
@@ -106,6 +107,19 @@ export default function App() {
   const themeLabel = theme === 'light' ? 'White Mode' : 'Dark Mode';
   const nextThemeLabel = theme === 'light' ? 'dark' : 'white';
 
+  const [tourOpen, setTourOpen] = useState(false);
+  useEffect(() => {
+    if (!localStorage.getItem('vibe-tour-done')) {
+      const t = setTimeout(() => setTourOpen(true), 600);
+      return () => clearTimeout(t);
+    }
+  }, []);
+  const closeTour = () => {
+    setTourOpen(false);
+    localStorage.setItem('vibe-tour-done', '1');
+  };
+  const startTour = () => setTourOpen(true);
+
   const updateSpec = <K extends keyof TechSpec>(key: K, value: TechSpec[K]) => {
     setSpec(prev => ({ ...prev, [key]: value }));
   };
@@ -136,7 +150,7 @@ export default function App() {
       <header className="sticky top-0 z-50 px-4 py-3 sm:px-8 backdrop-blur-md"
               style={{ background: 'var(--bar-bg)', borderBottom: '1px solid var(--bar-border)' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => goToStep(1)}>
+          <div data-tour="logo" className="flex items-center gap-3 cursor-pointer group" onClick={() => goToStep(1)}>
             <div className="w-9 h-9 rounded-md flex items-center justify-center text-white group-hover:scale-105 transition-transform"
                  style={{ background: 'linear-gradient(135deg, #3BCFFF, #1E96E5)' }}>
               <Sparkles className="w-5 h-5" />
@@ -148,22 +162,29 @@ export default function App() {
               <p className="hcas-eyebrow mt-1">AI Tech Spec Generator</p>
             </div>
           </div>
-          <div className="hidden lg:flex items-center gap-2">
+          <div data-tour="steps" className="hidden lg:flex items-center gap-2">
             <StepIndicator currentStep={step} onStepClick={goToStep} />
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={toggleTheme} aria-label={`Switch to ${nextThemeLabel} mode`} className="px-3 py-2 rounded-full transition-all duration-300 flex items-center gap-2"
+            <button data-tour="tourbtn" onClick={startTour} aria-label="Start guided tour" className="px-3 py-2 rounded-full transition-all duration-300 flex items-center gap-2"
+                    style={{ color: 'var(--ink-soft)', background: 'transparent' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--paper-soft)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--ink-soft)'; }}>
+              <MessageCircle className="w-5 h-5" />
+              <span className="text-xs font-bold tracking-wide uppercase hidden sm:inline">Guide</span>
+            </button>
+            <button data-tour="theme" onClick={toggleTheme} aria-label={`Switch to ${nextThemeLabel} mode`} className="px-3 py-2 rounded-full transition-all duration-300 flex items-center gap-2"
                     style={{ color: 'var(--ink-soft)', background: 'transparent' }}
                     onMouseEnter={e => { e.currentTarget.style.background = 'var(--paper-soft)'; e.currentTarget.style.color = 'var(--accent)'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--ink-soft)'; }}>
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-              <span className="text-xs font-bold tracking-wide uppercase">{themeLabel}</span>
+              <span className="text-xs font-bold tracking-wide uppercase hidden sm:inline">{themeLabel}</span>
             </button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6 sm:py-10 flex flex-col pb-36 lg:pb-44">
+      <main data-tour="content" className="flex-1 max-w-5xl mx-auto w-full px-4 py-6 sm:py-10 flex flex-col pb-36 lg:pb-44">
         <div className="hcas-hairline p-6 sm:p-10 flex-1 flex flex-col min-h-[600px]"
              style={{ background: 'var(--surface-bg)', backdropFilter: 'blur(8px)' }}>
           <div className="flex-1">
@@ -184,7 +205,7 @@ export default function App() {
              <span className="hcas-eyebrow">STEP {step}/6</span>
           </div>
           {step < 5 ? (
-            <button onClick={() => setStep(s => Math.min(s + 1, 6) as Step)}
+            <button data-tour="next" onClick={() => setStep(s => Math.min(s + 1, 6) as Step)}
                     className="flex items-center gap-2 px-8 py-3 rounded-md font-bold transition-all active:scale-95"
                     style={{ background: '#fff', color: '#000' }}>
               Next Step <ArrowRight className="w-5 h-5" />
@@ -204,6 +225,7 @@ export default function App() {
           )}
         </div>
       </footer>
+      <Tour open={tourOpen} onClose={closeTour} currentStep={step} goToStep={goToStep} />
     </div>
   );
 }
@@ -592,6 +614,141 @@ function Step6Preview({ spec, refinedMarkdown, isRefining, onRefine }: { spec: T
             {refinedMarkdown || `# Project: ${spec.basic.name || 'Untitled'}\n## Type: ${spec.basic.type}\n\n### 🎯 Vision\n${spec.basic.description || 'No description'}\n\n### 🎨 UI Spec\n- Style: ${spec.design.styles.join(', ')}\n- Theme: ${spec.design.themes.join(', ')}\n- Layout: ${spec.design.mobileLayouts.concat(spec.design.desktopLayouts).join(', ')}\n\n### 🛠️ Tech Stack\n- Frontend: ${spec.techStack.frontend}\n- UI: ${spec.techStack.ui}\n- API: ${spec.techStack.api}\n- Database: ${spec.techStack.database}\n- Infrastructure: ${spec.techStack.infrastructure}\n\n💡 Click "Deep Refine with AI" to generate the full document.`}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+const TOUR_STEPS: { selector: string | null; title: string; body: string; goStep?: number }[] = [
+  { selector: null, title: "Hi, I'm VibeBot!", body: "Welcome to VibeSpec — the AI tech-spec generator. Let me give you a 30-second tour of how everything works." },
+  { selector: '[data-tour=\"logo\"]', title: "Home & Branding", body: "Click the VibeSpec logo any time to jump back to Step 1 (Project Basics)." },
+  { selector: '[data-tour=\"steps\"]', title: "The 6 Steps", body: "Your spec is built in 6 stages: Basics → Design → Features → Tech Stack → Data Model → Generate. Click any step to jump there." },
+  { selector: '[data-tour=\"tourbtn\"]', title: "Replay This Guide", body: "Press the Guide button any time to replay this tour. I'll be here whenever you need me." },
+  { selector: '[data-tour=\"theme\"]', title: "White / Dark Mode", body: "Toggle between White Mode and Dark Mode. The label updates so you always know which mode you're in." },
+  { selector: '[data-tour=\"content\"]', title: "Your Spec Canvas", body: "Each step shows a form here. Look for the sparkle (✨) Draft / Refine with AI buttons — they let Gemini write or polish fields for you." },
+  { selector: '[data-tour=\"next\"]', title: "Navigate Steps", body: "Use Back / Next at the bottom to move between steps. On the final step you'll hit Refine with AI to generate the full spec doc." },
+  { selector: null, title: "You're ready!", body: "That's everything. Start filling in Project Basics — you can always replay this tour from the Guide button. Have fun building!" },
+];
+
+function Tour({ open, onClose, currentStep, goToStep }: { open: boolean; onClose: () => void; currentStep: Step; goToStep: (s: number) => void }) {
+  const [idx, setIdx] = useState(0);
+  const [rect, setRect] = useState<DOMRect | null>(null);
+
+  useEffect(() => {
+    if (open) setIdx(0);
+  }, [open]);
+
+  const step = TOUR_STEPS[idx];
+
+  useEffect(() => {
+    if (!open) return;
+    const update = () => {
+      if (!step.selector) { setRect(null); return; }
+      const el = document.querySelector(step.selector) as HTMLElement | null;
+      if (!el) { setRect(null); return; }
+      setRect(el.getBoundingClientRect());
+    };
+    update();
+    const t1 = setTimeout(update, 100);
+    const t2 = setTimeout(update, 350);
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update, true);
+    return () => {
+      clearTimeout(t1); clearTimeout(t2);
+      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', update, true);
+    };
+  }, [open, idx, step?.selector]);
+
+  if (!open) return null;
+  const isLast = idx === TOUR_STEPS.length - 1;
+  const next = () => isLast ? onClose() : setIdx(i => i + 1);
+  const prev = () => setIdx(i => Math.max(0, i - 1));
+
+  const dialogW = 340;
+  const dialogH = 220;
+  const margin = 16;
+  let dialogStyle: React.CSSProperties = { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' };
+  let arrowSide: 'top' | 'bottom' = 'top';
+  let arrowX = 0, arrowY = 0;
+
+  if (rect) {
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const centerX = rect.left + rect.width / 2;
+    const clampedLeft = Math.max(margin, Math.min(window.innerWidth - dialogW - margin, centerX - dialogW / 2));
+    if (spaceBelow > dialogH + 60) {
+      dialogStyle = { left: clampedLeft, top: rect.bottom + 40, transform: 'none' };
+      arrowSide = 'top';
+      arrowX = centerX;
+      arrowY = rect.bottom + 8;
+    } else {
+      dialogStyle = { left: clampedLeft, top: Math.max(margin, rect.top - dialogH - 40), transform: 'none' };
+      arrowSide = 'bottom';
+      arrowX = centerX;
+      arrowY = rect.top - 36;
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-[200]" role="dialog" aria-modal="true">
+      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        <defs>
+          <mask id="vibe-tour-mask">
+            <rect width="100%" height="100%" fill="white" />
+            {rect && <rect x={rect.left - 8} y={rect.top - 8} width={rect.width + 16} height={rect.height + 16} rx={14} fill="black" />}
+          </mask>
+        </defs>
+        <rect width="100%" height="100%" fill="rgba(2,8,23,0.72)" mask="url(#vibe-tour-mask)" />
+        {rect && (
+          <rect x={rect.left - 8} y={rect.top - 8} width={rect.width + 16} height={rect.height + 16} rx={14}
+                fill="none" stroke="#3BCFFF" strokeWidth={2.5} className="animate-pulse" />
+        )}
+      </svg>
+
+      <button onClick={onClose} aria-label="Close tour" className="absolute inset-0 w-full h-full cursor-default" tabIndex={-1} />
+
+      {rect && (
+        <div className="absolute pointer-events-none animate-bounce" style={{ left: arrowX - 16, top: arrowY - 16 }}>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-2xl" style={{ background: 'linear-gradient(135deg, #3BCFFF, #1E96E5)', boxShadow: '0 0 24px rgba(59,207,255,0.6)' }}>
+            {arrowSide === 'top' ? <ArrowDown className="w-5 h-5 text-slate-900" /> : <ArrowUp className="w-5 h-5 text-slate-900" />}
+          </div>
+        </div>
+      )}
+
+      <div className="absolute rounded-3xl p-5 shadow-2xl pointer-events-auto animate-in fade-in zoom-in-95 duration-300"
+           style={{ ...dialogStyle, width: dialogW, maxWidth: '92vw', background: 'linear-gradient(135deg, #0f1a2f, #15294a)', border: '2px solid #3BCFFF', boxShadow: '0 20px 60px rgba(30,150,229,0.35)' }}>
+        <div className="flex items-start gap-3">
+          <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3BCFFF, #1E96E5)' }}>
+            <Sparkles className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: '#3BCFFF' }}>VibeBot · {idx + 1} / {TOUR_STEPS.length}</p>
+            <h3 className="text-white font-black text-lg mt-1 leading-tight">{step.title}</h3>
+          </div>
+          <button onClick={onClose} aria-label="Skip tour" className="text-slate-400 hover:text-white transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        <p className="text-sm text-slate-200 leading-relaxed mt-3">{step.body}</p>
+        <div className="flex items-center gap-1 mt-4">
+          {TOUR_STEPS.map((_, i) => (
+            <div key={i} className="h-1 flex-1 rounded-full transition-all" style={{ background: i <= idx ? '#3BCFFF' : 'rgba(255,255,255,0.15)' }} />
+          ))}
+        </div>
+        <div className="flex justify-between items-center mt-4">
+          <button onClick={onClose} className="text-xs font-bold text-slate-400 hover:text-white transition-colors">Skip tour</button>
+          <div className="flex gap-2">
+            {idx > 0 && (
+              <button onClick={prev} className="px-3 py-2 rounded-xl text-xs font-black bg-slate-800 text-slate-200 hover:bg-slate-700 transition-colors">
+                Back
+              </button>
+            )}
+            <button onClick={next} className="px-4 py-2 rounded-xl text-xs font-black text-slate-900 transition-transform active:scale-95"
+                    style={{ background: 'linear-gradient(90deg, #3BCFFF, #1E96E5)' }}>
+              {isLast ? "Let's go!" : 'Next →'}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
