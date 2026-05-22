@@ -193,14 +193,10 @@
         Continue with Microsoft
       </a>
       <p class="login-foot login-stagger d3">Uses your school account to sync Teams &amp; Calendar.</p>
-    {% else %}
-      <div class="login-warn login-stagger d2">
-        Microsoft sign-in is not configured on this instance.
-      </div>
     {% endif %}
 
     {% if dev_login_on %}
-      <div class="divider login-stagger d3">{% if ms_oauth_on %}OR{% else %}DEV&nbsp;SIGN-IN{% endif %}</div>
+      <div class="divider login-stagger d3">{% if ms_oauth_on %}OR{% else %}SIGN&nbsp;IN{% endif %}</div>
 
       <form action="/auth/dev/login" method="post" class="space-y-4">
         <div class="login-stagger d4">
