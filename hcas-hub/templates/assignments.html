@@ -25,10 +25,37 @@
   <div class="flex flex-wrap gap-2">
     <input name="subject" placeholder="Subject" class="flex-1 min-w-[120px] bg-black hairline-soft px-3 py-2 text-[12px] placeholder-ink-mute focus:outline-none" />
     <input name="priority" type="number" min="1" max="99" value="3" class="w-16 bg-black hairline-soft px-3 py-2 text-[12px] focus:outline-none" />
-    <input name="due_at" type="datetime-local" class="flex-1 min-w-[160px] bg-black hairline-soft px-3 py-2 text-[12px] focus:outline-none" />
+    <label class="due-wrap flex-1 min-w-[180px] relative">
+      <input name="due_at" type="datetime-local" lang="en"
+             class="due-input w-full bg-black hairline-soft px-3 py-2 text-[12px] focus:outline-none" />
+      <span class="due-ph">Due date · YYYY-MM-DD HH:MM</span>
+    </label>
     <button class="px-5 py-2 bg-white text-black display text-[12px] tracking-wider hover:bg-ink-soft transition">Add</button>
   </div>
 </form>
+
+<style>
+  .due-wrap { display: inline-flex; }
+  .due-ph {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    pointer-events: none; color: var(--ink-mute); font-size: 12px;
+    transition: opacity .15s ease;
+  }
+  /* Hide the localized native text while empty (datetime-local is :invalid when empty/required-less? — use :placeholder-shown fallback via :not(:focus) and JS-driven .has-value) */
+  .due-input::-webkit-datetime-edit { color: transparent; }
+  .due-input.has-value::-webkit-datetime-edit,
+  .due-input:focus::-webkit-datetime-edit { color: var(--page-text); }
+  .due-input.has-value + .due-ph,
+  .due-input:focus + .due-ph { opacity: 0; }
+</style>
+<script>
+  (function () {
+    document.querySelectorAll('.due-input').forEach(function (el) {
+      var sync = function () { el.classList.toggle('has-value', !!el.value); };
+      el.addEventListener('input', sync); el.addEventListener('change', sync); sync();
+    });
+  })();
+</script>
 
 {% set open = assignments | rejectattr('done') | list %}
 {% set done = assignments | selectattr('done') | list %}
