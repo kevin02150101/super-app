@@ -200,6 +200,25 @@
     .guide-btn:hover { transform: scale(1.10); }
     .guide-btn:active { transform: scale(0.96); }
 
+    /* Header Sign-in pill */
+    .signin-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 0 14px; height: 32px;
+      border-radius: 999px;
+      font-family: "D-DIN", Inter, sans-serif;
+      font-weight: 800; font-size: 12px; letter-spacing: 0.08em;
+      color: #0F1A2F;
+      background: linear-gradient(90deg, #3BCFFF, #1E96E5);
+      box-shadow: 0 6px 18px rgba(30,150,229,0.35);
+      white-space: nowrap;
+      text-decoration: none;
+      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+    .signin-pill:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 10px 24px rgba(30,150,229,0.45); }
+    .signin-pill:active { transform: scale(0.97); }
+    .signin-pill svg { flex: none; }
+    .signin-pill span { line-height: 1; }
+
     /* Header */
     .app-header {
       background: var(--bar-bg);
@@ -339,12 +358,11 @@
           <button class="inline-flex items-center px-3 py-1.5 rounded-full border border-line text-[12px] hover:bg-paper-soft">Sign out</button>
         </form>
       {% else %}
-        <a href="/login" class="inline-flex items-center gap-1.5 ml-3 px-3.5 py-1.5 rounded-full text-[12px] font-bold tracking-wide"
-           style="background: linear-gradient(90deg, #3BCFFF, #1E96E5); color: #0F1A2F; box-shadow: 0 6px 18px rgba(30,150,229,0.35);">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <a href="/login" class="signin-pill ml-3">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
           </svg>
-          Sign in
+          <span>Sign in</span>
         </a>
       {% endif %}
       {# Guide / replay tour #}
