@@ -142,7 +142,7 @@ export default function App() {
               <Sparkles className="w-5 h-5" />
             </div>
             <div className="hidden sm:block">
-              <h1 className="hcas-display text-[18px] flex items-center gap-1.5 text-white">
+              <h1 className="hcas-display text-[18px] flex items-center gap-1.5" style={{ color: 'var(--page-text)' }}>
                 VIBESPEC <TermHelp term="Vibe Coding" />
               </h1>
               <p className="hcas-eyebrow mt-1">AI Tech Spec Generator</p>
