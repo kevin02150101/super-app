@@ -322,7 +322,7 @@ function Step1Basic({ spec, updateSpec }: { spec: TechSpec, updateSpec: any }) {
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
       <div className="space-y-3">
-        <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+        <h2 className="text-4xl font-black text-white tracking-tight flex items-center gap-3">
           Project Basics <Settings className="w-8 h-8 text-blue-500" />
         </h2>
         <p className="text-lg text-slate-500 dark:text-slate-400 font-medium italic">Define the soul of your app so the AI understands your vision.</p>
@@ -363,7 +363,7 @@ function Step2Design({ spec, updateSpec }: { spec: TechSpec, updateSpec: any }) 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
       <div className="space-y-3">
-        <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+        <h2 className="text-4xl font-black text-white tracking-tight flex items-center gap-3">
           UI Design Spec <Palette className="w-8 h-8 text-indigo-500" />
         </h2>
         <p className="text-lg text-slate-500 dark:text-slate-400 font-medium italic">Pick tags to define the visual tone — we'll turn them into precise UI instructions.</p>
@@ -390,7 +390,7 @@ function Step3Features({ spec, updateSpec }: { spec: TechSpec, updateSpec: any }
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
       <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="space-y-3">
-          <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-3"><Layers className="w-8 h-8 text-blue-500" /> Feature Modules</h2>
+          <h2 className="text-4xl font-black text-white tracking-tight flex items-center gap-3"><Layers className="w-8 h-8 text-blue-500" /> Feature Modules</h2>
         </div>
         <button onClick={addFeature} className="bg-blue-600 text-white px-8 py-3 rounded-2xl flex items-center gap-2 font-black hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 active:scale-95"><Plus className="w-5 h-5" /> Add Module</button>
       </header>
@@ -405,7 +405,7 @@ function Step3Features({ spec, updateSpec }: { spec: TechSpec, updateSpec: any }
                     <label className="text-xs font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest">Module Name</label>
                     <AIAssist field="Module Name" currentValue={feature.name} context={`Project: ${spec.basic.name}`} onResult={(val) => updateFeature(feature.id, { name: val })} />
                   </div>
-                  <input placeholder="e.g. User Authentication" className="w-full font-black text-2xl text-slate-800 dark:text-white bg-transparent border-b-2 border-slate-100 dark:border-slate-800 focus:border-blue-500 outline-none py-1" value={feature.name} onChange={(e) => updateFeature(feature.id, { name: e.target.value })} />
+                  <input placeholder="e.g. User Authentication" className="w-full font-black text-2xl text-white bg-transparent border-b-2 border-slate-100 dark:border-slate-800 focus:border-blue-500 outline-none py-1" value={feature.name} onChange={(e) => updateFeature(feature.id, { name: e.target.value })} />
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center px-1">
@@ -461,7 +461,7 @@ function Step4Tech({ spec, updateSpec }: { spec: TechSpec, updateSpec: any }) {
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
       <div className="space-y-3">
-        <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+        <h2 className="text-4xl font-black text-white tracking-tight flex items-center gap-3">
           <Monitor className="w-8 h-8 text-blue-500" /> Tech Architecture
         </h2>
         <p className="text-lg text-slate-500 dark:text-slate-400 font-medium italic">Pick one core technology per category. AI will tie them into best-practice implementation guidance.</p>
@@ -523,7 +523,7 @@ function Step5Schema({ spec, updateSpec }: { spec: TechSpec, updateSpec: any }) 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
        <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-3"><Database className="w-8 h-8 text-emerald-500" /> Data Schema</h2>
+        <h2 className="text-4xl font-black text-white tracking-tight flex items-center gap-3"><Database className="w-8 h-8 text-emerald-500" /> Data Schema</h2>
         <button onClick={addEntity} className="bg-emerald-600 text-white px-8 py-3 rounded-2xl flex items-center gap-2 font-black hover:bg-emerald-700 transition-all shadow-emerald-500/20 active:scale-95"><Plus className="w-5 h-5" /> Add Entity</button>
       </header>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -532,7 +532,7 @@ function Step5Schema({ spec, updateSpec }: { spec: TechSpec, updateSpec: any }) 
             <div className="flex justify-between items-center">
               <div className="flex-1 space-y-1">
                  <label className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest">Table Name</label>
-                 <input placeholder="e.g. users, orders" className="w-full font-black text-slate-900 dark:text-white text-2xl border-b-2 border-slate-100 dark:border-slate-700 focus:border-emerald-500 outline-none py-1 bg-transparent" value={entity.name} onChange={(e) => updateSpec('dataSchema', spec.dataSchema.map(ent => ent.id === entity.id ? { ...ent, name: e.target.value } : ent))} />
+                 <input placeholder="e.g. users, orders" className="w-full font-black text-white text-2xl border-b-2 border-slate-100 dark:border-slate-700 focus:border-emerald-500 outline-none py-1 bg-transparent" value={entity.name} onChange={(e) => updateSpec('dataSchema', spec.dataSchema.map(ent => ent.id === entity.id ? { ...ent, name: e.target.value } : ent))} />
               </div>
               <button onClick={() => removeEntity(entity.id)} className="p-2 text-slate-300 hover:text-red-500 transition-all"><Trash2 className="w-6 h-6" /></button>
             </div>
@@ -554,7 +554,7 @@ function Step6Preview({ spec, refinedMarkdown, isRefining, onRefine }: { spec: T
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700 pb-12 transition-all">
       <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-6">
-        <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-3"><FileText className="w-8 h-8 text-blue-600" /> Spec Summary</h2>
+        <h2 className="text-4xl font-black text-white tracking-tight flex items-center gap-3"><FileText className="w-8 h-8 text-blue-600" /> Spec Summary</h2>
         <div className="flex flex-wrap gap-3">
           <button onClick={copy} className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-200 transition-all shadow-sm">{copied ? 'Copied!' : 'Copy Spec'} <Save className="w-5 h-5" /></button>
           {!refinedMarkdown && <button onClick={onRefine} disabled={isRefining} className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-black flex items-center gap-2 hover:shadow-2xl transition-all disabled:opacity-50 shadow-lg shadow-blue-500/30">{isRefining ? 'Analyzing...' : 'Deep Refine with AI'} <Sparkles className="w-5 h-5" /></button>}
