@@ -109,7 +109,7 @@
 
     /* Theme toggle button */
     .theme-btn {
-      width: 32px; height: 32px;
+      width: 40px; height: 40px;
       border-radius: 50%;
       border: none;
       display: inline-flex;
@@ -191,7 +191,7 @@
     .tour-btn-next { background: linear-gradient(90deg, #3BCFFF, #1E96E5); color: #0F1A2F; }
     .tour-btn-next:active { transform: scale(0.96); }
     .guide-btn {
-      width: 32px; height: 32px; border-radius: 50%; border: none;
+      width: 40px; height: 40px; border-radius: 50%; border: none;
       display: inline-flex; align-items: center; justify-content: center;
       background: var(--page-bg); color: var(--page-text);
       box-shadow: 0 0 0 1.5px var(--bar-border); cursor: pointer;
@@ -486,7 +486,7 @@
           <button class="inline-flex items-center px-3 py-1.5 rounded-full border border-line text-[12px] hover:bg-paper-soft">Sign out</button>
         </form>
       {% else %}
-        <a href="/login" class="signin-pill ml-3">
+        <a href="/login" class="signin-pill sm:mr-6">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
           </svg>
@@ -494,17 +494,17 @@
         </a>
       {% endif %}
       {# Guide / replay tour #}
-      <button id="guide-btn" data-tour="guide" class="guide-btn sm:ml-4 mb-1 sm:mb-0" aria-label="Replay guided tour" title="Replay tour">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button id="guide-btn" data-tour="guide" class="guide-btn sm:ml-2 mb-1 sm:mb-0" aria-label="Replay guided tour" title="Replay tour">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
         </svg>
       </button>
       {# Theme toggle #}
       <button id="theme-toggle" data-tour="theme" class="theme-btn sm:ml-3 mb-1 sm:mb-0" aria-label="Toggle theme" aria-pressed="false">
-        <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
-        <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+        <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
           <circle cx="12" cy="12" r="4"/>
           <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
           <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
