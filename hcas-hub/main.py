@@ -158,6 +158,9 @@ def lunch(request: Request, day: str | None = None):
     week = seed.week_dates(day, menus)
     all_dates = sorted(menus.keys())
 
+    img_path = BASE / "static" / "lunch" / f"{day}.png"
+    lunch_image_url = f"/static/lunch/{day}.png" if img_path.exists() else None
+
     return render(
         request,
         "lunch.html",
@@ -173,6 +176,7 @@ def lunch(request: Request, day: str | None = None):
         crowd_n=db_n,
         uber_url=uber_url,
         uber_suggestions=_pick_uber_suggestions(),
+        lunch_image_url=lunch_image_url,
     )
 
 

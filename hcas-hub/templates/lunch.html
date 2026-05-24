@@ -44,6 +44,13 @@
 
 {% if not menu.is_holiday %}
 
+{% if lunch_image_url %}
+<figure class="mb-10 border border-line bg-black">
+  <img src="{{ lunch_image_url }}" alt="{{ menu.headline }}"
+       class="w-full h-auto block" loading="lazy" />
+</figure>
+{% endif %}
+
 {# Stats row #}
 <div class="grid grid-cols-3 mt-2 mb-10 border-t border-b border-line">
   <div class="py-4 px-2 text-center border-r border-line">
