@@ -468,6 +468,10 @@
         {% for key, href, label in items %}
           <a href="{{ href }}" data-tour="nav-{{ key }}" class="nav-link {{ 'active' if active == key else '' }}">{{ label }}</a>
         {% endfor %}
+        <a href="https://hcas-hub-launch.vercel.app/#top" target="_blank" rel="noopener"
+           class="nav-link" style="color:#3BCFFF;" title="About HCAS Hub — overview & launch page">
+          About&nbsp;↗
+        </a>
       </nav>
       {# User / streak chip #}
       {% if user %}
