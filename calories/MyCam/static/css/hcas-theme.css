@@ -266,3 +266,252 @@ hr { border-color: var(--bar-border) !important; opacity: 1 !important; }
   background: var(--accent) !important; color: #000 !important;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   MyCam UI POLISH — refined cards, gradients, animations
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Rebrand: switch purple gradient → MyCam cyan/blue everywhere */
+:root {
+  --mc-primary: #3BCFFF;
+  --mc-primary-2: #1E96E5;
+  --mc-grad: linear-gradient(135deg, #6EE3FF 0%, #3BCFFF 45%, #1E96E5 100%);
+}
+
+/* Refined page background — multi-layer mesh */
+html, body {
+  background:
+    radial-gradient(1100px 600px at 85% -5%,  rgba(59,207,255,0.18),  transparent 55%) !important,
+    radial-gradient(900px  500px at -5% 105%, rgba(30,150,229,0.20),  transparent 60%) !important,
+    radial-gradient(700px  400px at 50% 50%,  rgba(110,227,255,0.06), transparent 65%) !important,
+    var(--page-bg) !important;
+}
+
+/* Navbar — glassy + gradient brand */
+.hcas-header { backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); }
+.hcas-brand .mark {
+  background: var(--mc-grad);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(30,150,229,0.45);
+}
+.hcas-brand .name {
+  background: var(--mc-grad);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+
+/* Hero — refined gradient + soft glow */
+.mc-hero {
+  background:
+    radial-gradient(700px 350px at 90% 20%, rgba(110,227,255,0.45), transparent 60%),
+    linear-gradient(135deg, #1E96E5 0%, #0F4A85 100%) !important;
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.mc-hero::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 80%, rgba(59,207,255,0.25), transparent 50%);
+  pointer-events: none;
+}
+.mc-hero__title { font-weight: 800 !important; letter-spacing: -0.02em; }
+.mc-kpi {
+  background: rgba(255,255,255,0.10) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+  backdrop-filter: blur(10px);
+  transition: transform .2s ease, background .2s ease;
+}
+.mc-kpi:hover { transform: translateY(-2px); background: rgba(255,255,255,0.14) !important; }
+.mc-kpi__value { font-weight: 800; }
+
+/* Sidebar — refined */
+.mc-sidebar {
+  background: rgba(15,26,47,0.55) !important;
+  backdrop-filter: blur(14px);
+  border-right: 1px solid var(--bar-border);
+}
+.mc-sidebar a.active, .mc-sidebar .nav-link.active {
+  background: var(--mc-grad) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(30,150,229,0.35);
+}
+
+/* Cards — softer corners, subtle lift on hover */
+.mc-card, .mc-auth__card, .mc-feature, .mc-analysis {
+  border-radius: 16px !important;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.mc-card:hover, .mc-feature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(59,207,255,0.28) !important;
+}
+.mc-auth__card {
+  padding: 2.5rem !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35) !important;
+}
+
+/* Auth page — center vertically with breathing room */
+.mc-auth { min-height: calc(100vh - 200px); padding: 2rem 1rem; }
+
+/* Feature cards (landing) — gradient icon */
+.mc-feature__icon {
+  background: var(--mc-grad) !important;
+  -webkit-background-clip: text; background-clip: text; color: transparent !important;
+  filter: drop-shadow(0 4px 12px rgba(59,207,255,0.35));
+}
+
+/* Card title — slight emphasis */
+.mc-card__title {
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* Primary button — re-skin to MyCam cyan gradient + nicer shadow */
+.mc-btn-primary {
+  background: var(--mc-grad) !important;
+  box-shadow: 0 6px 18px rgba(30,150,229,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+  font-weight: 700 !important;
+  padding: 0.7rem 1.6rem !important;
+  letter-spacing: 0.02em;
+  transition: transform .15s ease, box-shadow .2s ease, filter .15s ease;
+}
+.mc-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(30,150,229,0.6), inset 0 1px 0 rgba(255,255,255,0.25); filter: brightness(1.05); }
+.mc-btn-primary:active { transform: scale(0.97); }
+
+/* Outline buttons — refined */
+.btn-outline-primary, .btn-outline-secondary, .btn-outline-light {
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+  padding: 0.55rem 1.2rem !important;
+  transition: all .15s ease;
+}
+.btn-outline-primary:hover, .btn-outline-secondary:hover, .btn-outline-light:hover {
+  border-color: var(--accent) !important;
+  background: rgba(59,207,255,0.08) !important;
+  color: var(--accent) !important;
+  transform: translateY(-1px);
+}
+
+/* HCAS pill buttons in nav */
+.hcas-pill-primary {
+  background: var(--mc-grad) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(30,150,229,0.4);
+  font-weight: 700 !important;
+}
+.hcas-pill-primary:hover { color: #fff !important; filter: brightness(1.05); transform: translateY(-1px); }
+
+/* Form inputs — refined focus */
+.form-control, .form-select {
+  border-radius: 12px !important;
+  padding: 0.65rem 0.95rem !important;
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  color: var(--page-text) !important;
+  transition: all .15s ease;
+}
+.form-control:focus, .form-select:focus {
+  background: rgba(255,255,255,0.08) !important;
+  border-color: rgba(59,207,255,0.6) !important;
+  box-shadow: 0 0 0 3px rgba(59,207,255,0.18) !important;
+}
+.form-control-lg { padding: 0.8rem 1.1rem !important; font-size: 1rem !important; }
+
+/* Dropzone — animated dashed border + hover state */
+.mc-drop {
+  background: rgba(59,207,255,0.04) !important;
+  border: 2px dashed rgba(59,207,255,0.35) !important;
+  border-radius: 16px !important;
+  color: var(--ink-soft) !important;
+  padding: 2.5rem 1.5rem !important;
+  transition: all .2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.mc-drop:hover {
+  background: rgba(59,207,255,0.08) !important;
+  border-color: var(--accent) !important;
+  transform: translateY(-1px);
+}
+.mc-drop.dragover {
+  background: rgba(59,207,255,0.14) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 6px rgba(59,207,255,0.15);
+}
+.mc-drop i.bi-image {
+  background: var(--mc-grad);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 3px 10px rgba(59,207,255,0.4));
+}
+.mc-drop__preview {
+  max-height: 240px; border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+/* Camera preview */
+.mc-camera {
+  border-radius: 16px !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(59,207,255,0.18);
+}
+
+/* Analysis cards — refined */
+.mc-analysis {
+  padding: 1rem !important;
+  border-radius: 14px !important;
+}
+.mc-analysis:hover {
+  transform: translateY(-2px);
+  border-color: rgba(59,207,255,0.4) !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.3), 0 0 24px rgba(59,207,255,0.08) !important;
+}
+.mc-analysis__thumb {
+  width: 90px !important; height: 90px !important;
+  border-radius: 12px !important;
+}
+.mc-analysis__cal {
+  background: var(--mc-grad);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent !important;
+  font-weight: 800 !important;
+}
+
+/* Tags */
+.mc-tag {
+  background: rgba(59,207,255,0.12) !important;
+  color: var(--accent) !important;
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  font-weight: 600;
+}
+
+/* Selection */
+::selection { background: rgba(59,207,255,0.35); color: #fff; }
+
+/* Smooth page entry */
+.mc-main { animation: mc-fade-in .35s ease-out; }
+@keyframes mc-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(59,207,255,0.45), rgba(30,150,229,0.35)) !important;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(59,207,255,0.7), rgba(30,150,229,0.6)) !important;
+}
+
+/* Charts container — let canvas breathe */
+canvas { border-radius: 8px; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .mc-card, .mc-btn-primary, .mc-main, .mc-feature, .mc-analysis, .mc-kpi, .mc-drop {
+    animation: none !important; transition: none !important;
+  }
+}
+
