@@ -26,28 +26,28 @@
 
 <style>
   .hub-hello {
-    background: linear-gradient(180deg, #ffffff 0%, #cfe7ff 60%, #6fb6ff 100%);
+    background: linear-gradient(135deg, #0A2540 0%, #1E96E5 55%, #3BCFFF 100%);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
-    text-shadow: 0 0 60px rgba(59,207,255,0.08);
+    font-weight: 800;
   }
   .hub-hello__name {
-    background: linear-gradient(135deg, #6EE3FF 0%, #3BCFFF 45%, #1E96E5 100%);
+    background: linear-gradient(135deg, #1E96E5 0%, #3BCFFF 60%, #6EE3FF 100%);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     position: relative;
   }
   .hub-hello__name::after {
     content: ""; display: inline-block;
-    width: 6px; height: 6px; margin-left: 6px;
+    width: 8px; height: 8px; margin-left: 8px;
     background: #3BCFFF; border-radius: 999px;
-    box-shadow: 0 0 14px #3BCFFF;
-    vertical-align: 0.55em;
+    box-shadow: 0 0 12px rgba(59,207,255,0.85);
+    vertical-align: 0.45em;
     animation: hub-pulse 2.2s ease-in-out infinite;
   }
   @keyframes hub-pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
-    50%      { opacity: 0.45; transform: scale(0.85); }
+    50%      { opacity: 0.45; transform: scale(0.8); }
   }
   @media (prefers-reduced-motion: reduce) {
     .hub-hello__name::after { animation: none; }
