@@ -23,7 +23,7 @@
        class="bg-black text-center py-3 transition
               {{ 'bg-white text-black' if d == day else 'text-ink-soft hover:text-white' }}">
       <div class="text-[10px] uppercase tracking-[0.18em] {{ 'opacity-70' if d == day else '' }}">{{ wd }}</div>
-      <div class="display text-[18px]">{{ dd }}</div>
+      <div class="display text-[18px]" {% if d == day %}style="color:#0F1A2F; -webkit-text-fill-color:#0F1A2F; background:none;"{% endif %}>{{ dd }}</div>
     </a>
   {% endfor %}
 </div>
