@@ -639,105 +639,259 @@
 
   {# ───────── Hub Helper chat widget ───────── #}
   <style>
+    :root {
+      --hh-grad: linear-gradient(135deg, #6EE3FF 0%, #3BCFFF 40%, #1E96E5 100%);
+      --hh-glow: 0 8px 30px rgba(30,150,229,0.45);
+    }
     .hh-fab {
-      position: fixed; right: 18px; bottom: 18px; z-index: 9998;
-      width: 56px; height: 56px; border-radius: 50%;
-      background: linear-gradient(180deg, #3BCFFF 0%, #1E96E5 100%);
+      position: fixed; right: 22px; bottom: 22px; z-index: 9998;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--hh-grad);
       border: none; color: #fff; cursor: pointer;
-      box-shadow: 0 6px 22px rgba(30,150,229,0.45), 0 0 0 1.5px rgba(255,255,255,0.15) inset;
+      box-shadow: var(--hh-glow), 0 0 0 1.5px rgba(255,255,255,0.18) inset;
       display: inline-flex; align-items: center; justify-content: center;
-      font-size: 24px; transition: transform .15s ease;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
     }
-    .hh-fab:hover { transform: translateY(-2px); }
+    .hh-fab::before {
+      content: ""; position: absolute; inset: -4px; border-radius: 50%;
+      background: var(--hh-grad); filter: blur(14px); opacity: .55; z-index: -1;
+      animation: hh-pulse 2.6s ease-in-out infinite;
+    }
+    @keyframes hh-pulse {
+      0%, 100% { opacity: .45; transform: scale(1); }
+      50% { opacity: .75; transform: scale(1.08); }
+    }
+    .hh-fab:hover { transform: translateY(-3px) scale(1.04); }
+    .hh-fab svg { width: 26px; height: 26px; }
+    .hh-fab .hh-fab-close { display: none; }
+    .hh-fab.is-open .hh-fab-open { display: none; }
+    .hh-fab.is-open .hh-fab-close { display: block; }
+
     .hh-panel {
-      position: fixed; right: 18px; bottom: 86px; z-index: 9999;
-      width: min(380px, calc(100vw - 36px));
-      height: min(560px, calc(100vh - 120px));
-      background: var(--page-bg);
-      border: 1.5px solid var(--bar-border);
-      border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-      display: none; flex-direction: column; overflow: hidden;
+      position: fixed; right: 22px; bottom: 96px; z-index: 9999;
+      width: min(400px, calc(100vw - 32px));
+      height: min(620px, calc(100vh - 130px));
+      background: rgba(11, 20, 38, 0.92);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(59,207,255,0.06);
+      display: flex; flex-direction: column; overflow: hidden;
+      opacity: 0; transform: translateY(16px) scale(.96); pointer-events: none;
+      transition: opacity .22s ease, transform .28s cubic-bezier(.34,1.4,.6,1);
     }
-    .hh-panel.open { display: flex; }
+    .hh-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
     .hh-head {
       display: flex; align-items: center; gap: 12px;
-      padding: 14px 14px 12px; border-bottom: 1px solid var(--bar-border);
+      padding: 16px 16px 14px;
+      background: linear-gradient(180deg, rgba(59,207,255,0.10) 0%, rgba(59,207,255,0) 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .hh-avatar {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: linear-gradient(180deg, #3BCFFF 0%, #1E96E5 100%);
+      width: 42px; height: 42px; border-radius: 12px;
+      background: var(--hh-grad);
       color: #fff; display: inline-flex; align-items: center; justify-content: center;
-      font-size: 18px;
+      box-shadow: 0 4px 14px rgba(30,150,229,0.4), inset 0 0 0 1px rgba(255,255,255,0.25);
+      flex-shrink: 0;
     }
-    .hh-head .title { font-weight: 600; font-size: 14px; }
-    .hh-head .status { font-size: 11px; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
-    .hh-dot { width: 7px; height: 7px; border-radius: 50%; background: #2ecc71; box-shadow: 0 0 6px #2ecc71; }
-    .hh-close { margin-left: auto; background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 18px; padding: 4px 8px; }
-    .hh-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .hh-avatar svg { width: 22px; height: 22px; }
+    .hh-head .meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .hh-head .title { font-weight: 700; font-size: 14.5px; color: #fff; letter-spacing: -.01em; }
+    .hh-head .status { font-size: 11.5px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 6px; }
+    .hh-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #2ecc71;
+      box-shadow: 0 0 8px #2ecc71;
+      animation: hh-blink 2s ease-in-out infinite;
+    }
+    @keyframes hh-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .45; }
+    }
+    .hh-close {
+      margin-left: auto; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.6); cursor: pointer;
+      width: 30px; height: 30px; border-radius: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: background .15s, color .15s;
+    }
+    .hh-close:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .hh-close svg { width: 14px; height: 14px; }
+
+    .hh-body {
+      flex: 1; overflow-y: auto; padding: 16px 16px 8px;
+      display: flex; flex-direction: column; gap: 8px;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent;
+    }
+    .hh-body::-webkit-scrollbar { width: 6px; }
+    .hh-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+
+    .hh-row { display: flex; align-items: flex-end; gap: 8px; max-width: 100%; }
+    .hh-row.user { justify-content: flex-end; }
+    .hh-row .hh-mini {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--hh-grad); flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(30,150,229,0.35);
+    }
+    .hh-row .hh-mini svg { width: 14px; height: 14px; color: #fff; }
+    .hh-row.user .hh-mini { display: none; }
+
     .hh-msg {
-      max-width: 88%;
-      padding: 10px 12px; border-radius: 14px;
-      font-size: 13px; line-height: 1.45;
+      max-width: 80%;
+      padding: 10px 13px; border-radius: 16px;
+      font-size: 13.5px; line-height: 1.5;
       white-space: pre-wrap; word-wrap: break-word;
+      animation: hh-pop .22s cubic-bezier(.34,1.5,.6,1);
+    }
+    @keyframes hh-pop {
+      from { opacity: 0; transform: translateY(6px) scale(.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
     .hh-msg.bot {
-      align-self: flex-start;
-      background: rgba(59,207,255,0.08);
-      border: 1px solid rgba(59,207,255,0.18);
-      color: var(--page-text);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.92);
+      border-bottom-left-radius: 6px;
     }
     .hh-msg.user {
-      align-self: flex-end;
-      background: linear-gradient(180deg, #3BCFFF 0%, #1E96E5 100%);
+      background: var(--hh-grad);
       color: #fff;
+      box-shadow: 0 4px 14px rgba(30,150,229,0.35);
+      border-bottom-right-radius: 6px;
     }
-    .hh-typing { align-self: flex-start; font-size: 12px; color: var(--ink-mute); padding: 4px 8px; }
-    .hh-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 14px 10px; }
+
+    .hh-typing {
+      display: inline-flex; gap: 4px;
+      padding: 12px 14px; border-radius: 16px; border-bottom-left-radius: 6px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+      width: fit-content;
+    }
+    .hh-typing span {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.55);
+      animation: hh-bounce 1.2s ease-in-out infinite;
+    }
+    .hh-typing span:nth-child(2) { animation-delay: .15s; }
+    .hh-typing span:nth-child(3) { animation-delay: .3s; }
+    @keyframes hh-bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: .5; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .hh-chips {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 4px 16px 12px;
+    }
     .hh-chip {
       font-size: 12px; padding: 7px 12px; border-radius: 999px;
-      background: transparent; color: #3BCFFF;
-      border: 1px solid rgba(59,207,255,0.45);
-      cursor: pointer;
+      background: rgba(59,207,255,0.08);
+      color: #6EE3FF;
+      border: 1px solid rgba(59,207,255,0.25);
+      cursor: pointer; font-family: inherit;
+      transition: all .15s ease;
     }
-    .hh-chip:hover { background: rgba(59,207,255,0.1); }
-    .hh-form { display: flex; gap: 8px; padding: 10px 12px 14px; border-top: 1px solid var(--bar-border); }
+    .hh-chip:hover {
+      background: rgba(59,207,255,0.18);
+      border-color: rgba(59,207,255,0.5);
+      transform: translateY(-1px);
+    }
+
+    .hh-form {
+      display: flex; gap: 8px; align-items: center;
+      padding: 12px 14px 14px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
     .hh-input {
-      flex: 1; background: var(--tint);
-      border: 1px solid var(--bar-border);
-      color: var(--page-text);
-      padding: 10px 12px; border-radius: 12px; font-size: 13px; outline: none;
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+      padding: 11px 14px; border-radius: 999px;
+      font-size: 13.5px; outline: none; font-family: inherit;
+      transition: border-color .15s, background .15s;
+    }
+    .hh-input::placeholder { color: rgba(255,255,255,0.4); }
+    .hh-input:focus {
+      border-color: rgba(59,207,255,0.5);
+      background: rgba(255,255,255,0.07);
     }
     .hh-send {
-      background: linear-gradient(180deg, #3BCFFF 0%, #1E96E5 100%);
-      color: #fff; border: none; width: 40px; border-radius: 12px; cursor: pointer; font-size: 16px;
+      background: var(--hh-grad);
+      color: #fff; border: none;
+      width: 40px; height: 40px; border-radius: 50%;
+      cursor: pointer; flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(30,150,229,0.4);
+      transition: transform .15s, box-shadow .15s;
     }
-    .hh-send:disabled { opacity: .5; cursor: not-allowed; }
+    .hh-send svg { width: 16px; height: 16px; }
+    .hh-send:hover:not(:disabled) { transform: scale(1.06); box-shadow: 0 6px 18px rgba(30,150,229,0.55); }
+    .hh-send:disabled { opacity: .4; cursor: not-allowed; }
+
+    @media (max-width: 480px) {
+      .hh-panel { right: 12px; left: 12px; width: auto; bottom: 88px; }
+      .hh-fab { right: 16px; bottom: 16px; }
+    }
   </style>
 
-  <button id="hh-fab" class="hh-fab" aria-label="Open Hub Helper">💬</button>
+  <button id="hh-fab" class="hh-fab" aria-label="Open Hub Helper">
+    <svg class="hh-fab-open" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L14.4 8.6L21 9.2L16 13.8L17.6 20.4L12 16.8L6.4 20.4L8 13.8L3 9.2L9.6 8.6L12 2Z"
+            fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+    <svg class="hh-fab-close" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+  </button>
+
   <div id="hh-panel" class="hh-panel" role="dialog" aria-label="Hub Helper">
     <div class="hh-head">
-      <div class="hh-avatar">★</div>
-      <div>
+      <div class="hh-avatar">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L14.4 8.6L21 9.2L16 13.8L17.6 20.4L12 16.8L6.4 20.4L8 13.8L3 9.2L9.6 8.6L12 2Z"
+                fill="white" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="meta">
         <div class="title">Hub Helper</div>
         <div class="status"><span class="hh-dot"></span> Usually replies instantly</div>
       </div>
-      <button id="hh-close" class="hh-close" aria-label="Close">×</button>
+      <button id="hh-close" class="hh-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
+
     <div id="hh-body" class="hh-body">
-      <div class="hh-msg bot">👋 Hey! I'm the <b>Hub Helper</b>. Ask me anything about HCAS Hub — or tap a question below.</div>
+      <div class="hh-row bot">
+        <div class="hh-mini">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L14.4 8.6L21 9.2L16 13.8L17.6 20.4L12 16.8L6.4 20.4L8 13.8L3 9.2L9.6 8.6L12 2Z" fill="currentColor"/></svg>
+        </div>
+        <div class="hh-msg bot">👋 Hey! I'm the <b>Hub Helper</b>. Ask me anything about HCAS Hub — or tap a question below.</div>
+      </div>
     </div>
+
     <div id="hh-chips" class="hh-chips">
       <button class="hh-chip" data-q="How do I set up the extension?">How do I set up the extension?</button>
       <button class="hh-chip" data-q="What's the lunch verdict?">What's the lunch verdict?</button>
       <button class="hh-chip" data-q="How do streaks work?">How do streaks work?</button>
       <button class="hh-chip" data-q="Is it free?">Is it free?</button>
     </div>
+
     <form id="hh-form" class="hh-form" autocomplete="off">
       <input id="hh-input" class="hh-input" type="text" maxlength="500"
              placeholder="Ask about lunch, Teams sync, streaks…" />
-      <button id="hh-send" class="hh-send" type="submit" aria-label="Send">→</button>
+      <button id="hh-send" class="hh-send" type="submit" aria-label="Send">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12L21 4L13 21L11 13L3 12Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </form>
   </div>
 
@@ -754,28 +908,46 @@
       const history = [];
       let busy = false;
 
-      function open() { panel.classList.add('open'); setTimeout(() => input.focus(), 50); }
-      function close() { panel.classList.remove('open'); }
+      function open() { panel.classList.add('open'); fab.classList.add('is-open'); setTimeout(() => input.focus(), 50); }
+      function close() { panel.classList.remove('open'); fab.classList.remove('is-open'); }
       fab.addEventListener('click', () => panel.classList.contains('open') ? close() : open());
       closeBtn.addEventListener('click', close);
 
+      const STAR_SVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M12 2L14.4 8.6L21 9.2L16 13.8L17.6 20.4L12 16.8L6.4 20.4L8 13.8L3 9.2L9.6 8.6L12 2Z" fill="currentColor"/></svg>';
+
       function addMsg(role, text) {
-        const div = document.createElement('div');
-        div.className = 'hh-msg ' + (role === 'user' ? 'user' : 'bot');
-        div.textContent = text;
-        body.appendChild(div);
+        const row = document.createElement('div');
+        row.className = 'hh-row ' + role;
+        if (role === 'bot') {
+          const mini = document.createElement('div');
+          mini.className = 'hh-mini';
+          mini.innerHTML = STAR_SVG;
+          row.appendChild(mini);
+        }
+        const bubble = document.createElement('div');
+        bubble.className = 'hh-msg ' + role;
+        bubble.textContent = text;
+        row.appendChild(bubble);
+        body.appendChild(row);
         body.scrollTop = body.scrollHeight;
-        return div;
+        return row;
       }
 
       function showTyping() {
-        const t = document.createElement('div');
-        t.className = 'hh-typing';
-        t.textContent = 'Hub Helper is typing…';
-        t.id = 'hh-typing';
-        body.appendChild(t);
+        const row = document.createElement('div');
+        row.className = 'hh-row bot';
+        row.id = 'hh-typing-row';
+        const mini = document.createElement('div');
+        mini.className = 'hh-mini';
+        mini.innerHTML = STAR_SVG;
+        row.appendChild(mini);
+        const dots = document.createElement('div');
+        dots.className = 'hh-typing';
+        dots.innerHTML = '<span></span><span></span><span></span>';
+        row.appendChild(dots);
+        body.appendChild(row);
         body.scrollTop = body.scrollHeight;
-        return t;
+        return row;
       }
 
       async function ask(message) {
