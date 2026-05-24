@@ -18,29 +18,7 @@
   </div>
 </div>
 
-{# Add row #}
-<form method="post" action="/assignments/add" class="p-4 mb-8 space-y-3">
-  <input name="title" required placeholder="New assignment…"
-         class="w-full bg-transparent text-[16px] placeholder-ink-mute focus:outline-none" />
-  <div class="flex flex-wrap gap-2 items-end">
-    <label class="flex-1 min-w-[120px]">
-      <span class="block eyebrow text-[10px] tracking-[0.18em] mb-1 text-ink-mute">Subject</span>
-      <input name="subject" placeholder="e.g. Math" class="w-full bg-black hairline-soft px-3 py-2 text-[12px] placeholder-ink-mute focus:outline-none" />
-    </label>
-    <label class="w-20">
-      <span class="block eyebrow text-[10px] tracking-[0.18em] mb-1 text-ink-mute" title="Lower number = higher priority. 1 is top.">Priority <span class="text-ink-soft normal-case tracking-normal">(1 = top)</span></span>
-      <input name="priority" type="number" min="1" max="99" value="3"
-             title="1 = highest priority, 99 = lowest"
-             class="w-full bg-black hairline-soft px-3 py-2 text-[12px] focus:outline-none" />
-    </label>
-    <label class="flex-1 min-w-[200px]">
-      <span class="block eyebrow text-[10px] tracking-[0.18em] mb-1 text-ink-mute">Due date</span>
-      <input id="due-at-input" name="due_at" type="text" autocomplete="off" placeholder="Pick due date…"
-             class="w-full bg-black hairline-soft px-3 py-2 text-[12px] placeholder-ink-mute focus:outline-none cursor-pointer" />
-    </label>
-    <button class="px-5 py-2 bg-white text-black display text-[12px] tracking-wider hover:bg-ink-soft transition">Add</button>
-  </div>
-</form>
+{# Manual add form removed #}
 
 {# Flatpickr — English calendar/time picker #}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
