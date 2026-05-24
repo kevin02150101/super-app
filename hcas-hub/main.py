@@ -32,6 +32,7 @@ from fastapi.templating import Jinja2Templates
 
 from lib import db, seed, auth, streak as streak_svc, themes as theme_svc
 from lib import toolbox as toolbox_lib
+from lib import helper as helper_svc
 from lib.lunch_verdict import verdict_for
 
 BASE = Path(__file__).parent
@@ -206,6 +207,22 @@ def lunch_rate(request: Request, day: str = Form(...),
         db.log_activity(uid, "lunch_rated",
                         {"day": day, "stars": stars})
     return RedirectResponse(f"/lunch?day={day}", status_code=303)
+
+
+# --------- HUB HELPER (chat assistant) ---------
+@app.post("/helper/chat")
+async def helper_chat(payload: dict = Body(...)):
+    message = (payload.get("message") or "").strip()
+    if not message:
+        raise HTTPException(400, "empty message")
+    history = payload.get("history") or []
+    if not isinstance(history, list):
+        history = []
+    try:
+        reply = helper_svc.answer(message, history)
+    except Exception as e:  # noqa: BLE001
+        return JSONResponse({"error": str(e)}, status_code=500)
+    return {"reply": reply}
 
 
 # --------- ASSIGNMENTS ---------
