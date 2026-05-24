@@ -273,27 +273,68 @@
     <h2 class="eyebrow">▸ TOOLBOX</h2>
     <a href="/toolbox" class="text-[11px] uppercase tracking-wider text-ink-soft hover:text-white">See all →</a>
   </div>
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 tool-grid">
 
-    <a href="/toolbox#mycam" class="hairline p-4 group block">
-      <div class="display text-[24px] mb-2">📷</div>
+    <a href="/toolbox#mycam" class="tool-card tool-card--mycam group block">
+      <div class="tool-card__icon">📷</div>
       <div class="display text-[14px] text-white mb-1">MyCam</div>
       <div class="text-[12px] text-ink-soft">Snap food → get calories.</div>
     </a>
 
-    <a href="/toolbox#bookfinder" class="hairline p-4 group block">
-      <div class="display text-[24px] mb-2">📚</div>
+    <a href="/toolbox#bookfinder" class="tool-card tool-card--book group block">
+      <div class="tool-card__icon">📚</div>
       <div class="display text-[14px] text-white mb-1">BookFinder</div>
       <div class="text-[12px] text-ink-soft">Search Books.com.tw fast.</div>
     </a>
 
-    <a href="/toolbox#vibespec" class="hairline p-4 group block">
-      <div class="display text-[24px] mb-2">✦</div>
+    <a href="/toolbox#vibespec" class="tool-card tool-card--vibe group block">
+      <div class="tool-card__icon">✦</div>
       <div class="display text-[14px] text-white mb-1">VibeSpec</div>
       <div class="text-[12px] text-ink-soft">Generate product specs.</div>
     </a>
 
   </div>
+
+  <style>
+    .tool-card {
+      position: relative;
+      padding: 18px 16px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      transition: transform .18s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .tool-card__icon {
+      font-size: 28px; line-height: 1;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    }
+    .tool-card:hover { transform: translateY(-2px); }
+    .tool-card--mycam {
+      background: linear-gradient(135deg, rgba(255,128,40,0.22) 0%, rgba(255,64,80,0.10) 60%, rgba(255,64,80,0.04) 100%);
+      border-color: rgba(255,140,60,0.35);
+    }
+    .tool-card--mycam:hover {
+      border-color: rgba(255,160,80,0.7);
+      box-shadow: 0 10px 28px rgba(255,110,40,0.30);
+    }
+    .tool-card--book {
+      background: linear-gradient(135deg, rgba(110,220,140,0.20) 0%, rgba(59,207,255,0.12) 60%, rgba(59,207,255,0.04) 100%);
+      border-color: rgba(110,220,140,0.32);
+    }
+    .tool-card--book:hover {
+      border-color: rgba(140,230,170,0.7);
+      box-shadow: 0 10px 28px rgba(80,200,130,0.30);
+    }
+    .tool-card--vibe {
+      background: linear-gradient(135deg, rgba(160,90,255,0.24) 0%, rgba(59,207,255,0.12) 60%, rgba(59,207,255,0.04) 100%);
+      border-color: rgba(170,110,255,0.35);
+    }
+    .tool-card--vibe:hover {
+      border-color: rgba(190,140,255,0.75);
+      box-shadow: 0 10px 28px rgba(150,80,255,0.32);
+    }
+  </style>
 </section>
 
 {% endblock %}
