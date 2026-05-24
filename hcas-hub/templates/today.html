@@ -2,13 +2,35 @@
 {% block title %}TODAY · HCAS HUB{% endblock %}
 
 {% block content %}
-<div class="pt-2 pb-8">
+
+{# ── Greeting ── #}
+<div class="pt-2 pb-6">
   <div class="eyebrow mb-3">{{ now.strftime('%A · %B %-d, %Y') | upper }}</div>
-  <h1 class="display text-[44px] sm:text-[60px]">
-    Good {% if now.hour < 12 %}morning{% elif now.hour < 18 %}afternoon{% else %}evening{% endif %}
+  <h1 class="display text-[40px] sm:text-[56px] leading-[1.05]">
+    Good {% if now.hour < 12 %}morning{% elif now.hour < 18 %}afternoon{% else %}evening{% endif %}{% if user %}, <span style="color:#3BCFFF;">{{ (user.email or '').split('@')[0] }}</span>{% endif %}.
   </h1>
-  <p class="mt-3 text-[14px] text-ink-soft max-w-md">Everything for your day at HCAS — lunch verdict, work, toolbox, study notes.</p>
+  {% if not user %}
+    <p class="mt-3 text-[14px] text-ink-soft max-w-md">Your daily HCAS hub — lunch verdict, to-do, study notes, and tools.</p>
+  {% endif %}
 </div>
+
+{# ── Sign in (only when logged out) ── #}
+{% if not user %}
+  <div class="hairline p-5 mb-8" style="background: linear-gradient(135deg, rgba(59,207,255,0.06), rgba(30,150,229,0.04));">
+    <p class="eyebrow text-[11px] mb-3" style="color:#3BCFFF;">▸ SIGN IN TO GET STARTED</p>
+    <form action="/auth/dev/login" method="post" class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-2">
+      <input name="email" type="email" required placeholder="you@school.edu"
+             class="bg-paper-soft border border-line rounded-md px-3 py-2.5 text-sm" />
+      <input name="password" type="password" placeholder="Password (admin only)"
+             class="bg-paper-soft border border-line rounded-md px-3 py-2.5 text-sm" />
+      <button class="px-5 py-2.5 rounded-md bg-white text-black font-semibold text-sm hover:bg-ink-soft">Continue →</button>
+    </form>
+    <p class="text-[11px] text-ink-mute mt-2.5">
+      <span class="text-ink-soft">Students:</span> any school email, no password needed.
+      &nbsp;<span class="text-ink-soft">Admins:</span> add your password.
+    </p>
+  </div>
+{% endif %}
 
 {# ── Quick announcement composer (admins only) ── #}
 {% if user and user.role == 'admin' %}
@@ -45,7 +67,7 @@
       'warn':    {'bg':'rgba(255,128,32,0.10)','rule':'rgba(255,128,32,0.45)','fg':'#FF8020','label':'IMPORTANT'},
       'success': {'bg':'rgba(110,204,113,0.10)','rule':'rgba(110,204,113,0.45)','fg':'#6ECC71','label':'GOOD NEWS'},
   } %}
-  <div class="mb-6 space-y-2">
+  <div class="mb-8 space-y-2">
     {% for a in announcements %}
       {% set t = tones.get(a.tone, tones['info']) %}
       <div class="rounded-md border px-4 py-3" style="background: {{ t.bg }}; border-color: {{ t.rule }};">
@@ -57,8 +79,7 @@
           {% if user and user.role == 'admin' %}
             <form action="/admin/announcements/{{ a.id }}/delete" method="post"
                   onsubmit="return confirm('Delete this announcement?');" class="inline-flex">
-              <button class="text-[10px] text-ink-mute hover:text-white uppercase tracking-wider"
-                      title="Delete">✕ Delete</button>
+              <button class="text-[10px] text-ink-mute hover:text-white uppercase tracking-wider" title="Delete">✕</button>
             </form>
           {% endif %}
         </div>
@@ -69,12 +90,35 @@
   </div>
 {% endif %}
 
-{# Streak — only when signed in #}
+{# ════════════════════════════════════════════════════════════
+   PRIMARY ACTION — Today's lunch verdict (#1 reason to visit)
+   ════════════════════════════════════════════════════════════ #}
+{% set tone = {
+  'EAT_LUNCH':  {'bg': 'rgba(110,204,113,0.12)', 'fg': '#6ECC71', 'rule': 'rgba(110,204,113,0.55)', 'cta': 'See menu'},
+  'YOUR_CALL':  {'bg': 'rgba(255,128,32,0.12)',  'fg': '#FF8020', 'rule': 'rgba(255,128,32,0.55)',  'cta': 'Check details'},
+  'ORDER_UBER': {'bg': 'rgba(255,64,64,0.12)',   'fg': '#FF4040', 'rule': 'rgba(255,64,64,0.55)',   'cta': 'Find alternatives'},
+}[verdict.label] %}
+<a href="/lunch?day={{ day }}" class="block group mb-10">
+  <div class="callout" style="background: {{ tone.bg }}; border-color: {{ tone.rule }}; padding: 1.75rem;">
+    <div class="eyebrow mb-2" style="color: {{ tone.fg }};">▸ {{ day_label }} · LUNCH</div>
+    <div class="display text-[32px] sm:text-[44px] text-white leading-[1.05] mb-2">{{ menu.headline }}</div>
+    <div class="display text-[15px] sm:text-[17px]" style="color: {{ tone.fg }}; letter-spacing: 0.08em;">{{ verdict.headline | upper }}</div>
+    {% if menu.main_dish %}<div class="text-[13px] text-ink-soft mt-2">{{ menu.main_dish }}</div>{% endif %}
+    <div class="mt-4 flex items-center gap-3 text-[11px] text-ink-mute uppercase tracking-wider">
+      <span>★ {{ '%.1f' % avg if avg else '—' }} · {{ rating_count }} ratings</span>
+      <span class="ml-auto display text-[13px] text-white group-hover:translate-x-1 transition">
+        {{ tone.cta }} →
+      </span>
+    </div>
+  </div>
+</a>
+
+{# ── Streak (signed in only) ── #}
 {% if user and streak %}
   {% set newly = (streak_info.newly_unlocked if streak_info else []) %}
-  <a href="/me" class="block group mb-6">
+  <a href="/me" class="block group mb-10">
     <div class="hairline p-4 flex items-center gap-4">
-      <div class="display text-[36px] leading-none">🔥</div>
+      <div class="display text-[32px] leading-none">🔥</div>
       <div class="flex-1 min-w-0">
         <div class="eyebrow">{{ streak.current_count }}-DAY STREAK</div>
         <div class="text-[13px] text-ink-soft">
@@ -92,99 +136,91 @@
           </div>
         {% endif %}
       </div>
-      <div class="display text-[22px] opacity-0 group-hover:opacity-100 transition">→</div>
+      <div class="display text-[18px] opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition">→</div>
     </div>
   </a>
-{% elif not user %}
-  <div class="hairline p-4 mb-6">
-    <p class="eyebrow text-[11px] tracking-[0.22em] mb-2">SIGN&nbsp;IN</p>
-    <form action="/auth/dev/login" method="post" class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-2">
-      <input name="email" type="email" required placeholder="you@school.edu"
-             class="bg-paper-soft border border-line rounded-md px-3 py-2 text-sm" />
-      <input name="password" type="password" placeholder="Password (admins only)"
-             class="bg-paper-soft border border-line rounded-md px-3 py-2 text-sm" />
-      <button class="px-4 py-2 rounded-md bg-white text-black font-medium text-sm hover:bg-ink-soft">Sign in</button>
-    </form>
-    <p class="text-[11px] text-ink-mute mt-2">Students: any school email — no password. Admins: use your admin password.</p>
-  </div>
 {% endif %}
 
-{# Verdict — full-width SpaceX block #}
-{% set tone = {
-  'EAT_LUNCH':  {'bg': 'rgba(110,204,113,0.10)', 'fg': '#6ECC71', 'rule': 'rgba(110,204,113,0.45)'},
-  'YOUR_CALL':  {'bg': 'rgba(255,128,32,0.10)',  'fg': '#FF8020', 'rule': 'rgba(255,128,32,0.45)'},
-  'ORDER_UBER': {'bg': 'rgba(255,64,64,0.10)',   'fg': '#FF4040', 'rule': 'rgba(255,64,64,0.45)'},
-}[verdict.label] %}
-<a href="/lunch?day={{ day }}" class="block group">
-  <div class="callout" style="background: {{ tone.bg }}; border-color: {{ tone.rule }};">
-    <div class="eyebrow" style="color: {{ tone.fg }};">{{ day_label }} · Lunch</div>
-    <div class="display text-[28px] sm:text-[36px] text-white">{{ menu.headline }}</div>
-    <div class="display text-[14px] sm:text-[16px]" style="color: {{ tone.fg }}; letter-spacing: 0.08em;">{{ verdict.headline | upper }}</div>
-    {% if menu.main_dish %}<div class="text-[12px] text-ink-soft">{{ menu.main_dish }}</div>{% endif %}
-    <div class="mt-2 flex items-center gap-4 text-[11px] text-ink-mute uppercase tracking-wider">
-      <span>★ {{ '%.1f' % avg if avg else '—' }}</span>
-      <span>·</span>
-      <span>{{ rating_count }} ratings</span>
-      <span class="ml-auto opacity-0 group-hover:opacity-100 transition text-white">Open →</span>
-    </div>
-  </div>
-</a>
+{# ════════════════════════════════════════════════════════════
+   YOUR DAY — quick glance grid (To-do + Notes CTA)
+   ════════════════════════════════════════════════════════════ #}
+<section class="mb-10">
+  <h2 class="eyebrow mb-3">▸ YOUR DAY</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 
-{# To-do #}
-<section class="mt-12">
-  <div class="flex items-end justify-between mb-3">
-    <h2 class="eyebrow">To-do</h2>
-    <a href="/assignments" class="text-[11px] uppercase tracking-wider text-ink-soft hover:text-white">Manage</a>
+    {# To-do #}
+    <a href="/assignments" class="hairline p-4 group block">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="display text-[14px] text-white">To-do</span>
+        {% if assignments %}<span class="text-[11px] text-ink-mute">· {{ assignments|length }} open</span>{% endif %}
+        <span class="ml-auto text-[12px] text-ink-mute group-hover:text-white transition">Manage →</span>
+      </div>
+      {% if assignments %}
+        <ul class="space-y-1.5">
+        {% for a in assignments[:3] %}
+          <li class="flex items-start gap-2 text-[13px]">
+            <span class="mt-1 w-2.5 h-2.5 border border-white/40 shrink-0"></span>
+            <div class="min-w-0 flex-1">
+              <div class="text-white truncate">{{ a.title }}</div>
+              {% if a.subject or a.due_at %}
+                <div class="text-[10px] text-ink-mute uppercase tracking-wider">
+                  {% if a.subject %}{{ a.subject }}{% endif %}{% if a.due_at %} · due {{ a.due_at }}{% endif %}
+                </div>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+        </ul>
+        {% if assignments|length > 3 %}
+          <div class="text-[11px] text-ink-mute mt-2 uppercase tracking-wider">+ {{ assignments|length - 3 }} more</div>
+        {% endif %}
+      {% else %}
+        <p class="text-[13px] text-ink-soft">All caught up. ✓</p>
+      {% endif %}
+    </a>
+
+    {# Study Notes CTA #}
+    <a href="/notes" class="hairline p-4 group block" style="background: linear-gradient(135deg, rgba(59,207,255,0.06), transparent);">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="display text-[14px] text-white">Study Notes</span>
+        <span class="ml-auto text-[12px] text-ink-mute group-hover:text-white transition">Open →</span>
+      </div>
+      <p class="text-[13px] text-ink-soft">Type a topic. Get organized notes in seconds.</p>
+      <p class="text-[11px] text-ink-mute uppercase tracking-wider mt-2">✦ AI-POWERED</p>
+    </a>
+
   </div>
-  {% if assignments %}
-    <ul class="border-t border-line">
-    {% for a in assignments %}
-      <li class="border-b border-line py-3 flex items-start gap-4">
-        <span class="mt-1.5 w-3 h-3 border border-white/40 shrink-0"></span>
-        <div class="min-w-0 flex-1">
-          <div class="text-[15px] text-white truncate">{{ a.title }}</div>
-          <div class="text-[11px] text-ink-mute uppercase tracking-wider">
-            {% if a.subject %}{{ a.subject }}{% endif %}{% if a.due_at %} · due {{ a.due_at }}{% endif %}
-          </div>
-        </div>
-      </li>
-    {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-[13px] text-ink-mute">All caught up. <a class="text-white underline" href="/assignments">Add one</a></p>
-  {% endif %}
 </section>
 
-{# Toolbox shortcut #}
-<section class="mt-12">
-  <div class="flex items-end justify-between mb-3">
-    <h2 class="eyebrow">Toolbox</h2>
-    <a href="/toolbox" class="text-[11px] uppercase tracking-wider text-ink-soft hover:text-white">Open toolbox</a>
+{# ════════════════════════════════════════════════════════════
+   TOOLBOX — quick-launch tappable cards
+   ════════════════════════════════════════════════════════════ #}
+<section class="mb-10">
+  <div class="flex items-baseline justify-between mb-3">
+    <h2 class="eyebrow">▸ TOOLBOX</h2>
+    <a href="/toolbox" class="text-[11px] uppercase tracking-wider text-ink-soft hover:text-white">See all →</a>
   </div>
-  <ul class="border-t border-line">
-    <li class="border-b border-line py-3 flex items-center gap-4 text-[14px]">
-      <span class="text-[11px] uppercase tracking-wider text-ink-mute w-16 shrink-0">AI</span>
-      <div class="flex-1 truncate"><span class="text-white">MyCam</span><span class="text-ink-soft"> · food image analysis</span></div>
-    </li>
-    <li class="border-b border-line py-3 flex items-center gap-4 text-[14px]">
-      <span class="text-[11px] uppercase tracking-wider text-ink-mute w-16 shrink-0">Search</span>
-      <div class="flex-1 truncate"><span class="text-white">BookFinder</span><span class="text-ink-soft"> · Books.com.tw lookup</span></div>
-    </li>
-    <li class="border-b border-line py-3 flex items-center gap-4 text-[14px]">
-      <span class="text-[11px] uppercase tracking-wider text-ink-mute w-16 shrink-0">AI</span>
-      <div class="flex-1 truncate"><span class="text-white">VibeSpec</span><span class="text-ink-soft"> · spec generator</span></div>
-    </li>
-  </ul>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+    <a href="/toolbox#mycam" class="hairline p-4 group block">
+      <div class="display text-[24px] mb-2">📷</div>
+      <div class="display text-[14px] text-white mb-1">MyCam</div>
+      <div class="text-[12px] text-ink-soft">Snap food → get calories.</div>
+    </a>
+
+    <a href="/toolbox#bookfinder" class="hairline p-4 group block">
+      <div class="display text-[24px] mb-2">📚</div>
+      <div class="display text-[14px] text-white mb-1">BookFinder</div>
+      <div class="text-[12px] text-ink-soft">Search Books.com.tw fast.</div>
+    </a>
+
+    <a href="/toolbox#vibespec" class="hairline p-4 group block">
+      <div class="display text-[24px] mb-2">✦</div>
+      <div class="display text-[14px] text-white mb-1">VibeSpec</div>
+      <div class="text-[12px] text-ink-soft">Generate product specs.</div>
+    </a>
+
+  </div>
 </section>
 
-{# Notes shortcut — SpaceX-style block CTA #}
-<a href="/notes" class="mt-12 block group">
-  <div class="hairline p-5 hover:bg-paper-soft transition flex items-center gap-4">
-    <div class="flex-1">
-      <div class="eyebrow text-white">Generate Study Notes</div>
-      <div class="text-[12px] text-ink-soft mt-1">Type a topic. Organized notes, in seconds.</div>
-    </div>
-    <div class="display text-[14px] tracking-wider text-white group-hover:translate-x-1 transition">→</div>
-  </div>
-</a>
 {% endblock %}
