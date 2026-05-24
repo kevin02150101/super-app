@@ -5,8 +5,8 @@
 
 {# ── Greeting ── #}
 {% set part = 'morning' if now.hour < 12 else ('afternoon' if now.hour < 18 else 'evening') %}
-<div class="pt-4 pb-8">
-  <div class="flex items-center gap-3 mb-4">
+<div class="pt-6 pb-12">
+  <div class="flex items-center gap-3 mb-10">
     <span class="eyebrow tracking-[0.28em]">{{ now.strftime('%A · %b %-d') | upper }}</span>
     <span class="h-px flex-1 bg-line"></span>
     <span class="eyebrow text-ink-mute">{{ now.strftime('%H:%M') }}</span>
@@ -15,7 +15,7 @@
     Good {{ part }}{% if user %},<br class="hidden sm:block" />
     <span class="hub-hello__name">{{ (user.email or '').split('@')[0] }}</span>{% endif %}.
   </h1>
-  <p class="mt-4 text-[14px] sm:text-[15px] text-ink-soft max-w-xl">
+  <p class="mt-8 text-[14px] sm:text-[15px] text-ink-soft max-w-xl">
     {% if user %}
       Here's your day at HCAS — lunch verdict, to-do, study notes, and tools.
     {% else %}
@@ -24,7 +24,7 @@
   </p>
 
   {# About / tour button — overview of the whole site #}
-  <a href="https://hcas-hub-launch.vercel.app/#top" target="_blank" rel="noopener" class="hub-about-btn mt-5">
+  <a href="https://hcas-hub-launch.vercel.app/#top" target="_blank" rel="noopener" class="hub-about-btn mt-10">
     What is HCAS Hub? &nbsp;·&nbsp; Take the 1-min tour&nbsp;↗
   </a>
 </div>
@@ -59,10 +59,11 @@
 
 <style>
   .hub-hello {
-    background: linear-gradient(135deg, #0A2540 0%, #1E96E5 55%, #3BCFFF 100%);
+    background: linear-gradient(135deg, #3BCFFF 0%, #6EE3FF 50%, #FFFFFF 100%);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     font-weight: 800;
+    text-shadow: 0 2px 24px rgba(59,207,255,0.15);
   }
   .hub-hello__name {
     background: linear-gradient(135deg, #1E96E5 0%, #3BCFFF 60%, #6EE3FF 100%);
@@ -276,19 +277,34 @@
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 tool-grid">
 
     <a href="/toolbox#mycam" class="tool-card tool-card--mycam group block">
-      <div class="tool-card__icon">📷</div>
+      <div class="tool-card__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7h3l2-2h8l2 2h3v12H3z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+      </div>
       <div class="display text-[14px] text-white mb-1">MyCam</div>
       <div class="text-[12px] text-ink-soft">Snap food → get calories.</div>
     </a>
 
     <a href="/toolbox#bookfinder" class="tool-card tool-card--book group block">
-      <div class="tool-card__icon">📚</div>
+      <div class="tool-card__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/>
+          <path d="M20 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/>
+        </svg>
+      </div>
       <div class="display text-[14px] text-white mb-1">BookFinder</div>
       <div class="text-[12px] text-ink-soft">Search Books.com.tw fast.</div>
     </a>
 
     <a href="/toolbox#vibespec" class="tool-card tool-card--vibe group block">
-      <div class="tool-card__icon">✦</div>
+      <div class="tool-card__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/>
+          <path d="M19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7z"/>
+        </svg>
+      </div>
       <div class="display text-[14px] text-white mb-1">VibeSpec</div>
       <div class="text-[12px] text-ink-soft">Generate product specs.</div>
     </a>
@@ -305,10 +321,16 @@
       transition: transform .18s ease, box-shadow .25s ease, border-color .25s ease;
     }
     .tool-card__icon {
-      font-size: 28px; line-height: 1;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+      width: 36px; height: 36px;
+      margin-bottom: 12px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 10px;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.45));
     }
+    .tool-card__icon svg { width: 28px; height: 28px; }
+    .tool-card--mycam .tool-card__icon { color: #FFB070; background: rgba(255,140,60,0.15); }
+    .tool-card--book  .tool-card__icon { color: #8CE6B0; background: rgba(110,220,140,0.15); }
+    .tool-card--vibe  .tool-card__icon { color: #C9A7FF; background: rgba(170,110,255,0.18); }
     .tool-card:hover { transform: translateY(-2px); }
     .tool-card--mycam {
       background: linear-gradient(135deg, rgba(255,128,40,0.22) 0%, rgba(255,64,80,0.10) 60%, rgba(255,64,80,0.04) 100%);

@@ -109,7 +109,7 @@
 
     /* Theme toggle button */
     .theme-btn {
-      width: 40px; height: 40px;
+      width: 48px; height: 48px;
       border-radius: 50%;
       border: none;
       display: inline-flex;
@@ -121,6 +121,7 @@
       cursor: pointer;
       transition: transform 0.15s ease, background 0.3s ease, color 0.3s ease;
     }
+    .theme-btn svg { width: 22px; height: 22px; }
     .theme-btn:hover { transform: scale(1.10); }
     .theme-btn:active { transform: scale(0.96); }
     .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
@@ -191,22 +192,23 @@
     .tour-btn-next { background: linear-gradient(90deg, #3BCFFF, #1E96E5); color: #0F1A2F; }
     .tour-btn-next:active { transform: scale(0.96); }
     .guide-btn {
-      width: 40px; height: 40px; border-radius: 50%; border: none;
+      width: 48px; height: 48px; border-radius: 50%; border: none;
       display: inline-flex; align-items: center; justify-content: center;
       background: var(--page-bg); color: var(--page-text);
       box-shadow: 0 0 0 1.5px var(--bar-border); cursor: pointer;
       transition: transform 0.15s ease;
     }
+    .guide-btn svg { width: 22px; height: 22px; }
     .guide-btn:hover { transform: scale(1.10); }
     .guide-btn:active { transform: scale(0.96); }
 
     /* Header Sign-in pill */
     .signin-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 0 10px; height: 24px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0 20px; height: 48px;
       border-radius: 999px;
       font-family: "D-DIN", Inter, sans-serif;
-      font-weight: 800; font-size: 10px; letter-spacing: 0.08em;
+      font-weight: 800; font-size: 13px; letter-spacing: 0.08em;
       color: #0F1A2F;
       background: linear-gradient(90deg, #3BCFFF, #1E96E5);
       box-shadow: 0 4px 12px rgba(30,150,229,0.30);
@@ -416,8 +418,8 @@
       text-shadow: 0 0 12px rgba(59,207,255,0.25);
     }
 
-    /* Theme + guide buttons — smoother shape */
-    .theme-btn, .guide-btn { border-radius: 10px; }
+    /* Theme + guide buttons — round, same height as signin */
+    .theme-btn, .guide-btn { border-radius: 999px; }
 
     /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce) {
@@ -461,7 +463,7 @@
           ('today',       '/',            'Home'),
           ('lunch',       '/lunch',       'Lunch'),
           ('schedule',    '/schedule',    'Schedule'),
-          ('assignments', '/assignments', 'Home work'),
+          ('assignments', '/assignments', 'Homework'),
           ('toolbox',     '/toolbox',     'Toolbox'),
           ('notes',       '/notes',       'Notes'),
         ] %}
