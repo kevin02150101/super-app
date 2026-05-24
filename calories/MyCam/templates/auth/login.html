@@ -27,11 +27,33 @@
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
+  const payload = Object.fromEntries(fd);
   try {
-    await axios.post('/api/auth/login', Object.fromEntries(fd));
+    await axios.post('/api/auth/login', payload);
     location.href = '/dashboard/';
   } catch (err) {
-    Swal.fire({ icon: 'error', title: 'Sign-in failed', text: err.response?.data?.error?.message || err.message });
+    const errObj = err.response?.data?.error || {};
+    const code = errObj.code || '';
+    const msg = errObj.message || err.message;
+    // Bad credentials → offer to register instead with email pre-filled
+    if (code === 'BAD_CREDENTIALS') {
+      const res = await Swal.fire({
+        icon: 'info',
+        title: "Hmm, can't sign you in",
+        html: 'Either your password is wrong, or there\'s no account with <b>' + payload.email + '</b> yet.<br><br>Want to create one?',
+        showCancelButton: true,
+        confirmButtonText: 'Create account',
+        cancelButtonText: 'Try again',
+        confirmButtonColor: '#6e3aff',
+      });
+      if (res.isConfirmed) {
+        const url = new URL('{{ url_for("auth.register_page") }}', location.origin);
+        url.searchParams.set('email', payload.email);
+        location.href = url.toString();
+      }
+    } else {
+      Swal.fire({ icon: 'error', title: 'Sign-in failed', text: msg });
+    }
   }
 });
 </script>

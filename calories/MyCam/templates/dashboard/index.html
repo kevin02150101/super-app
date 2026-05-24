@@ -15,6 +15,34 @@
 {% endblock %}
 
 {% block content %}
+  {# Quick upload — works on desktop (file picker) and phone (camera or camera roll) #}
+  <div class="mc-card mb-4" id="quickUpload">
+    <h5 class="mc-card__title"><i class="bi bi-cloud-arrow-up me-1"></i>Quick upload — analyze a food photo</h5>
+    <p class="text-muted small mb-3">Drag &amp; drop a photo, choose a file from your computer, or use your phone camera.</p>
+    <div id="quQuickDrop" class="mc-drop mb-3" style="cursor:pointer;">
+      <div id="quQuickPlaceholder">
+        <i class="bi bi-image" style="font-size:2rem"></i>
+        <p class="mt-2 mb-1">Drop an image here, or tap to choose</p>
+        <small class="text-muted">JPG / PNG / WEBP · max 8 MB</small>
+      </div>
+      <img id="quQuickPreview" class="mc-drop__preview d-none" />
+    </div>
+    <input type="file" id="quQuickFile" class="d-none" accept="image/*" />
+    <input type="file" id="quQuickCam" class="d-none" accept="image/*" capture="environment" />
+    <div class="d-flex flex-wrap gap-2">
+      <button class="btn btn-outline-primary rounded-pill" type="button" onclick="document.getElementById('quQuickFile').click()">
+        <i class="bi bi-folder2-open"></i> Choose file
+      </button>
+      <button class="btn btn-outline-primary rounded-pill d-md-none" type="button" onclick="document.getElementById('quQuickCam').click()">
+        <i class="bi bi-camera"></i> Use camera
+      </button>
+      <button class="mc-btn-primary" id="quQuickSend" disabled>
+        <span id="quQuickSendLabel"><i class="bi bi-stars"></i> Analyze</span>
+      </button>
+      <a class="btn btn-link" href="{{ url_for('capture.index') }}">Open full capture page →</a>
+    </div>
+  </div>
+
   <div class="row g-4">
     <div class="col-lg-8">
       <div class="mc-card">
@@ -39,6 +67,61 @@
 {% endblock %}
 
 {% block scripts %}
+  <script>
+    // Quick-upload widget (vanilla JS, no Vue dependency)
+    (function () {
+      const drop = document.getElementById('quQuickDrop');
+      const placeholder = document.getElementById('quQuickPlaceholder');
+      const preview = document.getElementById('quQuickPreview');
+      const fileInp = document.getElementById('quQuickFile');
+      const camInp = document.getElementById('quQuickCam');
+      const sendBtn = document.getElementById('quQuickSend');
+      const sendLabel = document.getElementById('quQuickSendLabel');
+      let file = null;
+
+      function setFile(f) {
+        if (!f || !f.type.startsWith('image/')) return;
+        file = f;
+        preview.src = URL.createObjectURL(f);
+        preview.classList.remove('d-none');
+        placeholder.classList.add('d-none');
+        sendBtn.disabled = false;
+      }
+
+      drop.addEventListener('click', () => fileInp.click());
+      drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+      drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+      drop.addEventListener('drop', e => {
+        e.preventDefault();
+        drop.classList.remove('dragover');
+        if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+      });
+      fileInp.addEventListener('change', e => setFile(e.target.files[0]));
+      camInp.addEventListener('change', e => setFile(e.target.files[0]));
+
+      sendBtn.addEventListener('click', async () => {
+        if (!file) return;
+        sendBtn.disabled = true;
+        sendLabel.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Analyzing…';
+        try {
+          const fd = new FormData();
+          fd.append('image', file, file.name || 'photo.jpg');
+          const { data } = await axios.post('/api/analyze', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+          await Swal.fire({
+            icon: 'success',
+            title: 'Analysis complete',
+            text: data.data.summary || 'Analysis ready',
+            confirmButtonText: 'View details'
+          });
+          location.href = '/history/' + data.data.id;
+        } catch (e) {
+          Swal.fire({ icon: 'error', title: 'Analysis failed', text: (window.MC && MC.errorOf ? MC.errorOf(e) : (e.response?.data?.error?.message || e.message)) });
+          sendBtn.disabled = false;
+          sendLabel.innerHTML = '<i class="bi bi-stars"></i> Analyze';
+        }
+      });
+    })();
+  </script>
   <script src="{{ url_for('static', filename='js/components/AnalysisCard.js') }}"></script>
   <script src="{{ url_for('static', filename='js/pages/dashboard.js') }}"></script>
 {% endblock %}
