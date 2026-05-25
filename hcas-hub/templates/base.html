@@ -212,13 +212,13 @@
       transition: background 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Nav: uppercase, tracking, hover underline in brand cyan */
+    /* Nav: title case, hover underline in brand cyan */
     .nav-link {
-      font-family: "D-DIN", Inter, system-ui, sans-serif;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-size: 11px;
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      font-size: 14px;
       color: var(--ink-soft);
       position: relative;
       transition: color .18s ease;
@@ -226,7 +226,7 @@
       white-space: nowrap;
     }
     @media (min-width: 640px) {
-      .nav-link { font-size: 12px; letter-spacing: 0.16em; }
+      .nav-link { font-size: 15px; letter-spacing: 0.01em; }
     }
     .nav-link:hover { color: var(--page-text); }
     .nav-link.active { color: #1E96E5; }
@@ -366,6 +366,7 @@
       height: 2px;
       box-shadow: 0 0 8px rgba(59,207,255,0.55);
     }
+    :root.light .nav-link.active { color: #1E96E5; text-shadow: none; }
 
     /* Inputs / textareas — refined focus ring */
     input[type=text], input[type=email], input[type=password], input[type=number],
@@ -405,6 +406,229 @@
     /* Theme + guide buttons — round, same height as signin */
     .theme-btn, .guide-btn { border-radius: 999px; }
 
+    /* ═══════════════════════════════════════════════════════
+       NAVBAR CARD — floating rounded glass container
+       ═══════════════════════════════════════════════════════ */
+    .app-header {
+      background: transparent !important;
+      border-bottom: 0 !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      pointer-events: none; /* let the card capture */
+    }
+    .navbar-card {
+      pointer-events: auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 60px;
+      padding: 8px 14px 8px 18px;
+      margin: 12px auto 0;
+      max-width: min(1180px, calc(100% - 20px));
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(22,38,68,0.86) 0%, rgba(13,22,40,0.82) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        inset 0 0 0 1px rgba(59,207,255,0.18),
+        0 20px 50px -10px rgba(0,0,0,0.55),
+        0 0 30px rgba(59,207,255,0.06);
+      backdrop-filter: blur(22px) saturate(170%);
+      -webkit-backdrop-filter: blur(22px) saturate(170%);
+    }
+    .navbar-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(59,207,255,0.45), rgba(59,207,255,0) 35%, rgba(30,150,229,0) 65%, rgba(59,207,255,0.30));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+    }
+    :root.light .navbar-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,250,253,0.88));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.8),
+        inset 0 0 0 1px rgba(15,26,47,0.06),
+        0 18px 40px -8px rgba(15,26,47,0.14),
+        0 0 24px rgba(59,207,255,0.10);
+    }
+    :root.light .navbar-card::before {
+      background: linear-gradient(135deg, rgba(30,150,229,0.35), rgba(30,150,229,0) 35%, rgba(30,150,229,0) 65%, rgba(30,150,229,0.25));
+    }
+    @media (min-width: 640px) {
+      .navbar-card { min-height: 68px; padding: 10px 16px 10px 22px; gap: 22px; }
+    }
+
+    /* Logo */
+    .navbar-logo { gap: 10px; }
+    .navbar-logo svg { width: 26px; height: 26px; }
+    @media (min-width: 640px) { .navbar-logo svg { width: 30px; height: 30px; } }
+    .navbar-wordmark {
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.18em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    @media (min-width: 640px) { .navbar-wordmark { font-size: 18px; } }
+    .navbar-wordmark .wm-hcas { color: #FFFFFF; }
+    .navbar-wordmark .wm-hub  { color: #3BCFFF; text-shadow: 0 0 14px rgba(59,207,255,0.45); margin-left: 4px; }
+    :root.light .navbar-wordmark .wm-hcas { color: var(--page-text); }
+    :root.light .navbar-wordmark .wm-hub  { color: #1E96E5; text-shadow: none; }
+
+    /* Center nav */
+    .navbar-nav {
+      gap: 4px;
+    }
+    @media (min-width: 1024px) { .navbar-nav { gap: 6px; } }
+    .navbar-nav .nav-link {
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 9px 14px;
+      border-radius: 999px;
+      color: var(--ink-soft);
+      transition: color .18s ease, background .22s ease, box-shadow .22s ease, transform .15s ease;
+    }
+    @media (min-width: 1024px) { .navbar-nav .nav-link { font-size: 13px; padding: 10px 16px; } }
+    .navbar-nav .nav-link::after { display: none; } /* drop the underline */
+    .navbar-nav .nav-link:hover {
+      color: var(--page-text);
+      background: rgba(59,207,255,0.08);
+    }
+    :root.light .navbar-nav .nav-link:hover {
+      background: rgba(30,150,229,0.10);
+    }
+    .navbar-nav .nav-link.active {
+      color: #0A1426;
+      background: linear-gradient(135deg, #3BCFFF 0%, #1E96E5 100%);
+      box-shadow:
+        0 6px 18px -4px rgba(30,150,229,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+      text-shadow: none;
+    }
+    :root.light .navbar-nav .nav-link.active {
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #1E96E5 0%, #0F4A85 100%);
+    }
+    .navbar-nav .nav-link.active:hover { filter: brightness(1.05); }
+
+    /* Right controls */
+    .navbar-right { gap: 8px; }
+    @media (min-width: 768px) { .navbar-right { gap: 10px; } }
+    .nav-icon-btn {
+      width: 40px; height: 40px;
+      flex: none; box-sizing: border-box;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      color: var(--page-text);
+      border: 1px solid rgba(59,207,255,0.28);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
+    }
+    .nav-icon-btn svg { width: 18px; height: 18px; }
+    .nav-icon-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(59,207,255,0.65);
+      background: rgba(59,207,255,0.12);
+      color: #3BCFFF;
+      box-shadow: 0 0 0 4px rgba(59,207,255,0.10), 0 6px 18px -4px rgba(59,207,255,0.30);
+    }
+    .nav-icon-btn:active { transform: scale(0.94); }
+    :root.light .nav-icon-btn {
+      background: #FFFFFF;
+      border-color: rgba(30,150,229,0.30);
+      color: var(--page-text);
+      box-shadow: 0 1px 2px rgba(15,26,47,0.05);
+    }
+    :root.light .nav-icon-btn:hover {
+      color: #1E96E5;
+      border-color: rgba(30,150,229,0.55);
+      background: #F4FAFF;
+      box-shadow: 0 0 0 4px rgba(30,150,229,0.10), 0 4px 14px -2px rgba(30,150,229,0.20);
+    }
+
+    .signin-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #0A1426;
+      background: linear-gradient(135deg, #3BCFFF 0%, #1E96E5 100%);
+      box-shadow:
+        0 8px 22px -6px rgba(30,150,229,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.40);
+      transition: transform .15s ease, box-shadow .2s ease, filter .15s ease;
+      white-space: nowrap;
+    }
+    .signin-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+      box-shadow: 0 12px 28px -6px rgba(30,150,229,0.65), inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+    .signin-btn:active { transform: scale(0.97); }
+
+    /* Mobile menu trigger + drawer */
+    .navbar-menu-btn { display: none; }
+    @media (max-width: 639px) {
+      .navbar-nav { display: none !important; }
+      .navbar-menu-btn { display: inline-flex; }
+      .navbar-card { gap: 10px; padding: 8px 10px 8px 14px; min-height: 56px; }
+      .signin-btn { padding: 0 14px; font-size: 11px; height: 38px; }
+      .nav-icon-btn { width: 38px; height: 38px; }
+    }
+    #navbar-drawer {
+      pointer-events: auto;
+      max-width: min(1180px, calc(100% - 24px));
+      margin: 10px auto 0;
+      border-radius: 22px;
+      padding: 14px 18px;
+      background: linear-gradient(180deg, rgba(20,34,60,0.96), rgba(15,26,47,0.92));
+      box-shadow:
+        inset 0 0 0 1px rgba(59,207,255,0.22),
+        0 18px 40px rgba(0,0,0,0.45);
+      display: none;
+    }
+    :root.light #navbar-drawer {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,253,0.92));
+      box-shadow: inset 0 0 0 1px rgba(15,26,47,0.10), 0 14px 36px rgba(15,26,47,0.12);
+    }
+    #navbar-drawer.open { display: block; }
+    #navbar-drawer .nav-link {
+      display: block;
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: var(--ink-soft);
+    }
+    #navbar-drawer .nav-link::after { display: none; }
+    #navbar-drawer .nav-link:hover { background: rgba(59,207,255,0.08); color: var(--page-text); }
+    #navbar-drawer .nav-link.active {
+      color: #0A1426;
+      background: linear-gradient(135deg, #3BCFFF, #1E96E5);
+    }
+    :root.light #navbar-drawer .nav-link.active { color: #FFFFFF; background: linear-gradient(135deg, #1E96E5, #0F4A85); }
+
     /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce) {
       .hairline, .bg-white, main, .hh-msg, .hh-fab::before { animation: none !important; transition: none !important; }
@@ -417,12 +641,11 @@
   {# Curtain overlay for theme transitions #}
   <div id="theme-curtain" class="curtain" aria-hidden="true"></div>
 
-  <header class="app-header fixed top-0 inset-x-0 z-50 backdrop-blur safe-top">
-    {# Logo row — centered on mobile, on the left on desktop #}
-    <div class="max-w-screen-md mx-auto px-5 pt-2 sm:pt-0 sm:h-12 flex flex-col sm:flex-row items-center sm:items-stretch">
-      <a href="/" data-tour="logo" class="flex items-center gap-2 shrink-0 sm:mr-6 sm:self-center">
-        {# H-mark logo #}
-        <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <header class="app-header fixed top-0 inset-x-0 z-50 safe-top">
+    <div class="navbar-card">
+      {# Logo #}
+      <a href="/" data-tour="logo" class="navbar-logo flex items-center shrink-0">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
             <linearGradient id="hcasGradLeft" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stop-color="#3BCFFF"/>
@@ -433,19 +656,18 @@
               <stop offset="100%" stop-color="#0F4A85"/>
             </linearGradient>
           </defs>
-          {# Left bar #}
           <path d="M6 6 L22 6 L22 58 L6 58 Z" fill="url(#hcasGradLeft)"/>
-          {# Right bar #}
           <path d="M42 6 L58 6 L58 58 L42 58 Z" fill="url(#hcasGradRight)"/>
-          {# Crossbar with slight angle #}
           <path d="M22 26 L42 22 L42 36 L22 40 Z" fill="url(#hcasGradLeft)" opacity="0.95"/>
         </svg>
-        <span class="font-extrabold text-[15px] tracking-[0.22em] text-white whitespace-nowrap">HCAS&nbsp;HUB</span>
+        <span class="navbar-wordmark"><span class="wm-hcas">HCAS</span><span class="wm-hub">HUB</span></span>
       </a>
-      <nav data-tour="nav" class="mx-auto sm:mx-0 sm:ml-auto sm:mr-auto flex items-center justify-center gap-3 sm:gap-7 py-1.5 sm:py-0">
+
+      {# Center nav links #}
+      <nav data-tour="nav" class="navbar-nav hidden sm:flex flex-1 items-center justify-center">
         {% set items = [
           ('today',       '/',            'Home'),
-          ('lunch',       '/lunch',       'Lunch'),
+          ('lunch',       '/lunch',       'School Food'),
           ('schedule',    '/schedule',    'Schedule'),
           ('assignments', '/assignments', 'Homework'),
           ('toolbox',     '/toolbox',     'Toolbox'),
@@ -455,53 +677,79 @@
           <a href="{{ href }}" data-tour="nav-{{ key }}" class="nav-link {{ 'active' if active == key else '' }}">{{ label }}</a>
         {% endfor %}
       </nav>
-      {# User / streak chip #}
-      {% if user %}
-        {% if user.role == 'admin' %}
-          <a href="/admin" class="hidden sm:inline-flex items-center ml-3 px-2.5 py-1 rounded-full border text-[12px] hover:bg-paper-soft"
-             style="border-color: #FF8020; color: #FF8020;">ADMIN</a>
-        {% endif %}
-        <a href="/me" class="hidden sm:inline-flex items-center gap-1.5 ml-3 px-2.5 py-1 rounded-full border border-line bg-paper-soft text-[12px] hover:bg-paper-tint"
-           title="{{ user.display_name }}">
-          <span class="display tracking-wide">{{ (user.display_name or user.email or 'U')[:1]|upper }}</span>
-          {% if streak and streak.current_count %}
-            <span class="text-ink-soft">🔥 {{ streak.current_count }}</span>
+
+      {# Right controls #}
+      <div class="navbar-right ml-auto flex items-center">
+        {% if user %}
+          {% if user.role == 'admin' %}
+            <a href="/admin" class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-full border text-[12px] hover:bg-paper-soft"
+               style="border-color: #FF8020; color: #FF8020;">ADMIN</a>
           {% endif %}
-        </a>
-        <form action="/auth/logout" method="post" class="inline-flex ml-2">
-          <button class="inline-flex items-center px-3 py-1.5 rounded-full border border-line text-[12px] hover:bg-paper-soft">Sign out</button>
-        </form>
-      {% endif %}
-      {# Guide / replay tour #}
-      <button id="guide-btn" data-tour="guide" class="guide-btn sm:ml-12 mb-1 sm:mb-0" aria-label="Replay guided tour" title="Replay tour">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-        </svg>
-      </button>
-      {# Theme toggle #}
-      <button id="theme-toggle" data-tour="theme" class="theme-btn sm:ml-6 mb-1 sm:mb-0" aria-label="Toggle theme" aria-pressed="false">
-        <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-        <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-          <circle cx="12" cy="12" r="4"/>
-          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      </button>
-      {# Privacy link #}
-      <a href="https://hcas-hub-launch.vercel.app/privacy" target="_blank" rel="noopener"
-         class="theme-btn sm:ml-6 mb-1 sm:mb-0" aria-label="Privacy policy" title="Privacy policy">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-      </a>
+          <a href="/me" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-line bg-paper-soft text-[12px] hover:bg-paper-tint"
+             title="{{ user.display_name }}">
+            <span class="display tracking-wide">{{ (user.display_name or user.email or 'U')[:1]|upper }}</span>
+            {% if streak and streak.current_count %}
+              <span class="text-ink-soft">🔥 {{ streak.current_count }}</span>
+            {% endif %}
+          </a>
+          <form action="/auth/logout" method="post" class="hidden sm:inline-flex">
+            <button class="signin-btn" style="background: linear-gradient(135deg,#3BCFFF,#1E96E5);">Sign out</button>
+          </form>
+        {% else %}
+          <a href="/login" class="signin-btn hidden sm:inline-flex">Sign in</a>
+        {% endif %}
+
+        {# Theme toggle — rounded-square #}
+        <button id="theme-toggle" data-tour="theme" class="nav-icon-btn" aria-label="Toggle theme" aria-pressed="false">
+          <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <circle cx="12" cy="12" r="4"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
+
+        {# Mobile menu trigger #}
+        <button id="navbar-menu-btn" class="nav-icon-btn navbar-menu-btn sm:hidden" aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6"  x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    {# Mobile drawer #}
+    <div id="navbar-drawer" class="sm:hidden">
+      <nav class="flex flex-col">
+        {% for key, href, label in [
+          ('today',       '/',            'Home'),
+          ('lunch',       '/lunch',       'School Food'),
+          ('schedule',    '/schedule',    'Schedule'),
+          ('assignments', '/assignments', 'Homework'),
+          ('toolbox',     '/toolbox',     'Toolbox'),
+          ('notes',       '/notes',       'Notes'),
+        ] %}
+          <a href="{{ href }}" class="nav-link {{ 'active' if active == key else '' }}">{{ label }}</a>
+        {% endfor %}
+        {% if user %}
+          <a href="/me" class="nav-link">Account</a>
+          <form action="/auth/logout" method="post" class="mt-2">
+            <button class="signin-btn w-full">Sign out</button>
+          </form>
+        {% else %}
+          <a href="/login" class="signin-btn w-full mt-2">Sign in</a>
+        {% endif %}
+      </nav>
     </div>
   </header>
 
-  <main class="flex-1 pt-24 sm:pt-20 pb-16 px-5 max-w-screen-md mx-auto w-full">
+  <main class="flex-1 pt-24 sm:pt-28 pb-16 px-5 max-w-screen-md mx-auto w-full">
     {% block content %}{% endblock %}
   </main>
 
@@ -559,6 +807,21 @@
         btn.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
       }
     })();
+
+    // ── Mobile navbar drawer ──────────────────────────────────────────────
+    (function () {
+      const trigger = document.getElementById('navbar-menu-btn');
+      const drawer  = document.getElementById('navbar-drawer');
+      if (!trigger || !drawer) return;
+      trigger.addEventListener('click', () => {
+        const open = drawer.classList.toggle('open');
+        trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      // Close drawer when a link inside is tapped
+      drawer.addEventListener('click', (e) => {
+        if (e.target.closest('a')) drawer.classList.remove('open');
+      });
+    })();
   </script>
 
   {# ─── VibeBot guided tour ─────────────────────────────────── #}
@@ -611,7 +874,7 @@
         { sel: '[data-tour="nav-today"]',       title: "Home / Today",   body: "Your daily overview — today's schedule, lunch, and what's due." },
         { sel: '[data-tour="nav-lunch"]',       title: "Lunch",          body: "See today's menu and the AI verdict on whether to eat school lunch." },
         { sel: '[data-tour="nav-schedule"]',    title: "Schedule",       body: "Your class periods and timing for the day." },
-        { sel: '[data-tour="nav-assignments"]', title: "HW",             body: "Track assignments, due dates, and progress in one place." },
+        { sel: '[data-tour="nav-assignments"]', title: "Homework",       body: "Track assignments, due dates, and progress in one place." },
         { sel: '[data-tour="nav-toolbox"]',     title: "Toolbox",        body: "Handy school links, tools, and shortcuts you use every day." },
         { sel: '[data-tour="nav-notes"]',       title: "Notes",          body: "Quick personal notes — synced and private to your account." },
         { sel: '[data-tour="theme"]',  title: "Light / Dark",   body: "Switch between dark and light mode any time. Your choice is remembered." },
