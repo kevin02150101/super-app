@@ -774,6 +774,63 @@
     {% block content %}{% endblock %}
   </main>
 
+  {# ─── Site footer ─────────────────────────────────────── #}
+  <footer class="site-footer" role="contentinfo">
+    <div class="site-footer-inner">
+      <div class="site-footer-grid">
+        {# Brand column #}
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="footHcasL" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#3BCFFF"/>
+                  <stop offset="100%" stop-color="#1E96E5"/>
+                </linearGradient>
+                <linearGradient id="footHcasR" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#1E96E5"/>
+                  <stop offset="100%" stop-color="#0F4A85"/>
+                </linearGradient>
+              </defs>
+              <path d="M6 6 L22 6 L22 58 L6 58 Z" fill="url(#footHcasL)"/>
+              <path d="M42 6 L58 6 L58 58 L42 58 Z" fill="url(#footHcasR)"/>
+              <path d="M22 26 L42 22 L42 36 L22 40 Z" fill="url(#footHcasL)" opacity="0.95"/>
+            </svg>
+            <span class="footer-wordmark"><span class="wm-hcas">HCAS</span><span class="wm-hub">HUB</span></span>
+          </a>
+          <p class="footer-desc">
+            Everything HCAS, one tap. A student project, built for phones and the way the school day actually runs.
+          </p>
+        </div>
+
+        {# THE APP #}
+        <div class="footer-col">
+          <h4 class="footer-heading">The App</h4>
+          <ul class="footer-links">
+            <li><a href="/">Today</a></li>
+            <li><a href="/lunch">School Food</a></li>
+            <li><a href="/calendar">Calendar</a></li>
+            <li><a href="/notes">Notes</a></li>
+          </ul>
+        </div>
+
+        {# ABOUT #}
+        <div class="footer-col">
+          <h4 class="footer-heading">About</h4>
+          <ul class="footer-links">
+            <li><a href="https://chromewebstore.google.com/" target="_blank" rel="noopener">Chrome extension</a></li>
+            <li><a href="#" id="footer-privacy-link">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="site-footer-bottom">
+        <span class="footer-copy">© 2026 HCAS Hub · Made at HCAS.</span>
+        <span class="footer-avail">Free for students and schools — HCAS Hub is available to any school.</span>
+      </div>
+    </div>
+  </footer>
+
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/static/sw.js').catch(() => {});
@@ -1316,6 +1373,105 @@
       box-shadow: 0 8px 22px -6px rgba(30,150,229,0.55);
     }
     .privacy-modal .privacy-close:hover { filter: brightness(1.05); }
+
+    /* ── Site footer ────────────────────────────────────────── */
+    .site-footer {
+      margin-top: 48px;
+      padding: 64px 24px 32px;
+      border-top: 1px solid rgba(59,207,255,0.14);
+      background: linear-gradient(180deg, transparent 0%, rgba(8,14,28,0.45) 100%);
+      color: rgba(245,247,250,0.65);
+      position: relative;
+      z-index: 1;
+    }
+    :root.light .site-footer {
+      border-top-color: rgba(15,26,47,0.08);
+      background: linear-gradient(180deg, transparent 0%, rgba(15,26,47,0.04) 100%);
+      color: rgba(15,26,47,0.65);
+    }
+    .site-footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .site-footer-grid {
+      display: grid;
+      gap: 48px 64px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 640px) {
+      .site-footer-grid { grid-template-columns: 1fr 1fr; gap: 48px; }
+    }
+    @media (min-width: 1024px) {
+      .site-footer-grid { grid-template-columns: 1.6fr 1fr 1fr; gap: 72px; }
+    }
+
+    .footer-brand { max-width: 380px; }
+    .footer-logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+    .footer-logo svg { width: 28px; height: 28px; flex: none; }
+    .footer-wordmark {
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0.18em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .footer-wordmark .wm-hcas { color: #FFFFFF; }
+    .footer-wordmark .wm-hub  { color: #3BCFFF; margin-left: 6px; text-shadow: 0 0 14px rgba(59,207,255,0.40); }
+    :root.light .footer-wordmark .wm-hcas { color: var(--page-text); }
+    :root.light .footer-wordmark .wm-hub  { color: #1E96E5; text-shadow: none; }
+
+    .footer-desc {
+      margin-top: 18px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: rgba(245,247,250,0.62);
+    }
+    :root.light .footer-desc { color: rgba(15,26,47,0.62); }
+
+    .footer-heading {
+      font-family: "D-DIN", Inter, system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(245,247,250,0.45);
+      margin-bottom: 22px;
+    }
+    :root.light .footer-heading { color: rgba(15,26,47,0.50); }
+
+    .footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+    .footer-links a {
+      color: rgba(245,247,250,0.78);
+      font-size: 14px;
+      text-decoration: none;
+      transition: color .18s ease;
+    }
+    .footer-links a:hover { color: #3BCFFF; }
+    :root.light .footer-links a { color: rgba(15,26,47,0.78); }
+    :root.light .footer-links a:hover { color: #1E96E5; }
+
+    .site-footer-bottom {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(59,207,255,0.10);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: rgba(245,247,250,0.50);
+    }
+    :root.light .site-footer-bottom {
+      border-top-color: rgba(15,26,47,0.08);
+      color: rgba(15,26,47,0.55);
+    }
+    @media (max-width: 639px) {
+      .site-footer { padding: 56px 20px 96px; }
+      .site-footer-bottom { flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 40px; }
+    }
   </style>
 
   <button id="hh-fab" class="hh-fab" aria-label="Open Hub Helper">
@@ -1484,6 +1640,8 @@
       function open() { backdrop.classList.add('open'); }
       function close() { backdrop.classList.remove('open'); }
       btn.addEventListener('click', open);
+      const footerLink = document.getElementById('footer-privacy-link');
+      if (footerLink) footerLink.addEventListener('click', (e) => { e.preventDefault(); open(); });
       closeBtn && closeBtn.addEventListener('click', close);
       backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
       document.addEventListener('keydown', (e) => {
