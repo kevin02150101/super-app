@@ -714,11 +714,11 @@
         </button>
 
         {# Privacy info #}
-        <button id="privacy-btn" class="nav-icon-btn" aria-label="Privacy & data" title="Privacy & data">
+        <a id="privacy-btn" class="nav-icon-btn" href="https://hcas-hub-launch.vercel.app/privacy" rel="noopener noreferrer" aria-label="Privacy & data" title="Privacy & data">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
-        </button>
+        </a>
 
         {# Theme toggle — rounded-square #}
         <button id="theme-toggle" data-tour="theme" class="nav-icon-btn" aria-label="Toggle theme" aria-pressed="false">
@@ -819,7 +819,7 @@
           <h4 class="footer-heading">About</h4>
           <ul class="footer-links">
             <li><a href="https://chromewebstore.google.com/" target="_blank" rel="noopener">Chrome extension</a></li>
-            <li><a href="#" id="footer-privacy-link">Privacy</a></li>
+            <li><a href="https://hcas-hub-launch.vercel.app/privacy" id="footer-privacy-link" rel="noopener noreferrer">Privacy</a></li>
           </ul>
         </div>
       </div>
@@ -1631,21 +1631,19 @@
       });
     })();
 
-    // ── Privacy modal ────────────────────────────────────────
+    // ── Privacy link ─────────────────────────────────────────
     (function () {
-      const btn = document.getElementById('privacy-btn');
-      const backdrop = document.getElementById('privacy-backdrop');
-      const closeBtn = document.getElementById('privacy-close');
-      if (!btn || !backdrop) return;
-      function open() { backdrop.classList.add('open'); }
-      function close() { backdrop.classList.remove('open'); }
-      btn.addEventListener('click', open);
-      const footerLink = document.getElementById('footer-privacy-link');
-      if (footerLink) footerLink.addEventListener('click', (e) => { e.preventDefault(); open(); });
-      closeBtn && closeBtn.addEventListener('click', close);
-      backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && backdrop.classList.contains('open')) close();
+      const PRIVACY_URL = 'https://hcas-hub-launch.vercel.app/privacy';
+      ['privacy-btn', 'footer-privacy-link'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.setAttribute('href', PRIVACY_URL);
+        el.removeAttribute('target');
+        el.setAttribute('rel', 'noopener noreferrer');
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = PRIVACY_URL;
+        });
       });
     })();
   </script>
