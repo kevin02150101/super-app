@@ -706,6 +706,20 @@
           <a href="/login" class="signin-btn hidden sm:inline-flex">Sign in</a>
         {% endif %}
 
+        {# Guide / tour trigger #}
+        <button id="guide-btn" data-tour="guide" class="nav-icon-btn" aria-label="Start guided tour" title="Guided tour">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </button>
+
+        {# Privacy info #}
+        <button id="privacy-btn" class="nav-icon-btn" aria-label="Privacy & data" title="Privacy & data">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </button>
+
         {# Theme toggle — rounded-square #}
         <button id="theme-toggle" data-tour="theme" class="nav-icon-btn" aria-label="Toggle theme" aria-pressed="false">
           <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1221,6 +1235,87 @@
       .hh-panel { right: 12px; left: 12px; width: auto; bottom: 88px; }
       .hh-fab { right: 16px; bottom: 16px; }
     }
+
+    /* ── Privacy modal ──────────────────────────────────────── */
+    .privacy-backdrop {
+      position: fixed; inset: 0; z-index: 9996;
+      background: rgba(8, 14, 28, 0.66);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: privacy-fade .18s ease;
+    }
+    @keyframes privacy-fade { from { opacity: 0 } to { opacity: 1 } }
+    .privacy-backdrop.open { display: flex; }
+    .privacy-modal {
+      width: 100%; max-width: 460px;
+      background: linear-gradient(180deg, rgba(20,34,60,0.98), rgba(15,26,47,0.96));
+      border-radius: 22px;
+      padding: 24px 22px 20px;
+      color: #F5F7FA;
+      box-shadow:
+        inset 0 0 0 1px rgba(59,207,255,0.30),
+        0 30px 60px rgba(0,0,0,0.55),
+        0 0 40px rgba(59,207,255,0.10);
+      animation: privacy-pop .22s cubic-bezier(.2,.9,.3,1.2);
+    }
+    :root.light .privacy-modal {
+      background: #FFFFFF;
+      color: var(--page-text);
+      box-shadow: inset 0 0 0 1px rgba(15,26,47,0.08), 0 24px 60px rgba(15,26,47,0.18);
+    }
+    @keyframes privacy-pop {
+      from { opacity: 0; transform: translateY(8px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .privacy-modal-head {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+    }
+    .privacy-modal-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #3BCFFF, #1E96E5);
+      color: #0A1426;
+      flex: none;
+    }
+    .privacy-modal-icon svg { width: 22px; height: 22px; }
+    .privacy-modal h3 {
+      font-family: "D-DIN", Inter, sans-serif;
+      font-weight: 800; font-size: 18px; letter-spacing: 0.04em;
+      text-transform: uppercase; line-height: 1;
+    }
+    .privacy-modal p { font-size: 13.5px; line-height: 1.55; margin-top: 10px; }
+    :root:not(.light) .privacy-modal p { color: rgba(245,247,250,0.78); }
+    .privacy-modal ul {
+      margin-top: 12px; padding: 0; list-style: none;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .privacy-modal li {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 13px; line-height: 1.5;
+    }
+    .privacy-modal li::before {
+      content: ''; flex: none; margin-top: 7px;
+      width: 6px; height: 6px; border-radius: 999px;
+      background: linear-gradient(135deg, #3BCFFF, #1E96E5);
+    }
+    .privacy-modal-actions {
+      display: flex; gap: 10px; margin-top: 18px;
+    }
+    .privacy-modal .privacy-close {
+      flex: 1;
+      height: 40px; border-radius: 999px;
+      border: 0; cursor: pointer;
+      font-family: "D-DIN", Inter, sans-serif;
+      font-weight: 800; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: #0A1426;
+      background: linear-gradient(135deg, #3BCFFF, #1E96E5);
+      box-shadow: 0 8px 22px -6px rgba(30,150,229,0.55);
+    }
+    .privacy-modal .privacy-close:hover { filter: brightness(1.05); }
   </style>
 
   <button id="hh-fab" class="hh-fab" aria-label="Open Hub Helper">
@@ -1379,6 +1474,46 @@
         ask(msg);
       });
     })();
+
+    // ── Privacy modal ────────────────────────────────────────
+    (function () {
+      const btn = document.getElementById('privacy-btn');
+      const backdrop = document.getElementById('privacy-backdrop');
+      const closeBtn = document.getElementById('privacy-close');
+      if (!btn || !backdrop) return;
+      function open() { backdrop.classList.add('open'); }
+      function close() { backdrop.classList.remove('open'); }
+      btn.addEventListener('click', open);
+      closeBtn && closeBtn.addEventListener('click', close);
+      backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && backdrop.classList.contains('open')) close();
+      });
+    })();
   </script>
+
+  {# Privacy modal #}
+  <div id="privacy-backdrop" class="privacy-backdrop" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="privacy-modal">
+      <div class="privacy-modal-head">
+        <span class="privacy-modal-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </span>
+        <h3 id="privacy-title">Privacy &amp; Data</h3>
+      </div>
+      <p>HCAS Hub is built for students. We only store what's needed to keep the hub useful — and you stay in control.</p>
+      <ul>
+        <li>Your school account (Microsoft) is only used to sign you in and sync your schedule &amp; homework.</li>
+        <li>Lunch ratings and notes are tied to your account so you see your own activity across devices.</li>
+        <li>We never sell data or share it with third-party advertisers.</li>
+        <li>You can sign out at any time from the menu; ask us to delete your data via the Hub Helper.</li>
+      </ul>
+      <div class="privacy-modal-actions">
+        <button id="privacy-close" class="privacy-close" type="button">Got it</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
